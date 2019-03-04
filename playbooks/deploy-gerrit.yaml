@@ -1,0 +1,5 @@
+---
+- hosts: gerrit
+  remote_user: root
+  roles:
+    - docker

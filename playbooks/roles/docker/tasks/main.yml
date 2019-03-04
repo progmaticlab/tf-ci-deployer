@@ -1,0 +1,6 @@
+---
+
+- include: "{{ ansible_os_family }}.yml"
+
+- name: start docker daemon
+  include: "start_docker_{{ ansible_system }}.yml"

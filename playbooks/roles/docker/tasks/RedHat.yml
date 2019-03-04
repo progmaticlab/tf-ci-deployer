@@ -1,0 +1,12 @@
+---
+- name: create docker repo
+  yum_repository:
+    name: dockerrepo
+    description: Docker Repository
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    gpgkey: https://download.docker.com/linux/centos/gpg
+    gpgcheck: yes
+
+- name: install docker
+  yum:
+    name: docker-ce-18.03.1.ce
