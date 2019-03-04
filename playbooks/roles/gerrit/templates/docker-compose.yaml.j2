@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  gerrit:
+    image: gerritcodereview/gerrit
+    ports:
+      - "29418:29418"
+      - "80:8080"
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    volumes:
+     - /var/gerrit/etc:/var/gerrit/etc
+     - gerrit-git-volume:/var/gerrit/git
+     - gerrit-index-volume:/var/gerrit/index
+     - gerrit-cache-volume:/var/gerrit/cache
+
+  postgres:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=gerrit
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=reviewdb
+    volumes:
+      - gerrit-db-volume:/var/lib/postgresql/data
+
+volumes:
+  gerrit-git-volume:
+  gerrit-db-volume:
+  gerrit-index-volume:
+  gerrit-cache-volume:

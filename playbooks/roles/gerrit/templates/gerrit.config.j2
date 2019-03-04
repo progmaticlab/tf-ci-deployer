@@ -1,0 +1,28 @@
+[gerrit]
+  basePath = git
+  canonicalWebUrl = http://localhost
+
+[database]
+  type = postgresql
+  hostname = postgres
+  database = reviewdb
+  username = gerrit
+
+[index]
+  type = LUCENE
+
+[sendemail]
+  enable = false
+  smtpServer = localhost
+
+[sshd]
+  listenAddress = *:29418
+
+[httpd]
+  listenUrl = http://*:8080/
+
+[cache]
+  directory = cache
+
+[container]
+  user = root
