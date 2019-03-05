@@ -3,3 +3,6 @@ all:
     gerrit:
       hosts:
         192.168.56.103:
+    quickstart:
+      hosts:
+        13.53.158.75

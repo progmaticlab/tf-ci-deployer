@@ -1,0 +1,29 @@
+- hosts: quickstart
+  vars:
+    gerrit_host: 13.53.158.75
+    gerrit_port: 8080
+  remote_user: ubuntu
+  become: yes
+  roles:
+    - docker
+  tasks:
+  - name: install git
+    package:
+      name: git
+      state: present
+  - name: intall git-review
+    package:
+      name: git-review
+      state: present
+  - name: Make sure a service is running
+    systemd:
+      name: docker.service
+      state: started
+      enabled: yes
+  - name: clone
+    git:
+      repo: https://github.com/progmaticlab/zuul
+      dest: /opt/zuul
+  - name: up
+    docker_service:
+      project_src: /opt/zuul/doc/source/admin/examples
