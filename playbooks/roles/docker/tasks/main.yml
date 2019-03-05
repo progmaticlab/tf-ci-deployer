@@ -1,6 +1,20 @@
 ---
 
+# we need to remove python-requests installed by distutils
+# cause it conflicts with requests lib installed by pip during docker-compose install
+- name: remove python-requests installed by distutils
+  package:
+    name: python-requests
+    state: absent
+  register: res
+  retries: 5
+  until: res | success
+
 - include: "{{ ansible_os_family }}.yml"
 
 - name: start docker daemon
   include: "start_docker_{{ ansible_system }}.yml"
+
+- name: install python compose
+  pip:
+    name: docker-compose

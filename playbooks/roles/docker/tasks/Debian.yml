@@ -35,3 +35,14 @@
     state: present
     update_cache: yes
   when: ansible_distribution_release == 'bionic'
+
+- name: install pip package
+  apt:
+    name: "{{ item }}"
+    state: present
+  register: res
+  retries: 5
+  until: res | success
+  with_items:
+    - python-setuptools
+    - python-pip

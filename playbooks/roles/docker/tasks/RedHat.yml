@@ -10,3 +10,16 @@
 - name: install docker
   yum:
     name: docker-ce-18.03.1.ce
+
+- name: install easy_install
+  package:
+    name: python-setuptools
+    state: present
+  register: res
+  retries: 5
+  until: res | success
+
+- name: Install common pre-requisites
+  easy_install:
+    name: pip
+    state: latest
