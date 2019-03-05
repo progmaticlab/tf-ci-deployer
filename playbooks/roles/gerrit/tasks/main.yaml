@@ -24,6 +24,20 @@
     group: 1000
     mode: '700'
 
+- name: generate openssh RSA host key
+  command : ssh-keygen -q -t rsa -f /var/gerrit/etc/ssh_host_rsa_key -C "" -N ""
+  args:
+    creates: /var/gerrit/etc/ssh_host_rsa_key
+
+- name: fix owner of RSA host key
+  file:
+    path: /var/gerrit/etc/{{ item.src }}
+    owner: 1000
+    group: 1000
+  with_items:
+    - { src: "ssh_host_rsa_key" }
+    - { src: "ssh_host_rsa_key.pub" }
+
 - name: create gerrit etc directory
   file:
     path: /etc/gerrit

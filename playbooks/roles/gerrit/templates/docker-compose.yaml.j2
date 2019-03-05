@@ -2,7 +2,7 @@ version: '3'
 
 services:
   gerrit:
-    image: gerritcodereview/gerrit
+    image: gerritcodereview/gerrit:2.16.6-centos7
     ports:
       - "29418:29418"
       - "80:8080"
@@ -11,10 +11,17 @@ services:
     depends_on:
       - postgres
     volumes:
-     - /var/gerrit/etc:/var/gerrit/etc
      - gerrit-git-volume:/var/gerrit/git
      - gerrit-index-volume:/var/gerrit/index
      - gerrit-cache-volume:/var/gerrit/cache
+    command: |
+      /bin/sh -c '\
+        git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl http://localhost:8080/ && \
+        git config -f /var/gerrit/etc/gerrit.config gerrit.ui POLYGERRIT && \
+        git config -f /var/gerrit/etc/gerrit.config sendemail.enable false && \
+        git config -f /var/gerrit/etc/gerrit.config noteDb.changes.autoMigrate true && \
+        java -jar /var/gerrit/bin/gerrit.war init --batch --install-all-plugins -d /var/gerrit && \
+        /var/gerrit/bin/gerrit.sh run'
 
   postgres:
     image: postgres:9.6
