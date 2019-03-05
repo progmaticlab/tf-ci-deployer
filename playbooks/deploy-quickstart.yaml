@@ -1,0 +1,28 @@
+---
+- hosts: quickstart
+  remote_user: ubuntu
+  become: yes
+
+  roles:
+    - docker
+    - instance
+
+  tasks:
+  - name: Install pre-requisites
+    package:
+      name: ['git', 'git-review']
+
+  - name: Make sure a service is running
+    systemd:
+      name: docker.service
+      state: started
+      enabled: yes
+
+  - name: clone
+    git:
+      repo: https://github.com/progmaticlab/zuul
+      dest: /opt/zuul
+
+  - name: up
+    docker_service:
+      project_src: /opt/zuul/doc/source/admin/examples
