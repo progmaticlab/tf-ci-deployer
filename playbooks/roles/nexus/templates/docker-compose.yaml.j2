@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  nexus:
+    image: sonatype/nexus3:3.15.2
+    ports:
+      - "8081:8081"
+    volumes:
+      - nexus-data:/nexus-data
+    environment:
+      - INSTALL4J_ADD_VM_PARAMS="-Xms512m -Xmx1g -XX:MaxDirectMemorySize=1g"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+
+volumes:
+  nexus-data:

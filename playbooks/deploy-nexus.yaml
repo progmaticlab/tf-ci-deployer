@@ -1,0 +1,6 @@
+---
+- hosts: nexus
+  remote_user: root
+  roles:
+    - docker
+    - nexus

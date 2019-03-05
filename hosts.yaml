@@ -3,3 +3,6 @@ all:
     gerrit:
       hosts:
         192.168.56.103:
+    nexus:
+      hosts:
+        192.168.56.103:

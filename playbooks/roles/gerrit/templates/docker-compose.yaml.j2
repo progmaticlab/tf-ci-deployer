@@ -22,6 +22,10 @@ services:
         git config -f /var/gerrit/etc/gerrit.config noteDb.changes.autoMigrate true && \
         java -jar /var/gerrit/bin/gerrit.war init --batch --install-all-plugins -d /var/gerrit && \
         /var/gerrit/bin/gerrit.sh run'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
 
   postgres:
     image: postgres:9.6
@@ -31,6 +35,10 @@ services:
       - POSTGRES_DB=reviewdb
     volumes:
       - gerrit-db-volume:/var/lib/postgresql/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
 
 volumes:
   gerrit-git-volume:
