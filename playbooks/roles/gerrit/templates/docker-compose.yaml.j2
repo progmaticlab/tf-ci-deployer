@@ -11,14 +11,12 @@ services:
     depends_on:
       - postgres
     volumes:
-     - gerrit-git-volume:/var/gerrit/git
-     - gerrit-index-volume:/var/gerrit/index
-     - gerrit-cache-volume:/var/gerrit/cache
+      - /var/gerrit/etc:/var/gerrit/etc
+      - gerrit-git-volume:/var/gerrit/git
+      - gerrit-index-volume:/var/gerrit/index
+      - gerrit-cache-volume:/var/gerrit/cache
     command: |
       /bin/sh -c '\
-        git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl http://localhost:8080/ && \
-        git config -f /var/gerrit/etc/gerrit.config gerrit.ui POLYGERRIT && \
-        git config -f /var/gerrit/etc/gerrit.config sendemail.enable false && \
         git config -f /var/gerrit/etc/gerrit.config noteDb.changes.autoMigrate true && \
         java -jar /var/gerrit/bin/gerrit.war init --batch --install-all-plugins -d /var/gerrit && \
         /var/gerrit/bin/gerrit.sh run'

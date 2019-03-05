@@ -1,12 +1,16 @@
 [gerrit]
   basePath = git
-  canonicalWebUrl = http://localhost
+  canonicalWebUrl = "{{ gerrit_baseurl }}"
+  ui = POLYGERRIT
 
 [database]
   type = postgresql
   hostname = postgres
   database = reviewdb
   username = gerrit
+
+[auth]
+  type = DEVELOPMENT_BECOME_ANY_ACCOUNT
 
 [index]
   type = LUCENE
@@ -20,9 +24,21 @@
 
 [httpd]
   listenUrl = http://*:8080/
+  filterClass = com.googlesource.gerrit.plugins.ootb.FirstTimeRedirect
+  firstTimeRedirectUrl = /login/%23%2F?account_id=1000000
+
+[plugins]
+  allowRemoteAdmin = true
 
 [cache]
   directory = cache
 
+[receive]
+  enableSignedPush = false
+
 [container]
-  user = root
+  javaOptions = "-Dflogger.backend_factory=com.google.common.flogger.backend.log4j.Log4jBackendFactory#getInstance"
+  javaOptions = "-Dflogger.logging_context=com.google.gerrit.server.logging.LoggingContext#getInstance"
+  user = gerrit
+  javaHome = /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-1.el7_6.x86_64/jre
+  javaOptions = -Djava.security.egd=file:/dev/./urandom
