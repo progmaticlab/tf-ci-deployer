@@ -38,6 +38,6 @@
     src: create-project-main.yaml
     dest: /opt/zuul/doc/source/admin/examples/playbooks/roles/create_project/tasks/main.yaml
 
-#- name: up
-#  docker_service:
-#    project_src: /opt/zuul/doc/source/admin/examples
+- name: up
+  docker_service:
+    project_src: /opt/zuul/doc/source/admin/examples
