@@ -1,47 +1,25 @@
 ---
 - name: create gerrit etc directory
   file:
-    path: /var/gerrit/etc
+    path: /etc/gerrit/docker
     state: directory
-    owner: 1000
-    group: 1000
-    mode: '700'
     recurse: yes
 
-- name: apply gerrit.config file
+- name: collect gerrit oauth2 plugin
+  get_url:
+    url: https://github.com/davido/gerrit-oauth-provider/releases/download/v2.16.1/gerrit-oauth-provider.jar
+    dest: /etc/gerrit/docker/gerrit-oauth-provider.jar
+
+- name: apply gerrit Dockerfile
   template:
-    src: gerrit.config.j2
-    dest: /var/gerrit/etc/gerrit.config
-    owner: 1000
-    group: 1000
-    mode: '700'
+    src: Dockerfile.j2
+    dest: /etc/gerrit/docker/Dockerfile
 
-- name: apply secure.config file
-  template:
-    src: secure.config.j2
-    dest: /var/gerrit/etc/secure.config
-    owner: 1000
-    group: 1000
-    mode: '700'
-
-- name: generate openssh RSA host key
-  command : ssh-keygen -q -t rsa -f /var/gerrit/etc/ssh_host_rsa_key -C "" -N ""
-  args:
-    creates: /var/gerrit/etc/ssh_host_rsa_key
-
-- name: fix owner of RSA host key
-  file:
-    path: /var/gerrit/etc/{{ item.src }}
-    owner: 1000
-    group: 1000
-  with_items:
-    - { src: "ssh_host_rsa_key" }
-    - { src: "ssh_host_rsa_key.pub" }
-
-- name: create gerrit etc directory
-  file:
-    path: /etc/gerrit
-    state: directory
+- name: build gerrit docker image
+  docker_image:
+    path: /etc/gerrit/docker
+    name: local/tf-ci-gerrit
+    pull: no
 
 - name: apply gerrit docker-compose.yaml
   template:

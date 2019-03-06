@@ -1,0 +1,18 @@
+FROM gerritcodereview/gerrit:2.16.1-centos7
+
+COPY --chown=gerrit:gerrit gerrit-oauth-provider.jar /var/gerrit/plugins/
+
+ENV CANONICAL_WEB_URL {{ gerrit_baseurl }}
+
+CMD git config -f /var/gerrit/etc/gerrit.config database.type "mariadb" && \
+    git config -f /var/gerrit/etc/gerrit.config database.hostname "mariadb" && \
+    git config -f /var/gerrit/etc/gerrit.config database.port 3306 && \
+    git config -f /var/gerrit/etc/gerrit.config database.database "gerritdb" && \
+    git config -f /var/gerrit/etc/gerrit.config database.username "gerrit" && \
+    git config -f /var/gerrit/etc/secure.config database.password "gerritsecret" && \
+    git config -f /var/gerrit/etc/gerrit.config gerrit.ui "POLYGERRIT" && \
+    git config -f /var/gerrit/etc/gerrit.config sendemail.enable false && \
+    git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl "{{ gerrit_baseurl }}" && \
+    git config -f /var/gerrit/etc/gerrit.config noteDb.changes.autoMigrate true && \
+    java -jar /var/gerrit/bin/gerrit.war init --batch --install-all-plugins -d /var/gerrit && \
+    /var/gerrit/bin/gerrit.sh run
