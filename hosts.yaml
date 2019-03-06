@@ -5,6 +5,8 @@ all:
         192.168.56.103:
       vars:
         gerrit_baseurl: "http://192.168.56.103/"
+        gerrit_oauth_client_id: cbb0e2c7098bdbdde3c3
+        gerrit_oauth_client_secret: a4356301e414066d94ddd353c04a1e706ae75641
     nexus:
       hosts:
         192.168.56.103:
