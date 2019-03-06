@@ -1,6 +1,7 @@
 ---
 - hosts: gerrit
-  remote_user: root
+  remote_user: "{{ remote_user }}"
+  become: yes
   roles:
     - docker
     - gerrit

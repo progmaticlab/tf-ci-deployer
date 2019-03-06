@@ -1,0 +1,36 @@
+- name: Check if {{ '{{' }} project {{ '}}' }} project exists
+  uri:
+    url: {{ gerrit_url }}/projects/{{ '{{' }} project {{ '}}' }}
+    status_code: 200, 404
+  register: project_check
+- name: Create {{ '{{' }} project {{ '}}' }}
+  when: project_check.status==404
+  block:
+    - name: Create temp dir for {{ '{{' }} project {{ '}}' }} creation
+      shell: mktemp -d
+      register: project_tmp
+    - name: Create {{ '{{' }} project {{ '}}' }} project in Gerrit
+      uri:
+        url: {{ gerrit_url }}/a/projects/{{ '{{' }} project {{ '}}' }}
+        method: PUT
+        user: admin
+        password: secret
+        status_code: 201
+    - name: Create initial commit in {{ '{{' }} project {{ '}}' }}
+      shell:
+        executable: /bin/sh
+        chdir: "{{ '{{' }} project_tmp.stdout {{ '}}' }}"
+        cmd: |
+          git init .
+          git config user.name "Admin"
+          git config user.email "admin@example.com"
+          cat >.gitreview <<EOF
+          [gerrit]
+          host={{ gerrit_sshd_host }}
+          port={{ gerrit_sshd_port }}
+          project={{ '{{' }} project {{ '}}' }}
+          EOF
+          git add .gitreview
+          git commit -m "Initial commit"
+          git remote add gerrit {{ gerrit_http_scheme }}://admin:secret@{{ gerrit_http_host }}:{{ gerrit_http_port }}/{{ '{{' }} project {{ '}}' }}
+          git push -f --set-upstream gerrit +HEAD:master

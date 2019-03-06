@@ -1,6 +1,7 @@
 [gerrit]
   basePath = git
-  canonicalWebUrl = http://localhost
+  canonicalWebUrl = "{{ gerrit_baseurl }}"
+  ui = POLYGERRIT
 
 [database]
   type = postgresql
