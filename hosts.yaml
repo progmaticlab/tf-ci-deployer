@@ -9,7 +9,9 @@ all:
         gerrit_oauth_client_secret: a4356301e414066d94ddd353c04a1e706ae75641
     nexus:
       hosts:
-        192.168.56.103:
+        13.53.186.64:
+      vars:
+        remote_user: ubuntu
     quickstart:
       hosts:
         13.53.206.7
