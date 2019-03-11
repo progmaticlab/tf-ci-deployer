@@ -2,22 +2,22 @@ all:
   children:
     gerrit:
       hosts:
-        13.53.199.108:
+        13.53.192.123:
       vars:
         remote_user: ubuntu
-        gerrit_baseurl: "http://13.53.199.108/"
+        gerrit_baseurl: "http://13.53.192.123/"
     nexus:
       hosts:
         192.168.56.103:
     quickstart:
       hosts:
-        13.48.28.144:
+        13.53.205.180:
       vars:
         remote_user: ubuntu
-        gerrit_url: http://13.53.199.108:80
+        gerrit_url: http://13.53.192.123:80
         gerrit_http_scheme: http
-        gerrit_http_host: 13.53.199.108
+        gerrit_http_host: 13.53.192.123
         gerrit_http_port: 80
-        gerrit_sshd_host: 13.53.199.108
+        gerrit_sshd_host: 13.53.192.123
         gerrit_sshd_port: 29418
 #        ansible_python_interpreter: /usr/bin/python3

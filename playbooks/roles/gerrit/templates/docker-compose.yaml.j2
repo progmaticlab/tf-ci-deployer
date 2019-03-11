@@ -16,7 +16,7 @@ services:
      - gerrit-cache-volume:/var/gerrit/cache
     command: |
       /bin/sh -c '\
-        git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl http://localhost:8080/ && \
+        git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl http://13.53.192.123:80/ && \
         git config -f /var/gerrit/etc/gerrit.config gerrit.ui POLYGERRIT && \
         git config -f /var/gerrit/etc/gerrit.config sendemail.enable false && \
         git config -f /var/gerrit/etc/gerrit.config noteDb.changes.autoMigrate true && \
