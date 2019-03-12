@@ -18,3 +18,8 @@
   copy:
     src: ./
     dest: /opt/zuul/
+
+- name: apply zuul.conf file
+  template:
+    src: zuul.conf
+    dest: /opt/zuul/etc_zuul/zuul.conf
