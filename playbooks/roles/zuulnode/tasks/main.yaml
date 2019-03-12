@@ -1,0 +1,20 @@
+---
+- name: install pre-requisites
+  package:
+    name: ['git', 'git-review']
+
+- name: make sure a service is running
+  systemd:
+    name: docker.service
+    state: started
+    enabled: yes
+    
+#- name: create remote directory
+#  file:
+#    path: /opt/zuul
+#    state: directory
+
+- name: copy config files
+  copy:
+    src: ./
+    dest: /opt/zuul/
