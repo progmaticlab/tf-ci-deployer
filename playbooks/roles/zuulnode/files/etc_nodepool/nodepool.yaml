@@ -11,7 +11,7 @@ providers:
     pools:
       - name: main
         nodes:
-          - name: 13.53.138.79
+          - name: node-test.ddns.net
             labels: centos-7-4-builder
             timeout: 60
             connection-type: ssh
