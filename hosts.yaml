@@ -25,8 +25,8 @@ all:
         zuul-test.ddns.net:
       vars:
         remote_user: ubuntu
-        gerrit_url: http://13.53.192.123:80
-        gerrit_sshd_host: 13.53.192.123
+        gerrit_url: http://gerrit-test.ddns.net
+        gerrit_sshd_host: gerrit-test.ddns.net
         gerrit_sshd_port: 29418
         gerrit_zuul_password: "secret"
     init:
