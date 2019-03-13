@@ -4,5 +4,4 @@
   become: yes
   roles:
     - docker
-#    - zuulquick
     - zuulnode
