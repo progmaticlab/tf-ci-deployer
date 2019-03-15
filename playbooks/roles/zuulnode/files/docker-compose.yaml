@@ -19,7 +19,7 @@ services:
     environment:
       no_proxy: "${no_proxy}"
     command: "sh -c 'zuul-scheduler -d'"
-    image: progmaticlab/zuul-scheduler
+    image: progmaticlab/zuul-scheduler:2.6.1 
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
       - "./ssh_keys/:/var/ssh/:z"
@@ -31,7 +31,7 @@ services:
       - mysql
     ports:
       - "9000:9000"
-    image: progmaticlab/zuul-web
+    image: progmaticlab/zuul-web:2.6.1
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
   executor:
@@ -41,7 +41,7 @@ services:
     command: "zuul-executor -d"
     depends_on:
       - scheduler
-    image: progmaticlab/zuul-executor
+    image: progmaticlab/zuul-executor:2.6.1
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
       - "./ssh_keys/:/var/ssh/:z"
@@ -60,7 +60,7 @@ services:
     command: "nodepool-launcher -d"
     depends_on:
       - zk
-    image: progmaticlab/nodepool-launcher
+    image: progmaticlab/nodepool-launcher:0.5.1
     volumes:
       - "./etc_nodepool/:/etc/nodepool/:z"
     ports:

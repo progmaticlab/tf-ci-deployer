@@ -77,3 +77,4 @@
           - tungstenfabric/tungsten-test-runner
           - Juniper/zuul-jobs
           - Juniper/zuul
+          - openstack/ara
