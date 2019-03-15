@@ -46,6 +46,17 @@ services:
       - "./etc_zuul/:/etc/zuul/:z"
       - "./ssh_keys/:/var/ssh/:z"
       - "logs:/srv/static/logs:z"
+  finger:
+    command: "zuul-fingergw -d"
+    depends_on:
+      - scheduler
+    ports:
+      - "79:79"
+    image: progmaticlab/zuul-fingergw:2.6.1
+    volumes:
+      - "./etc_zuul/:/etc/zuul/:z"
+      - "./ssh_keys/:/var/ssh/:z"
+      - "logs:/srv/static/logs:z"
   node:
     build:
       dockerfile: node-Dockerfile

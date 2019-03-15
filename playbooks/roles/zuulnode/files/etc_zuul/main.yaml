@@ -76,5 +76,5 @@
           - tungstenfabric/docs
           - tungstenfabric/tungsten-test-runner
           - Juniper/zuul-jobs
-          - Juniper/zuul
-          - openstack/ara
+          - Juniper/zuul:
+              exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
