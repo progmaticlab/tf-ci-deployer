@@ -23,6 +23,7 @@ services:
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
       - "./ssh_keys/:/var/ssh/:z"
+      - "/var/log/zuul/:/var/log/zuul/:z"
       - /var/lib/zuul
   web:
     command: "zuul-web -d"
@@ -45,6 +46,7 @@ services:
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
       - "./ssh_keys/:/var/ssh/:z"
+      - "/root/.ssh/:/root/.ssh/:z"
       - "logs:/srv/static/logs:z"
   finger:
     command: "zuul-fingergw -d"
