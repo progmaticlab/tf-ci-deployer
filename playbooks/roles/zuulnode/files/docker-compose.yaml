@@ -19,7 +19,7 @@ services:
     environment:
       no_proxy: "${no_proxy}"
     command: "sh -c 'zuul-scheduler -d'"
-    image: progmaticlab/zuul-scheduler:2.6.1 
+    image: progmaticlab/zuul-scheduler:2.5.3 
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
       - "./ssh_keys/:/var/ssh/:z"
@@ -32,7 +32,7 @@ services:
       - mysql
     ports:
       - "9000:9000"
-    image: progmaticlab/zuul-web:2.6.1
+    image: progmaticlab/zuul-web:2.5.3
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
   executor:
@@ -42,22 +42,11 @@ services:
     command: "zuul-executor -d"
     depends_on:
       - scheduler
-    image: progmaticlab/zuul-executor:2.6.1
+    image: progmaticlab/zuul-executor:2.5.3
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
       - "./ssh_keys/:/var/ssh/:z"
       - "/root/.ssh/:/root/.ssh/:z"
-      - "logs:/srv/static/logs:z"
-  finger:
-    command: "zuul-fingergw -d"
-    depends_on:
-      - scheduler
-    ports:
-      - "79:79"
-    image: progmaticlab/zuul-fingergw:2.6.1
-    volumes:
-      - "./etc_zuul/:/etc/zuul/:z"
-      - "./ssh_keys/:/var/ssh/:z"
       - "logs:/srv/static/logs:z"
   node:
     build:
@@ -90,7 +79,6 @@ services:
       - "80:80"
     volumes:
       - "/var/www/logs/:/usr/local/apache2/htdocs:z"
-#      - "logs:/usr/local/apache2/htdocs:z"
 
 volumes:
   logs:
