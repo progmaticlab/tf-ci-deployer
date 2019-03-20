@@ -1,7 +1,7 @@
 ---
-- hosts: quickstart
+- hosts: zuul
   remote_user: "{{ remote_user }}"
   become: yes
   roles:
     - docker
-    - zuulquick
+    - zuulnode

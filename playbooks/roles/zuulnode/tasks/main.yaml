@@ -1,0 +1,39 @@
+---
+- name: install pre-requisites
+  package:
+    name: ['git', 'git-review']
+
+- name: make sure a service is running
+  systemd:
+    name: docker.service
+    state: started
+    enabled: yes
+    
+- name: copy config files
+  copy:
+    src: ./
+    dest: /opt/zuul/
+
+- name: protect private keys (admin)
+  file:
+    path: /opt/zuul/ssh_keys/admin
+    mode: 0600
+
+- name: protect private keys (zuul)
+  file:
+    path: /opt/zuul/ssh_keys/zuul
+    mode: 0600
+
+- name: protect private keys (nodepool)
+  file:
+    path: /opt/zuul/ssh_keys/nodepool
+    mode: 0600
+
+- name: apply zuul.conf file
+  template:
+    src: zuul.conf
+    dest: /opt/zuul/etc_zuul/zuul.conf
+
+#- name: up
+#  docker_service:
+#    project_src: /opt/zuul/

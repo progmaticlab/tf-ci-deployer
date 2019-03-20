@@ -1,0 +1,19 @@
+---
+zuul_site_mirror_fqdn: 10.84.56.27
+#zuul_site_mirror_fqdn: "mirror.{{ nodepool.region | lower }}.{{ nodepool.cloud | lower }}.opencontrail.org"
+nexus:
+  fqdn: nexus-test.ddns.net
+#  ip: '10.84.5.85'
+  registry:
+    tungsten_ci: 5001
+    tungsten_nightly: 5002
+    proxy: 5005
+    access: 5010
+  repos:
+    yum: 'yum-tungsten'
+    yum_nightly: 'yum-tungsten-nightly'
+    yum_tpc: 'yum-tungsten-tpc'
+    maven: 'maven-public'
+docker_registry:
+  fqdn: nexus-test.ddns.net
+  port: 5000

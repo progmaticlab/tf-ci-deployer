@@ -1,0 +1,43 @@
+- name: install pre-requisites
+  package:
+    name: ['git', 'git-review']
+
+- name: make sure a service is running
+  systemd:
+    name: docker.service
+    state: started
+    enabled: yes
+    
+- name: remove directory, if exists
+  file:
+    path: /opt/zuul
+    state: absent
+
+- name: clone zuul code
+  git:
+    repo: https://git.zuul-ci.org/zuul
+    dest: /opt/zuul
+
+- name: apply zuul.conf file
+  template:
+    src: zuul.conf
+    dest: /opt/zuul/doc/source/admin/examples/etc_zuul/zuul.conf
+
+- name: apply setup.yaml file
+  template:
+    src: setup.yaml
+    dest: /opt/zuul/doc/source/admin/examples/playbooks/setup.yaml
+
+- name: apply wait-to-start.yaml file
+  template:
+    src: wait-to-start.yaml
+    dest: /opt/zuul/doc/source/admin/examples/playbooks/wait-to-start.yaml
+
+- name: apply create-project-main.yaml file
+  template:
+    src: create-project-main.yaml
+    dest: /opt/zuul/doc/source/admin/examples/playbooks/roles/create_project/tasks/main.yaml
+
+#- name: up
+#  docker_service:
+#    project_src: /opt/zuul/doc/source/admin/examples

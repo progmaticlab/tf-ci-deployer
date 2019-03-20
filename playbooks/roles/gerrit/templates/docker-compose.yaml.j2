@@ -14,7 +14,18 @@ services:
       - gerrit-git-volume:/var/gerrit/git
       - gerrit-index-volume:/var/gerrit/index
       - gerrit-cache-volume:/var/gerrit/cache
-    restart: always
+    command: |
+      /bin/sh -c '\
+        git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl http://13.53.192.123:80/ && \
+        git config -f /var/gerrit/etc/gerrit.config gerrit.ui POLYGERRIT && \
+        git config -f /var/gerrit/etc/gerrit.config sendemail.enable false && \
+        git config -f /var/gerrit/etc/gerrit.config noteDb.changes.autoMigrate true && \
+        java -jar /var/gerrit/bin/gerrit.war init --batch --install-all-plugins -d /var/gerrit && \
+        /var/gerrit/bin/gerrit.sh run'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
 
   mariadb:
     image: mariadb:10.4

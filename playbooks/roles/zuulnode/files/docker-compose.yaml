@@ -1,0 +1,90 @@
+# Version 2 is the latest that is supported by docker-compose in
+# Ubuntu Xenial.
+version: '2'
+
+services:
+  zk:
+    image: zookeeper
+  mysql:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: zuul
+      MYSQL_USER: zuul
+      MYSQL_PASSWORD: secret
+  scheduler:
+    depends_on:
+      - zk
+      - mysql
+    environment:
+      no_proxy: "${no_proxy}"
+    command: "sh -c 'pip3 install pymysql && zuul-scheduler -d'"
+#    command: "tail -f /dev/null"
+    image: progmaticlab/zuul-scheduler:2.5.3
+    ports:
+      - "8001:8001"
+    volumes:
+      - "./etc_zuul/:/etc/zuul/:z"
+      - "./ssh_keys/:/var/ssh/:z"
+      - "/var/log/zuul/:/var/log/zuul/:z"
+      - /var/lib/zuul
+  web:
+    command: "zuul-web -d"
+#    command: "sh -c 'pip3 install pymysql && zuul-web -d'"
+#    command: "tail -f /dev/null"
+    depends_on:
+      - scheduler
+      - mysql
+    ports:
+      - "9000:9000"
+    image: progmaticlab/zuul-web:2.5.3
+    volumes:
+      - "./etc_zuul/:/etc/zuul/:z"
+      - "/var/log/zuul/:/var/log/zuul/:z"
+  executor:
+    privileged: true
+    environment:
+      no_proxy: "${no_proxy}"
+    command: "zuul-executor -d"
+    depends_on:
+      - scheduler
+    image: progmaticlab/zuul-executor:2.5.3
+    volumes:
+      - "./etc_zuul/:/etc/zuul/:z"
+      - "./ssh_keys/:/var/ssh/:z"
+      - "/root/.ssh/:/root/.ssh/:z"
+      - "logs:/srv/static/logs:z"
+  node:
+    build:
+      dockerfile: node-Dockerfile
+      context: ./
+      args:
+        http_proxy: "${http_proxy}"
+        https_proxy: "${http_proxy}"
+        no_proxy: "${no_proxy}"
+    volumes:
+      - "./ssh_node/:/root/.ssh/:z"
+  launcher:
+    command: "nodepool-launcher -d"
+    depends_on:
+      - zk
+    image: progmaticlab/nodepool-launcher:0.5.1
+    volumes:
+      - "./etc_nodepool/:/etc/nodepool/:z"
+    ports:
+      - "8022:8022"
+  logs:
+    build:
+      dockerfile: logs-Dockerfile
+      context: ./
+      args:
+        http_proxy: "${http_proxy}"
+        https_proxy: "${http_proxy}"
+        no_proxy: "${no_proxy}"
+    ports:
+      - "80:80"
+    volumes:
+      - "/var/www/logs/:/usr/local/apache2/htdocs:z"
+
+volumes:
+  logs:
