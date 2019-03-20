@@ -18,8 +18,11 @@ services:
       - mysql
     environment:
       no_proxy: "${no_proxy}"
-    command: "sh -c 'zuul-scheduler -d'"
-    image: progmaticlab/zuul-scheduler:2.5.3 
+    command: "sh -c 'pip3 install pymysql && zuul-scheduler -d'"
+#    command: "tail -f /dev/null"
+    image: progmaticlab/zuul-scheduler:2.5.3
+    ports:
+      - "8001:8001"
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
       - "./ssh_keys/:/var/ssh/:z"
@@ -27,6 +30,8 @@ services:
       - /var/lib/zuul
   web:
     command: "zuul-web -d"
+#    command: "sh -c 'pip3 install pymysql && zuul-web -d'"
+#    command: "tail -f /dev/null"
     depends_on:
       - scheduler
       - mysql
@@ -35,6 +40,7 @@ services:
     image: progmaticlab/zuul-web:2.5.3
     volumes:
       - "./etc_zuul/:/etc/zuul/:z"
+      - "/var/log/zuul/:/var/log/zuul/:z"
   executor:
     privileged: true
     environment:
