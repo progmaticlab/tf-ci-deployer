@@ -1,0 +1,9 @@
+FROM nginx:1.15
+
+COPY zuul/etc/status/* /usr/share/nginx/html/
+COPY nginx/zuul.conf /etc/nginx/conf.d/
+
+RUN rm -f /etc/nginx/conf.d/default.conf \
+  && rm -f /usr/share/nginx/html/status-*
+
+VOLUME ['/usr/share/nginx/html', '/etc/nginx']

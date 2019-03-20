@@ -18,7 +18,7 @@ services:
       - mysql
     environment:
       no_proxy: "${no_proxy}"
-    command: "sh -c 'pip3 install pymysql && zuul-scheduler -d'"
+    command: "zuul-scheduler -d"
 #    command: "tail -f /dev/null"
     image: progmaticlab/zuul-scheduler:2.5.3
     ports:
@@ -85,6 +85,15 @@ services:
       - "80:80"
     volumes:
       - "/var/www/logs/:/usr/local/apache2/htdocs:z"
+  front:
+    build:
+      dockerfile: front-Dockerfile
+      context: ./
+    depends_on:
+      - scheduler
+      - web
+    ports:
+      - "8080:8080"
 
 volumes:
   logs:
