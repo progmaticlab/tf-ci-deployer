@@ -34,12 +34,6 @@
     src: zuul.conf
     dest: /opt/zuul/etc_zuul/zuul.conf
 
-- name: Clone zuul repository
-  git:
-    repo: https://github.com/progmaticlab/zuul.git
-    dest: /opt/zuul/zuul
-    version: contrail/feature/zuulv3
-
 #- name: up
 #  docker_service:
 #    project_src: /opt/zuul/
