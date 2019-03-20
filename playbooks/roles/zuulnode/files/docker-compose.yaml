@@ -45,7 +45,10 @@ services:
     privileged: true
     environment:
       no_proxy: "${no_proxy}"
+#    command: "sh -c 'mkdir /var/log/zuul && zuul-executor -d'"
     command: "zuul-executor -d"
+    ports:
+      - "79:7900"
     depends_on:
       - scheduler
     image: progmaticlab/zuul-executor:2.5.3
@@ -54,6 +57,7 @@ services:
       - "./ssh_keys/:/var/ssh/:z"
       - "/root/.ssh/:/root/.ssh/:z"
       - "logs:/srv/static/logs:z"
+      - "/var/log/zuul/:/var/log/zuul/:z"
   node:
     build:
       dockerfile: node-Dockerfile
