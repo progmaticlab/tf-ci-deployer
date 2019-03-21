@@ -119,7 +119,7 @@ services:
       - web
     ports:
       - "8080:8080"
-    volume:
+    volumes:
       - "/var/log/zuul:/var/log/zuul"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"

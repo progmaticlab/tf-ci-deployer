@@ -1,4 +1,14 @@
 ---
+- name: install ntp packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - ntpdate
+    - ntp
+
+- name: start ntp service
+  service: name=ntp state=started enabled=yes
 
 # we need to remove python-requests installed by distutils
 # cause it conflicts with requests lib installed by pip during docker-compose install
