@@ -23,11 +23,15 @@ services:
     image: progmaticlab/zuul-scheduler:2.5.3
     ports:
       - "8001:8001"
+    pid: host
+    ipc: host
     volumes:
-      - "./etc_zuul/:/etc/zuul/:z"
-      - "./ssh_keys/:/var/ssh/:z"
-      - "/var/log/zuul/:/var/log/zuul/:z"
-      - /var/lib/zuul
+      - "./etc_zuul:/etc/zuul"
+      - "./ssh_keys:/var/ssh"
+      - "/var/log/zuul:/var/log/zuul"
+      - "/var/run:/var/run"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
   web:
     command: "zuul-web -d"
 #    command: "sh -c 'pip3 install pymysql && zuul-web -d'"
@@ -38,9 +42,14 @@ services:
     ports:
       - "9000:9000"
     image: progmaticlab/zuul-web:2.5.3
+    pid: host
+    ipc: host
     volumes:
-      - "./etc_zuul/:/etc/zuul/:z"
-      - "/var/log/zuul/:/var/log/zuul/:z"
+      - "./etc_zuul:/etc/zuul"
+      - "/var/log/zuul:/var/log/zuul"
+      - "/var/run:/var/run"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
   executor:
     privileged: true
     environment:
@@ -52,12 +61,17 @@ services:
     depends_on:
       - scheduler
     image: progmaticlab/zuul-executor:2.5.3
+    pid: host
+    ipc: host
     volumes:
-      - "./etc_zuul/:/etc/zuul/:z"
-      - "./ssh_keys/:/var/ssh/:z"
-      - "/root/.ssh/:/root/.ssh/:z"
+      - "./etc_zuul:/etc/zuul"
+      - "./ssh_keys:/var/ssh"
+      - "/root/.ssh:/root/.ssh"
       - "logs:/srv/static/logs:z"
-      - "/var/log/zuul/:/var/log/zuul/:z"
+      - "/var/log/zuul:/var/log/zuul"
+      - "/var/run:/var/run"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
   node:
     build:
       dockerfile: node-Dockerfile
@@ -67,14 +81,21 @@ services:
         https_proxy: "${http_proxy}"
         no_proxy: "${no_proxy}"
     volumes:
-      - "./ssh_node/:/root/.ssh/:z"
+      - "./ssh_node:/root/.ssh"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
   launcher:
     command: "nodepool-launcher -d"
     depends_on:
       - zk
     image: progmaticlab/nodepool-launcher:0.5.1
+    pid: host
+    ipc: host
     volumes:
-      - "./etc_nodepool/:/etc/nodepool/:z"
+      - "/var/log/zuul:/var/log/zuul"
+      - "/var/run:/var/run"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
     ports:
       - "8022:8022"
   logs:
@@ -88,7 +109,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - "/var/www/logs/:/usr/local/apache2/htdocs:z"
+      - "/var/www/logs:/usr/local/apache2/htdocs"
   front:
     build:
       dockerfile: front-Dockerfile
@@ -98,6 +119,10 @@ services:
       - web
     ports:
       - "8080:8080"
+    volume:
+      - "/var/log/zuul:/var/log/zuul"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
 
 volumes:
   logs:
