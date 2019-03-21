@@ -35,10 +35,10 @@
     state: directory
     recurse: yes
 
-- name: apply zuul.conf file
-  template:
-    src: zuul.conf
-    dest: /opt/zuul/etc_zuul/zuul.conf
+- name: create /var/lib/zuul/git directory
+  file:
+    path: /var/lib/zuul/git
+    state: directory
 
 #- name: up
 #  docker_service:
