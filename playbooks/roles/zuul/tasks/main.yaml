@@ -40,6 +40,11 @@
     path: /var/lib/zuul/git
     state: directory
 
+- name: create /var/lib/zuul/ssh directory
+  file:
+    path: /var/lib/zuul/ssh
+    state: directory
+
 #- name: up
 #  docker_service:
 #    project_src: /opt/zuul/
