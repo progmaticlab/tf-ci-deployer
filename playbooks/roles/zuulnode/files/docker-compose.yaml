@@ -93,6 +93,7 @@ services:
     pid: host
     ipc: host
     volumes:
+      - "./etc_nodepool:/etc/nodepool"
       - "/var/log/zuul:/var/log/zuul"
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
