@@ -29,6 +29,12 @@
     path: /opt/zuul/ssh_keys/nodepool
     mode: 0600
 
+- name: create /var/lib/zuul/build directory
+  file:
+    path: /var/lib/zuul/builds
+    state: directory
+    recurse: yes
+
 - name: apply zuul.conf file
   template:
     src: zuul.conf

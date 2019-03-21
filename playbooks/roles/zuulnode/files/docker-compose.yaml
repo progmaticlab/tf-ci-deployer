@@ -69,6 +69,7 @@ services:
       - "/root/.ssh:/root/.ssh"
       - "logs:/srv/static/logs:z"
       - "/var/log/zuul:/var/log/zuul"
+      - "/var/lib/zuul:/var/lib/zuul"
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
