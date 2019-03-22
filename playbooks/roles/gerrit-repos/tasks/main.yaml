@@ -1,0 +1,31 @@
+---
+- name: create authentication cookie for later requests to gerrit
+  uri:
+    url: http://192.168.56.101/login/?account_id=1000000
+    method: GET
+    status_code: 302
+    follow_redirects: false
+  register: login
+
+- name: store xsrf token for later requests to gerrit
+  uri:
+    url: http://192.168.56.101/
+    method: GET
+    headers:
+      Cookie: "{{ login.set_cookie }}"
+    status_code: 200
+    follow_redirects: false
+  register: xsrf
+
+- name: create gerrit repositories
+  include_role:
+    name: gerrit-create-repo
+  vars:
+    target_namespace: "{{ item.dest_namespace }}"
+    project_name: "{{ item.project }}"
+    gerrit_user_cookie: "{{ login.set_cookie }}"
+    xsrf_cookie: "{{ xsrf.set_cookie }}"
+  with_items:
+    - {dest_namespace: "aos", project: "test2"}
+    - {dest_namespace: "aos", project: "test3"}
+

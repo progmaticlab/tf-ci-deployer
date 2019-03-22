@@ -14,8 +14,8 @@ CMD git config -f /var/gerrit/etc/gerrit.config database.type "mariadb" && \
     git config -f /var/gerrit/etc/gerrit.config sendemail.enable false && \
     git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl "{{ gerrit_baseurl }}" && \
     git config -f /var/gerrit/etc/gerrit.config noteDb.changes.autoMigrate true && \
-    git config -f /var/gerrit/etc/gerrit.config auth.type "OAUTH" && \
-    git config -f /var/gerrit/etc/gerrit.config plugin.gerrit-oauth-provider-github-oauth.client-id "{{ gerrit_oauth_client_id }}" && \
-    git config -f /var/gerrit/etc/gerrit.config plugin.gerrit-oauth-provider-github-oauth.client-secret "{{ gerrit_oauth_client_secret }}" && \
+#    git config -f /var/gerrit/etc/gerrit.config auth.type "OAUTH" && \
+#    git config -f /var/gerrit/etc/gerrit.config plugin.gerrit-oauth-provider-github-oauth.client-id "{{ gerrit_oauth_client_id }}" && \
+#    git config -f /var/gerrit/etc/gerrit.config plugin.gerrit-oauth-provider-github-oauth.client-secret "{{ gerrit_oauth_client_secret }}" && \
     java -jar /var/gerrit/bin/gerrit.war init --batch --install-all-plugins -d /var/gerrit && \
     /var/gerrit/bin/gerrit.sh run

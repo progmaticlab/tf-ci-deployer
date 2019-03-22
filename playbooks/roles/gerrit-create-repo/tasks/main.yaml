@@ -1,0 +1,41 @@
+---
+- name: calculate x-gerrit-auth
+  set_fact:
+    gerrit_auth: "{{ xsrf_cookie | regex_replace('^XSRF_TOKEN=(.*);.*$', '\\1') }}"
+
+- name: check if repository already exists
+  uri:
+    url: http://192.168.56.101/projects/{{ target_namespace }}%2F{{ project_name }}
+    method: GET
+    headers:
+      Cookie: "{{ gerrit_user_cookie }} {{ xsrf_cookie }}"
+    status_code:
+      - 200
+      - 404
+  register: repo
+
+- name: delete repository {{ target_namespace }}/{{ project_name }}
+  uri:
+    url: http://192.168.56.101/projects/{{ target_namespace }}%2F{{ project_name }}/delete-project~delete
+    method: POST
+    body: '{"force":false,"preserve":false}'
+    headers:
+      Cookie: "{{ gerrit_user_cookie }} {{ xsrf_cookie }}"
+      Content-Type: "application/json"
+      x-gerrit-auth: "{{ gerrit_auth }}"
+    status_code: 204
+  when:
+    - repo.status == 200
+    - force_update_repos
+
+- name: create repository {{ target_namespace }}/{{ project_name }}
+  uri:
+    url: http://192.168.56.101/projects/{{ target_namespace }}%2F{{ project_name }}
+    method: PUT
+    body: '{}'
+    headers:
+      Cookie: "{{ gerrit_user_cookie }} {{ xsrf_cookie }}"
+      Content-Type: "application/json"
+      x-gerrit-auth: "{{ gerrit_auth }}"
+    status_code: 201
+  when: repo.status == 404 or force_update_repos

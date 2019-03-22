@@ -26,6 +26,6 @@
     src: docker-compose.yaml.j2
     dest: /etc/gerrit/docker-compose.yaml
 
-#- name: start gerrit service
-#  docker_service:
-#    project_src: /etc/gerrit
+- name: start gerrit service
+  docker_service:
+    project_src: /etc/gerrit
