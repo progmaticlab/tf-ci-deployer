@@ -1,0 +1,12 @@
+centos node:
+
+sudo yum install python-lxml (centos)
+autoconf
+automake
+bzip2
+libtool
+patch
+unzip
+wget
+sudo yum install rpm-build
+sudo yum install kernel
