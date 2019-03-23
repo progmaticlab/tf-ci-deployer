@@ -5,7 +5,7 @@
 
 - name: check if gerrit project already exists
   uri:
-    url: "{{ gerrit_baseurl }}/projects/{{ target_namespace }}%2F{{ project_name }}"
+    url: "{{ gerrit_url }}/projects/{{ target_namespace }}%2F{{ project_name }}"
     method: GET
     headers:
       Cookie: "{{ gerrit_user_cookie }} {{ xsrf_cookie }}"
@@ -16,7 +16,7 @@
 
 - name: delete gerrit project {{ target_namespace }}/{{ project_name }}
   uri:
-    url: "{{ gerrit_baseurl }}/projects/{{ target_namespace }}%2F{{ project_name }}/delete-project~delete"
+    url: "{{ gerrit_url }}/projects/{{ target_namespace }}%2F{{ project_name }}/delete-project~delete"
     method: POST
     body: '{"force":false,"preserve":false}'
     headers:
@@ -30,7 +30,7 @@
 
 - name: create gerrit project {{ target_namespace }}/{{ project_name }}
   uri:
-    url: "{{ gerrit_baseurl }}/projects/{{ target_namespace }}%2F{{ project_name }}"
+    url: "{{ gerrit_url }}/projects/{{ target_namespace }}%2F{{ project_name }}"
     method: PUT
     body: '{}'
     headers:

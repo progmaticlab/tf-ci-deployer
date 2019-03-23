@@ -8,18 +8,12 @@
 - name: collect gerrit oauth2 plugin
   get_url:
     url: https://github.com/davido/gerrit-oauth-provider/releases/download/v2.16.1/gerrit-oauth-provider.jar
-    dest: /etc/gerrit/docker/gerrit-oauth-provider.jar
+    dest: /etc/gerrit/gerrit-oauth-provider.jar
 
 - name: apply gerrit Dockerfile
   template:
     src: Dockerfile.j2
-    dest: /etc/gerrit/docker/Dockerfile
-
-- name: build gerrit docker image
-  docker_image:
-    path: /etc/gerrit/docker
-    name: local/tf-ci-gerrit
-    pull: no
+    dest: /etc/gerrit/gerrit-Dockerfile
 
 - name: apply gerrit docker-compose.yaml
   template:
