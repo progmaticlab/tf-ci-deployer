@@ -21,11 +21,12 @@
   include_role:
     name: gerrit-create-repo
   vars:
+    source_namespace: "{{ item.src_namespace | default(item.dest_namespace) }}"
     target_namespace: "{{ item.dest_namespace }}"
     project_name: "{{ item.project }}"
     gerrit_user_cookie: "{{ login.set_cookie }}"
     xsrf_cookie: "{{ xsrf.set_cookie }}"
   with_items:
-    - {dest_namespace: "aos", project: "test2"}
-    - {dest_namespace: "aos", project: "test3"}
+    - {dest_namespace: "Juniper", project: "contrail-project-config", src_namespace: "progmaticlab"}
+    - {dest_namespace: "Juniper", project: "contrail"}
 

@@ -2,10 +2,10 @@ all:
   children:
     gerrit:
       hosts:
-        192.168.56.103:
+        192.168.56.101:
       vars:
         remote_user: ubuntu
-        gerrit_baseurl: "http://192.168.56.101/"
+        gerrit_baseurl: "http://192.168.56.101"
         gerrit_oauth_client_id: cbb0e2c7098bdbdde3c3
         gerrit_oauth_client_secret: a4356301e414066d94ddd353c04a1e706ae75641
         force_update_repos: true
