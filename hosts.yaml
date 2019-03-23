@@ -22,7 +22,7 @@ all:
         remote_user: ubuntu
     zuul:
       hosts:
-        192.168.56.101:
+        zuul-test.ddns.net:
       vars:
         remote_user: ubuntu
         gerrit_sshd_host: gerrit-test.ddns.net

@@ -1,7 +1,7 @@
 ---
 - name: create authentication cookie for later requests to gerrit
   uri:
-    url: http://192.168.56.101/login/?account_id=1000000
+    url: "{{ gerrit_url }}/login/?account_id=1000000"
     method: GET
     status_code: 302
     follow_redirects: false
@@ -9,7 +9,7 @@
 
 - name: store xsrf token for later requests to gerrit
   uri:
-    url: http://192.168.56.101/
+    url: "{{ gerrit_url }}/"
     method: GET
     headers:
       Cookie: "{{ login.set_cookie }}"
