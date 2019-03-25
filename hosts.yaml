@@ -1,35 +1,30 @@
 all:
+  vars:
+      gerrit_url: "http://192.168.56.101"
   children:
+    centos7-docker-builder:
+      hosts:
+        13.48.6.67:
+      vars:
+        remote_user: centos
     gerrit:
       hosts:
-        192.168.56.103:
+        192.168.56.101:
       vars:
         remote_user: ubuntu
-        gerrit_baseurl: "http://192.168.56.103/"
-#        gerrit_oauth_client_id: cbb0e2c7098bdbdde3c3
-#        gerrit_oauth_client_secret: a4356301e414066d94ddd353c04a1e706ae75641
+        gerrit_oauth_client_id: cbb0e2c7098bdbdde3c3
+        gerrit_oauth_client_secret: a4356301e414066d94ddd353c04a1e706ae75641
+        force_update_repos: true
     nexus:
       hosts:
         13.53.186.64:
       vars:
         remote_user: ubuntu
-    quickstart:
-      hosts:
-        13.48.3.11:
-      vars:
-        remote_user: ubuntu
-        gerrit_url: http://gerrit-test.ddns.net
-        gerrit_http_scheme: http
-        gerrit_http_host: gerrit-test.ddns.net
-        gerrit_http_port: 80
-        gerrit_sshd_host: gerrit-test.ddns.net
-        gerrit_sshd_port: 29418
     zuul:
       hosts:
         zuul-test.ddns.net:
       vars:
         remote_user: ubuntu
-        gerrit_url: http://gerrit-test.ddns.net
         gerrit_sshd_host: gerrit-test.ddns.net
         gerrit_sshd_port: 29418
         gerrit_zuul_password: "secret"
