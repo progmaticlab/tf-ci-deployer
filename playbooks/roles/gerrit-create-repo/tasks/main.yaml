@@ -42,10 +42,8 @@
 
 - name: remove existing git repository {{ target_namespace }}/{{ project_name }}
   shell: "docker exec -it gerrit_gerrit_1 rm -rf /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
-  when:
-    - repo.status == 200
-    - force_update_repos
+  when: repo.status == 404 or force_update_repos
 
 - name: clone git repository {{ target_namespace }}/{{ project_name }}
-  shell: "docker exec -it gerrit_gerrit_1 git clone --mirror https://github.com/{{ source_namespace }}/{{ project_name }} /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
+  shell: "docker exec -it gerrit_gerrit_1 git clone --mirror https://github.com/{{ source_namespace }}/{{ project_name }}.git /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
   when: repo.status == 404 or force_update_repos
