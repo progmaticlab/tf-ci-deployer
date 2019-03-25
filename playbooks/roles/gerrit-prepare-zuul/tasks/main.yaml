@@ -9,30 +9,33 @@
     path: "{{ gerrit_ssh_keys }}"
     state: directory
     recurse: yes
+  delegate_to: localhost
+  become: no
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
 - name: generate admin SSH key for gerrit
   command: "ssh-keygen -f {{ gerrit_ssh_keys }}/admin -N ''"
   args:
     creates: "{{ gerrit_ssh_keys }}/admin.pub"
+  delegate_to: localhost
+  become: no
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
 - name: generate zuul SSH key for gerrit
   command: "ssh-keygen -f {{ gerrit_ssh_keys }}/zuul -N ''"
   args:
     creates: "{{ gerrit_ssh_keys }}/zuul.pub"
+  delegate_to: localhost
+  become: no
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
 - name: generate zuul SSH key for nodepool
   command: "ssh-keygen -f {{ gerrit_ssh_keys }}/nodepool -N ''"
   args:
     creates: "{{ gerrit_ssh_keys }}/nodepool.pub"
+  delegate_to: localhost
+  become: no
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
-
-- name: add nodepool key to node authorized_keys file
-  command: cp "{{ gerrit_ssh_keys }}/nodepool.pub" "{{ gerrit_ssh_keys }}/authorized_keys"
-  args:
-    creates: "{{ gerrit_ssh_keys }}/authorized_keys"
 
 - name: create authentication cookie for later requests to gerrit
   uri:
@@ -56,15 +59,11 @@
   set_fact:
     gerrit_auth: "{{ xsrf.set_cookie | regex_replace('^XSRF_TOKEN=(.*);.*$', '\\1') }}"
 
-- name: collect admin SSH public key
-  shell: "cat {{ gerrit_ssh_keys }}/admin.pub"
-  register: admin_ssh_pub
-
 - name: add admin SSH key to gerrit
   uri:
     url: "{{ gerrit_url }}/accounts/self/sshkeys"
     method: POST
-    body: "{{ admin_ssh_pub.stdout }}"
+    body: "{{ lookup('file', '{{ gerrit_ssh_keys }}/admin.pub') }}"
     status_code: 201
     headers:
       Content-Type: text/plain
@@ -80,11 +79,6 @@
   register: zuul_user_check
   when: gerrit_create_zuul_user is defined and gerrit_create_zuul_user == true
 
-- name: collect zuul SSH public key
-  shell: "cat {{ gerrit_ssh_keys }}/zuul.pub"
-  register: zuul_ssh_pub
-  when: gerrit_create_zuul_user is defined and gerrit_create_zuul_user == true
-
 - name: create zuul gerrit account
   uri:
     url: "{{ gerrit_url }}/accounts/zuul"
@@ -93,7 +87,7 @@
     body_format: json
     body:
       name: zuul
-      ssh_key: "{{ zuul_ssh_pub.stdout }}"
+      ssh_key: "{{ lookup('file', '{{ gerrit_ssh_keys }}/admin.pub') }}"
       groups:
         - "Non-Interactive Users"
     headers:
