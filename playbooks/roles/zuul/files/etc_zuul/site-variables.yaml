@@ -1,6 +1,7 @@
 ---
-zuul_site_mirror_fqdn: 148.251.5.90
+#zuul_site_mirror_fqdn: 148.251.5.90
 #zuul_site_mirror_fqdn: "mirror.{{ nodepool.region | lower }}.{{ nodepool.cloud | lower }}.opencontrail.org"
+zuul_site_mirror_fqdn: nexus-test.ddns.net
 nexus:
   fqdn: nexus-test.ddns.net
 #  ip: '10.84.5.85'
