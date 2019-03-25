@@ -1,6 +1,9 @@
 all:
   vars:
       gerrit_url: "http://192.168.56.101"
+      gerrit_ssh_keys: "/etc/gerrit/ssh"
+      gerrit_ssh_keys_generate: false
+      gerrit_create_zuul_user: true
   children:
     centos7-docker-builder:
       hosts:

@@ -1,0 +1,104 @@
+---
+- name: wait for gerrit service
+  wait_for:
+    host: "{{ gerrit_url | regex_replace('^(http|https)://(.*)$', '\\2') }}"
+    port: 80
+
+- name: "create {{ gerrit_ssh_keys }} directory"
+  file:
+    path: "{{ gerrit_ssh_keys }}"
+    state: directory
+    recurse: yes
+  when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
+
+- name: generate admin SSH key for gerrit
+  command: "ssh-keygen -f {{ gerrit_ssh_keys }}/admin -N ''"
+  args:
+    creates: "{{ gerrit_ssh_keys }}/admin.pub"
+  when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
+
+- name: generate zuul SSH key for gerrit
+  command: "ssh-keygen -f {{ gerrit_ssh_keys }}/zuul -N ''"
+  args:
+    creates: "{{ gerrit_ssh_keys }}/zuul.pub"
+  when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
+
+- name: generate zuul SSH key for nodepool
+  command: "ssh-keygen -f {{ gerrit_ssh_keys }}/nodepool -N ''"
+  args:
+    creates: "{{ gerrit_ssh_keys }}/nodepool.pub"
+  when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
+
+- name: add nodepool key to node authorized_keys file
+  command: cp "{{ gerrit_ssh_keys }}/nodepool.pub" "{{ gerrit_ssh_keys }}/authorized_keys"
+  args:
+    creates: "{{ gerrit_ssh_keys }}/authorized_keys"
+
+- name: create authentication cookie for later requests to gerrit
+  uri:
+    url: "{{ gerrit_url }}/login/?account_id=1000000"
+    method: GET
+    status_code: 302
+    follow_redirects: false
+  register: login
+
+- name: store xsrf token for later requests to gerrit
+  uri:
+    url: "{{ gerrit_url }}/"
+    method: GET
+    headers:
+      Cookie: "{{ login.set_cookie }}"
+    status_code: 200
+    follow_redirects: false
+  register: xsrf
+
+- name: calculate x-gerrit-auth
+  set_fact:
+    gerrit_auth: "{{ xsrf.set_cookie | regex_replace('^XSRF_TOKEN=(.*);.*$', '\\1') }}"
+
+- name: collect admin SSH public key
+  shell: "cat {{ gerrit_ssh_keys }}/admin.pub"
+  register: admin_ssh_pub
+
+- name: add admin SSH key to gerrit
+  uri:
+    url: "{{ gerrit_url }}/accounts/self/sshkeys"
+    method: POST
+    body: "{{ admin_ssh_pub.stdout }}"
+    status_code: 201
+    headers:
+      Content-Type: text/plain
+      Cookie: "{{ login.set_cookie }} {{ xsrf.set_cookie }}"
+      x-gerrit-auth: "{{ gerrit_auth }}"
+
+- name: check if zuul user exists
+  uri:
+    url: "{{ gerrit_url }}/accounts/zuul"
+    status_code: 200, 404
+    headers:
+      Cookie: "{{ login.set_cookie }} {{ xsrf.set_cookie }}"
+  register: zuul_user_check
+  when: gerrit_create_zuul_user is defined and gerrit_create_zuul_user == true
+
+- name: collect zuul SSH public key
+  shell: "cat {{ gerrit_ssh_keys }}/zuul.pub"
+  register: zuul_ssh_pub
+  when: gerrit_create_zuul_user is defined and gerrit_create_zuul_user == true
+
+- name: create zuul gerrit account
+  uri:
+    url: "{{ gerrit_url }}/accounts/zuul"
+    method: PUT
+    status_code: 201
+    body_format: json
+    body:
+      name: zuul
+      ssh_key: "{{ zuul_ssh_pub.stdout }}"
+      groups:
+        - "Non-Interactive Users"
+    headers:
+      Cookie: "{{ login.set_cookie }} {{ xsrf.set_cookie }}"
+      x-gerrit-auth: "{{ gerrit_auth }}"
+  when:
+    - zuul_user_check.status==404
+    - gerrit_create_zuul_user is defined and gerrit_create_zuul_user == true

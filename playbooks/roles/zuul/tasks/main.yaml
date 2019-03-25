@@ -45,6 +45,6 @@
     path: /var/lib/zuul/ssh
     state: directory
 
-#- name: up
-#  docker_service:
-#    project_src: /opt/zuul/
+- name: start zuul service
+  docker_service:
+    project_src: /opt/zuul/

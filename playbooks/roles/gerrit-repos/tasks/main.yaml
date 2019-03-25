@@ -1,4 +1,9 @@
 ---
+- name: wait for gerrit service
+  wait_for:
+    host: "{{ gerrit_url | regex_replace('^(http|https)://(.*)$', '\\2') }}"
+    port: 80
+
 - name: create authentication cookie for later requests to gerrit
   uri:
     url: "{{ gerrit_url }}/login/?account_id=1000000"
