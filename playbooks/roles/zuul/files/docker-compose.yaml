@@ -29,6 +29,7 @@ services:
       - "./etc_zuul:/etc/zuul"
       - "./ssh_keys:/var/ssh"
       - "/var/log/zuul:/var/log/zuul"
+      - "/var/lib/zuul:/var/lib/zuul"
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
@@ -47,6 +48,7 @@ services:
     volumes:
       - "./etc_zuul:/etc/zuul"
       - "/var/log/zuul:/var/log/zuul"
+      - "/var/lib/zuul:/var/lib/zuul"
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
@@ -95,6 +97,7 @@ services:
     volumes:
       - "./etc_nodepool:/etc/nodepool"
       - "/var/log/zuul:/var/log/zuul"
+      - "/var/lib/zuul:/var/lib/zuul"
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
@@ -123,6 +126,7 @@ services:
       - "8080:8080"
     volumes:
       - "/var/log/zuul:/var/log/zuul"
+      - "/var/lib/zuul:/var/lib/zuul"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
 
