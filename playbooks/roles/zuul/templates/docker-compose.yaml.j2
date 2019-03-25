@@ -21,8 +21,6 @@ services:
     command: "zuul-scheduler -d"
 #    command: "tail -f /dev/null"
     image: progmaticlab/zuul-scheduler:2.5.3
-    ports:
-      - "8001:8001"
     pid: host
     ipc: host
     volumes:
@@ -40,8 +38,6 @@ services:
     depends_on:
       - scheduler
       - mysql
-    ports:
-      - "9000:9000"
     image: progmaticlab/zuul-web:2.5.3
     pid: host
     ipc: host
@@ -58,8 +54,6 @@ services:
       no_proxy: "${no_proxy}"
 #    command: "sh -c 'mkdir /var/log/zuul && zuul-executor -d'"
     command: "zuul-executor -d"
-    ports:
-      - "79:7900"
     depends_on:
       - scheduler
     image: progmaticlab/zuul-executor:2.5.3
@@ -84,7 +78,6 @@ services:
         https_proxy: "${http_proxy}"
         no_proxy: "${no_proxy}"
     volumes:
-      - "./ssh_node:/root/.ssh"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
   launcher:
@@ -101,8 +94,6 @@ services:
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-    ports:
-      - "8022:8022"
   logs:
     build:
       dockerfile: logs-Dockerfile
@@ -112,7 +103,7 @@ services:
         https_proxy: "${http_proxy}"
         no_proxy: "${no_proxy}"
     ports:
-      - "80:80"
+      - "{{ zuul_logs_port }}:80"
     volumes:
       - "/var/www/logs:/usr/local/apache2/htdocs"
   front:
@@ -123,7 +114,7 @@ services:
       - scheduler
       - web
     ports:
-      - "8080:8080"
+      - "{{ zuul_front_port }}:8080"
     volumes:
       - "/var/log/zuul:/var/log/zuul"
       - "/var/lib/zuul:/var/lib/zuul"

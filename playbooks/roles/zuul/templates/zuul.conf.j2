@@ -54,8 +54,7 @@ driver=gerrit
 server=gerrit-test.ddns.net
 sshkey=/var/ssh/zuul
 user=zuul
-password=secret
-baseurl=http://gerrit-test.ddns.net
+baseurl={{ gerrit_url }}
 auth_type=basic
 
 [connection "zuul-ci.org"]

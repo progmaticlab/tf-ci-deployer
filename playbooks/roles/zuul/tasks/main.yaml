@@ -11,8 +11,12 @@
     
 - name: copy config files
   copy:
-    src: ./
-    dest: /opt/zuul/
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    force: true
+  with_items:
+    - {src: "./", dest: "/opt/zuul/"}
+    - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/zuul/ssh_keys"}
 
 - name: protect private keys (admin)
   file:
@@ -44,6 +48,16 @@
   file:
     path: /var/lib/zuul/ssh
     state: directory
+
+- name: apply zuul.conf
+  template:
+    src: zuul.conf.j2
+    dest: /opt/zuul/etc_zuul/zuul.conf
+
+- name: apply docker-compose.yaml
+  template:
+    src: docker-compose.yaml.j2
+    dest: /opt/zuul/docker-compose.yaml
 
 - name: start zuul service
   docker_service:
