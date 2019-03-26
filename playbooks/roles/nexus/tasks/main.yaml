@@ -4,6 +4,22 @@
     path: /etc/nexus
     state: directory
 
+- name: create share directory
+  file:
+    path: "/home/{{ remote_user }}/zuul"
+    state: directory
+
+- name: Ensure docker group is present
+  group:
+    name: docker
+    state: present
+
+- name: Ensure remote user is in docker group
+  user:
+    name: "{{ remote_user }}"
+    state: present
+    groups: "docker"
+
 - name: apply docker-compose.yaml
   template:
     src: docker-compose.yaml.j2
@@ -12,3 +28,4 @@
 - name: start nexus service
   docker_service:
     project_src: /etc/nexus
+
