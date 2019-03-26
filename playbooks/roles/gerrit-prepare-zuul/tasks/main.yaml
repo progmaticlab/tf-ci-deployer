@@ -1,7 +1,7 @@
 ---
 - name: wait for gerrit service
   wait_for:
-    host: "{{ gerrit_url | regex_replace('^(http|https)://(.*)$', '\\2') }}"
+    host: "{{ gerrit_host }}"
     port: 80
 
 - name: "create {{ gerrit_ssh_keys }} directory"
@@ -14,25 +14,19 @@
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
 - name: generate admin SSH key for gerrit
-  command: "ssh-keygen -f {{ gerrit_ssh_keys }}/admin -N ''"
-  args:
-    creates: "{{ gerrit_ssh_keys }}/admin.pub"
+  command: "ssh-keygen -t rsa -m pem -f {{ gerrit_ssh_keys }}/admin_rsa -N '' -q"
   delegate_to: localhost
   become: no
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
 - name: generate zuul SSH key for gerrit
-  command: "ssh-keygen -f {{ gerrit_ssh_keys }}/zuul -N ''"
-  args:
-    creates: "{{ gerrit_ssh_keys }}/zuul.pub"
+  command: "ssh-keygen -t rsa -m pem -f {{ gerrit_ssh_keys }}/zuul_rsa -N '' -q"
   delegate_to: localhost
   become: no
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
 - name: generate zuul SSH key for nodepool
-  command: "ssh-keygen -f {{ gerrit_ssh_keys }}/nodepool -N ''"
-  args:
-    creates: "{{ gerrit_ssh_keys }}/nodepool.pub"
+  command: "ssh-keygen -t rsa -m pem -f {{ gerrit_ssh_keys }}/nodepool_rsa -N '' -q"
   delegate_to: localhost
   become: no
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
@@ -63,7 +57,7 @@
   uri:
     url: "{{ gerrit_url }}/accounts/self/sshkeys"
     method: POST
-    body: "{{ lookup('file', '{{ gerrit_ssh_keys }}/admin.pub') }}"
+    body: "{{ lookup('file', '{{ gerrit_ssh_keys }}/admin_rsa.pub') }}"
     status_code: 201
     headers:
       Content-Type: text/plain
@@ -94,5 +88,19 @@
       Cookie: "{{ login.set_cookie }} {{ xsrf.set_cookie }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
   when:
-    - zuul_user_check.status==404
+    - zuul_user_check.status == 404
     - gerrit_create_zuul_user is defined and gerrit_create_zuul_user == true
+
+- name: add zuul SSH key to gerrit
+  uri:
+    url: "{{ gerrit_url }}/accounts/zuul/sshkeys"
+    method: POST
+    body: "{{ lookup('file', '{{ gerrit_ssh_keys }}/zuul_rsa.pub') }}"
+    status_code: 201
+    headers:
+      Content-Type: text/plain
+      Cookie: "{{ login.set_cookie }} {{ xsrf.set_cookie }}"
+      x-gerrit-auth: "{{ gerrit_auth }}"
+  when:
+    - zuul_user_check.status == 200
+    - gerrit_ssh_keys_generate == true

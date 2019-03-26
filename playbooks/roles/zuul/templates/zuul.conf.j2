@@ -51,12 +51,10 @@ untrusted_rw_paths=
 [connection "gerrit"]
 name=gerrit
 driver=gerrit
-server=gerrit-test.ddns.net
-sshkey=/var/ssh/zuul
+server={{ gerrit_host }}
+sshkey=/var/ssh/zuul_rsa
 user=zuul
-password=secret
-baseurl=http://gerrit-test.ddns.net
-auth_type=basic
+baseurl={{ gerrit_url }}
 
 [connection "zuul-ci.org"]
 name=zuul-ci

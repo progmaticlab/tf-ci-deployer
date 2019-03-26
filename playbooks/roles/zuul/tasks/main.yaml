@@ -11,22 +11,26 @@
     
 - name: copy config files
   copy:
-    src: ./
-    dest: /opt/zuul/
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    force: true
+  with_items:
+    - {src: "./", dest: "/opt/zuul/"}
+    - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/zuul/ssh_keys"}
 
 - name: protect private keys (admin)
   file:
-    path: /opt/zuul/ssh_keys/admin
+    path: /opt/zuul/ssh_keys/admin_rsa
     mode: 0600
 
 - name: protect private keys (zuul)
   file:
-    path: /opt/zuul/ssh_keys/zuul
+    path: /opt/zuul/ssh_keys/zuul_rsa
     mode: 0600
 
 - name: protect private keys (nodepool)
   file:
-    path: /opt/zuul/ssh_keys/nodepool
+    path: /opt/zuul/ssh_keys/nodepool_rsa
     mode: 0600
 
 - name: create /var/lib/zuul/build directory
@@ -44,6 +48,27 @@
   file:
     path: /var/lib/zuul/ssh
     state: directory
+
+- name: apply zuul.conf
+  template:
+    src: zuul.conf.j2
+    dest: /opt/zuul/etc_zuul/zuul.conf
+
+- name: create /opt/zuul/.ssh directory
+  file:
+    path: /opt/zuul/.ssh
+    state: directory
+
+- name: construct known_hosts for gerrit
+  shell: "ssh-keyscan -p {{ item.port }} -t ecdsa {{ item.host }} >> /opt/zuul/.ssh/known_hosts"
+  with_items:
+    - {host: "{{ gerrit_host }}", port: 22}
+    - {host: "{{ gerrit_host }}", port: 29418}
+
+- name: apply docker-compose.yaml
+  template:
+    src: docker-compose.yaml.j2
+    dest: /opt/zuul/docker-compose.yaml
 
 - name: start zuul service
   docker_service:
