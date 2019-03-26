@@ -51,6 +51,7 @@ Initial zuul host configuration is placed in ansible inventory file
 ```
 all:
   vars:
+    zuul_build_with_docker: false
     gerrit_host: "gerrit.tungsten.io"
     gerrit_url: "http://{{ gerrit_host }}"
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
@@ -69,6 +70,7 @@ There are several variables there:
   - **gerrit_url** stores gerrit's external url
   - **zuul_front_port** stores zuul webpage port
   - **zuul_logs_port** stores zuul logs server port
+  - **zuul_build_with_docker** used special zuul configuration projects to build Tungsten Fabric with docker containers
 
 To deploy zuul service, run:
 ```

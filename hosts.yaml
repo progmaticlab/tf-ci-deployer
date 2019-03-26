@@ -7,7 +7,7 @@ all:
         remote_user: centos
     gerrit:
       hosts:
-        192.168.56.101:
+        gerrit-test.ddns.net:
       vars:
         remote_user: ubuntu
         gerrit_oauth_client_id: cbb0e2c7098bdbdde3c3
@@ -16,7 +16,7 @@ all:
         force_update_repos: true
     nexus:
       hosts:
-        13.53.186.64:
+        nexus-test.ddns.net:
       vars:
         remote_user: ubuntu
     zuul:
@@ -25,17 +25,18 @@ all:
       vars:
         remote_user: ubuntu
         zuul_front_port: 8080
-        zuul_logs_port: 8123
+        zuul_logs_port: 80
     init:
       hosts:
         zuul-test.ddns.net:
           remote_user: ubuntu
   vars:
-    gerrit_host: "192.168.56.101"
+    zuul_build_with_docker: false
+    gerrit_host: "gerrit-test.ddns.net"
     gerrit_url: "http://{{ gerrit_host }}"
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
-    gerrit_ssh_keys_generate: true
-    gerrit_create_zuul_user: true
+    gerrit_ssh_keys_generate: false
+    gerrit_create_zuul_user: false
     gerrit_repos:
       - {dest_namespace: "Juniper", project: "contrail"}
       - {dest_namespace: "Juniper", project: "contrail-analytics"}
@@ -101,6 +102,9 @@ all:
       - {dest_namespace: "Juniper", project: "openstack-helm"}
       - {dest_namespace: "Juniper", project: "openstack-helm-infra"}
       - {dest_namespace: "Juniper", project: "puppet-contrail"}
+      - {dest_namespace: "Juniper", project: "tf-ci-config-docker", src_namespace: "progmaticlab"}
+      - {dest_namespace: "Juniper", project: "tf-ci-zuul-jobs-docker", src_namespace: "progmaticlab"}
+      - {dest_namespace: "Juniper", project: "tf-third-party-packages", src_namespace: "progmaticlab"}
       - {dest_namespace: "Juniper", project: "vijava"}
       - {dest_namespace: "Juniper", project: "zuul", src_namespace: "progmaticlab"}
       - {dest_namespace: "Juniper", project: "zuul-jobs"}

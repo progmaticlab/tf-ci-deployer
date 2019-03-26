@@ -49,10 +49,34 @@
     path: /var/lib/zuul/ssh
     state: directory
 
-- name: apply zuul.conf
+- set_fact:
+    zuul_config_project: "Juniper/contrail-project-config"
+    zuul_zuul_jobs_project: "Juniper/contrail-zuul-jobs"
+    zuul_third_party_packages: "Juniper/contrail-third-party-packages"
+
+- name: setup zuul config project
+  set_fact:
+    zuul_config_project: "Juniper/tf-ci-config-docker"
+    zuul_zuul_jobs_project: "Juniper/tf-ci-zuul-jobs-docker"
+    zuul_third_party_packages: "Juniper/tf-third-party-packages"
+  when:
+    - zuul_build_with_docker is defined
+    - zuul_build_with_docker == true
+
+- name: trace zuul config project
+  debug:
+    msg: |
+      zuul_config_project: {{ zuul_config_project }}
+      zuul_zuul_jobs_project: {{ zuul_zuul_jobs_project }}
+      zuul_third_party_packages: {{ zuul_third_party_packages }}
+
+- name: apply zuul configuration
   template:
-    src: zuul.conf.j2
-    dest: /opt/zuul/etc_zuul/zuul.conf
+    src: "{{ item }}.j2"
+    dest: "/opt/zuul/etc_zuul/{{ item }}"
+  with_items:
+    - zuul.conf
+    - main.yaml
 
 - name: create /opt/zuul/.ssh directory
   file:
