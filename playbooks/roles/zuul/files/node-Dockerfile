@@ -3,4 +3,4 @@ FROM rastasheep/ubuntu-sshd
 RUN apt-get update && \
     apt-get -y install python rsync
 
-COPY ssh_keys/nodepool_rsa.pub /root/.ssh/
+COPY ssh_keys/nodepool_rsa.pub /root/.ssh/authorized_keys

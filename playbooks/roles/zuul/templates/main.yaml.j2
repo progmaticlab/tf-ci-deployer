@@ -4,11 +4,11 @@
     source:
       gerrit:
         config-projects:
-          - Juniper/contrail-project-config
+          - {{ zuul_config_project }}
         untrusted-projects:
           - Juniper/contrail
-          - Juniper/contrail-zuul-jobs:
-              shadow: Juniper/contrail-project-config
+          - {{ zuul_zuul_jobs_project }}:
+              shadow: {{ zuul_config_project }}
           - Juniper/contrail-analytics
           - Juniper/contrail-ansible
           - Juniper/contrail-ansible-deployer
@@ -48,7 +48,7 @@
           - Juniper/contrail-test-ci
           - Juniper/contrail-third-party
           - Juniper/contrail-third-party-cache
-          - Juniper/contrail-third-party-packages
+          - {{ zuul_third_party_packages }}
           - Juniper/contrail-tripleo-heat-templates
           - Juniper/contrail-tripleo-puppet
           - Juniper/contrail-vro-plugin

@@ -25,41 +25,53 @@
     - {src: "./", dest: "/opt/zuul/"}
     - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/zuul/ssh_keys"}
 
-- name: protect private keys (admin)
+- name: protect SSH private keys
   file:
-    path: /opt/zuul/ssh_keys/admin_rsa
+    path: /opt/zuul/ssh_keys/{{ item }}_rsa
     mode: 0600
+  with_items:
+    - admin
+    - zuul
+    - nodepool
 
-- name: protect private keys (zuul)
+- name: create /var/lib/zuul/ directories
   file:
-    path: /opt/zuul/ssh_keys/zuul_rsa
-    mode: 0600
-
-- name: protect private keys (nodepool)
-  file:
-    path: /opt/zuul/ssh_keys/nodepool_rsa
-    mode: 0600
-
-- name: create /var/lib/zuul/build directory
-  file:
-    path: /var/lib/zuul/builds
+    path: /var/lib/zuul/builds/{{ item }}
     state: directory
     recurse: yes
+  with_items:
+    - build
+    - git
+    - ssh
 
-- name: create /var/lib/zuul/git directory
-  file:
-    path: /var/lib/zuul/git
-    state: directory
+- set_fact:
+    zuul_config_project: "Juniper/contrail-project-config"
+    zuul_zuul_jobs_project: "Juniper/contrail-zuul-jobs"
+    zuul_third_party_packages: "Juniper/contrail-third-party-packages"
 
-- name: create /var/lib/zuul/ssh directory
-  file:
-    path: /var/lib/zuul/ssh
-    state: directory
+- name: setup zuul config project
+  set_fact:
+    zuul_config_project: "Juniper/tf-ci-config-docker"
+    zuul_zuul_jobs_project: "Juniper/tf-ci-zuul-jobs-docker"
+    zuul_third_party_packages: "Juniper/tf-third-party-packages"
+  when:
+    - zuul_build_with_docker is defined
+    - zuul_build_with_docker == true
 
-- name: apply zuul.conf
+- name: trace zuul config project
+  debug:
+    msg: |
+      zuul_config_project: {{ zuul_config_project }}
+      zuul_zuul_jobs_project: {{ zuul_zuul_jobs_project }}
+      zuul_third_party_packages: {{ zuul_third_party_packages }}
+
+- name: apply zuul configuration
   template:
-    src: zuul.conf.j2
-    dest: /opt/zuul/etc_zuul/zuul.conf
+    src: "{{ item }}.j2"
+    dest: "/opt/zuul/etc_zuul/{{ item }}"
+  with_items:
+    - zuul.conf
+    - main.yaml
 
 - name: create /opt/zuul/.ssh directory
   file:
