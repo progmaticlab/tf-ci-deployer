@@ -18,36 +18,24 @@
     - {src: "./", dest: "/opt/zuul/"}
     - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/zuul/ssh_keys"}
 
-- name: protect private keys (admin)
+- name: protect SSH private keys
   file:
-    path: /opt/zuul/ssh_keys/admin_rsa
+    path: /opt/zuul/ssh_keys/{{ item }}_rsa
     mode: 0600
+  with_items:
+    - admin
+    - zuul
+    - nodepool
 
-- name: protect private keys (zuul)
+- name: create /var/lib/zuul/ directories
   file:
-    path: /opt/zuul/ssh_keys/zuul_rsa
-    mode: 0600
-
-- name: protect private keys (nodepool)
-  file:
-    path: /opt/zuul/ssh_keys/nodepool_rsa
-    mode: 0600
-
-- name: create /var/lib/zuul/build directory
-  file:
-    path: /var/lib/zuul/builds
+    path: /var/lib/zuul/builds/{{ item }}
     state: directory
     recurse: yes
-
-- name: create /var/lib/zuul/git directory
-  file:
-    path: /var/lib/zuul/git
-    state: directory
-
-- name: create /var/lib/zuul/ssh directory
-  file:
-    path: /var/lib/zuul/ssh
-    state: directory
+  with_items:
+    - build
+    - git
+    - ssh
 
 - set_fact:
     zuul_config_project: "Juniper/contrail-project-config"

@@ -13,22 +13,14 @@
   become: no
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
-- name: generate admin SSH key for gerrit
-  command: "ssh-keygen -t rsa -m pem -f {{ gerrit_ssh_keys }}/admin_rsa -N '' -q"
+- name: generate SSH keys for gerrit
+  command: "ssh-keygen -t rsa -m pem -f {{ gerrit_ssh_keys }}/{{ item }}_rsa -N '' -q"
   delegate_to: localhost
   become: no
-  when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
-
-- name: generate zuul SSH key for gerrit
-  command: "ssh-keygen -t rsa -m pem -f {{ gerrit_ssh_keys }}/zuul_rsa -N '' -q"
-  delegate_to: localhost
-  become: no
-  when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
-
-- name: generate zuul SSH key for nodepool
-  command: "ssh-keygen -t rsa -m pem -f {{ gerrit_ssh_keys }}/nodepool_rsa -N '' -q"
-  delegate_to: localhost
-  become: no
+  with_items:
+    - admin
+    - zuul
+    - nodepool
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
 - name: create authentication cookie for later requests to gerrit
