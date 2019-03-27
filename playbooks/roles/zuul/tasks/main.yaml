@@ -8,7 +8,14 @@
     name: docker.service
     state: started
     enabled: yes
-    
+
+- name: Ensure zuul user exists
+  user:
+    name: "zuul"
+    state: present
+    groups: docker
+    append: yes
+
 - name: copy config files
   copy:
     src: "{{ item.src }}"
