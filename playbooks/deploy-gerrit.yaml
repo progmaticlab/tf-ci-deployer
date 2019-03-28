@@ -6,3 +6,6 @@
     - docker
     - gerrit
     - gerrit-prepare-zuul
+  pre_tasks:
+  - name: install python for ansible
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)

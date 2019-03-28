@@ -2,7 +2,7 @@
 - name: wait for gerrit service
   wait_for:
     host: "{{ gerrit_host }}"
-    port: 80
+    port: "{{ gerrit_front_port }}"
 
 - name: "create {{ gerrit_ssh_keys }} directory"
   file:
@@ -14,7 +14,7 @@
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
 - name: generate SSH keys for gerrit
-  command: "ssh-keygen -t rsa -m pem -f {{ gerrit_ssh_keys }}/{{ item }}_rsa -N '' -q"
+  command: "ssh-keygen -m pem -f {{ gerrit_ssh_keys }}/{{ item }}_rsa -N '' -q"
   delegate_to: localhost
   become: no
   with_items:
@@ -23,27 +23,9 @@
     - nodepool
   when: gerrit_ssh_keys_generate is defined and gerrit_ssh_keys_generate == true
 
-- name: create authentication cookie for later requests to gerrit
-  uri:
-    url: "{{ gerrit_url }}/login/?account_id=1000000"
-    method: GET
-    status_code: 302
-    follow_redirects: false
-  register: login
-
-- name: store xsrf token for later requests to gerrit
-  uri:
-    url: "{{ gerrit_url }}/"
-    method: GET
-    headers:
-      Cookie: "{{ login.set_cookie }}"
-    status_code: 200
-    follow_redirects: false
-  register: xsrf
-
-- name: calculate x-gerrit-auth
-  set_fact:
-    gerrit_auth: "{{ xsrf.set_cookie | regex_replace('^XSRF_TOKEN=(.*);.*$', '\\1') }}"
+- name: authenticate to gerrit
+  include_role:
+    name: gerrit-prepare-urllib
 
 - name: add admin SSH key to gerrit
   uri:
@@ -53,7 +35,7 @@
     status_code: 201
     headers:
       Content-Type: text/plain
-      Cookie: "{{ login.set_cookie }} {{ xsrf.set_cookie }}"
+      Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
 
 - name: check if zuul user exists
@@ -61,7 +43,7 @@
     url: "{{ gerrit_url }}/accounts/zuul"
     status_code: 200, 404
     headers:
-      Cookie: "{{ login.set_cookie }} {{ xsrf.set_cookie }}"
+      Cookie: "{{ gerrit_cookies }}"
   register: zuul_user_check
   when: gerrit_create_zuul_user is defined and gerrit_create_zuul_user == true
 
@@ -73,11 +55,11 @@
     body_format: json
     body:
       name: zuul
-      ssh_key: "{{ lookup('file', '{{ gerrit_ssh_keys }}/admin.pub') }}"
+      ssh_key: "{{ lookup('file', '{{ gerrit_ssh_keys }}/zuul_rsa.pub') }}"
       groups:
         - "Non-Interactive Users"
     headers:
-      Cookie: "{{ login.set_cookie }} {{ xsrf.set_cookie }}"
+      Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
   when:
     - zuul_user_check.status == 404
@@ -91,7 +73,7 @@
     status_code: 201
     headers:
       Content-Type: text/plain
-      Cookie: "{{ login.set_cookie }} {{ xsrf.set_cookie }}"
+      Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
   when:
     - zuul_user_check.status == 200

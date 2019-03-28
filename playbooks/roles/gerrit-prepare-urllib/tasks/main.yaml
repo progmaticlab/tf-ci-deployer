@@ -1,0 +1,36 @@
+---
+- name: wait for gerrit service
+  wait_for:
+    host: "{{ gerrit_host }}"
+    port: "{{ gerrit_front_port }}"
+
+- name: get gerrit first login screen
+  uri:
+    url: "{{ gerrit_url }}/a/accounts/self/sshkeys"
+    method: GET
+    user: admin
+    password: secret
+  ignore_errors: true
+
+- name: create authentication cookie for later requests to gerrit
+  uri:
+    url: "{{ gerrit_url }}/login/?account_id=1000000"
+    method: GET
+    status_code: 302
+    follow_redirects: false
+  register: gerrit_login
+
+- name: store xsrf token for later requests to gerrit
+  uri:
+    url: "{{ gerrit_url }}/"
+    method: GET
+    headers:
+      Cookie: "{{ gerrit_login.set_cookie }}"
+    status_code: 200
+    follow_redirects: false
+  register: gerrit_xsrf
+
+- name: calculate x-gerrit-auth
+  set_fact:
+    gerrit_cookies: "{{ gerrit_login.set_cookie }} {{ gerrit_xsrf.set_cookie }}"
+    gerrit_auth: "{{ gerrit_xsrf.set_cookie | regex_replace('^XSRF_TOKEN=(.*);.*$', '\\1') }}"

@@ -1,14 +1,11 @@
 ---
-- name: calculate x-gerrit-auth
-  set_fact:
-    gerrit_auth: "{{ xsrf_cookie | regex_replace('^XSRF_TOKEN=(.*);.*$', '\\1') }}"
 
 - name: check if gerrit project already exists
   uri:
     url: "{{ gerrit_url }}/projects/{{ target_namespace }}%2F{{ project_name }}"
     method: GET
     headers:
-      Cookie: "{{ gerrit_user_cookie }} {{ xsrf_cookie }}"
+      Cookie: "{{ gerrit_cookies }}"
     status_code:
       - 200
       - 404
@@ -18,10 +15,10 @@
   uri:
     url: "{{ gerrit_url }}/projects/{{ target_namespace }}%2F{{ project_name }}/delete-project~delete"
     method: POST
+    body_format: json
     body: '{"force":false,"preserve":false}'
     headers:
-      Cookie: "{{ gerrit_user_cookie }} {{ xsrf_cookie }}"
-      Content-Type: "application/json"
+      Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
     status_code: 204
   when:
@@ -32,10 +29,10 @@
   uri:
     url: "{{ gerrit_url }}/projects/{{ target_namespace }}%2F{{ project_name }}"
     method: PUT
+    body_format: json
     body: '{}'
     headers:
-      Cookie: "{{ gerrit_user_cookie }} {{ xsrf_cookie }}"
-      Content-Type: "application/json"
+      Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
     status_code: 201
   when: repo.status == 404 or force_update_repos

@@ -77,6 +77,11 @@
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}
 
+- name: construct authorized_keys for zuul
+  shell: "cat /opt/zuul/ssh_keys/{{ item }}_rsa.pub >> /opt/zuul/.ssh/authorized_keys"
+  with_items:
+    - nodepool
+
 - name: apply docker-compose.yaml
   template:
     src: docker-compose.yaml.j2

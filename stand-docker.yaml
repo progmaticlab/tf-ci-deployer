@@ -7,12 +7,11 @@ all:
         remote_user: centos
     gerrit:
       hosts:
-        gerrit-test.ddns.net:
+        13.48.6.213:
       vars:
         remote_user: ubuntu
         gerrit_oauth_client_id: cbb0e2c7098bdbdde3c3
         gerrit_oauth_client_secret: a4356301e414066d94ddd353c04a1e706ae75641
-        gerrit_front_port: 80
         force_update_repos: true
     nexus:
       hosts:
@@ -21,19 +20,19 @@ all:
         remote_user: ubuntu
     zuul:
       hosts:
-        zuul-test.ddns.net:
+        13.53.136.254:
       vars:
         remote_user: ubuntu
         zuul_front_port: 8080
-        zuul_logs_port: 80
+        zuul_logs_port: 8082
   vars:
-    zuul_build_with_docker: false
-    gerrit_host: "gerrit-test.ddns.net"
+    zuul_build_with_docker: true
+    gerrit_host: "13.48.6.213"
     gerrit_front_port: 80
     gerrit_url: "http://{{ gerrit_host }}:{{ gerrit_front_port }}"
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
-    gerrit_ssh_keys_generate: false
-    gerrit_create_zuul_user: false
+    gerrit_ssh_keys_generate: true
+    gerrit_create_zuul_user: true
     gerrit_repos:
       - {dest_namespace: "Juniper", project: "contrail"}
       - {dest_namespace: "Juniper", project: "contrail-analytics"}

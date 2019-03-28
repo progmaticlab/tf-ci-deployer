@@ -1,26 +1,7 @@
 ---
-- name: wait for gerrit service
-  wait_for:
-    host: "{{ gerrit_host }}"
-    port: 80
-
-- name: create authentication cookie for later requests to gerrit
-  uri:
-    url: "{{ gerrit_url }}/login/?account_id=1000000"
-    method: GET
-    status_code: 302
-    follow_redirects: false
-  register: login
-
-- name: store xsrf token for later requests to gerrit
-  uri:
-    url: "{{ gerrit_url }}/"
-    method: GET
-    headers:
-      Cookie: "{{ login.set_cookie }}"
-    status_code: 200
-    follow_redirects: false
-  register: xsrf
+- name: authenticate to gerrit
+  include_role:
+    name: gerrit-prepare-urllib
 
 - name: create gerrit repositories
   include_role:

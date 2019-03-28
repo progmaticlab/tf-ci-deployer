@@ -1,8 +1,0 @@
----
-- hosts: init
-  remote_user: "{{ remote_user }}"
-  become: yes
-  gather_facts: False
-  pre_tasks:
-  - name: Install python for Ansible
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)

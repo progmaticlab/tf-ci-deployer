@@ -79,6 +79,7 @@ services:
         https_proxy: "${http_proxy}"
         no_proxy: "${no_proxy}"
     volumes:
+      - "./.ssh:/root/.ssh"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
   launcher:
