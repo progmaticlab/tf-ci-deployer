@@ -2,7 +2,7 @@ all:
   children:
     centos7-docker-builder:
       hosts:
-        13.48.6.67:
+        13.53.92.48:
       vars:
         remote_user: centos
     gerrit:
@@ -27,6 +27,7 @@ all:
         zuul_logs_port: 8082
   vars:
     zuul_build_with_docker: true
+    node_docker_port: 2375
     gerrit_host: "13.48.6.213"
     gerrit_front_port: 80
     gerrit_url: "http://{{ gerrit_host }}:{{ gerrit_front_port }}"

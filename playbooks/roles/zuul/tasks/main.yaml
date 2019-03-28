@@ -44,6 +44,13 @@
     - git
     - ssh
 
+- name: create var/www/logs/ directory
+  file:
+    path: var/www/logs
+    state: directory
+    recurse: yes
+    mode: 0777
+
 - set_fact:
     zuul_config_project: "Juniper/contrail-project-config"
     zuul_zuul_jobs_project: "Juniper/contrail-zuul-jobs"
