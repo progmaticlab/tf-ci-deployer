@@ -36,7 +36,7 @@
 
 - name: create /var/lib/zuul/ directories
   file:
-    path: /var/lib/zuul/builds/{{ item }}
+    path: /var/lib/zuul/{{ item }}
     state: directory
     recurse: yes
   with_items:
