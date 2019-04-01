@@ -20,5 +20,10 @@ docker_registry:
   port: 5000
 
 sanity:
+  docker_registry_port: 
   control_plane_interface: ens5
   data_plane_interface: ens6
+# settings to avoid creation of sanity docker repos
+#  docker:
+#    port: 32810
+#    fqdn: nexus-test.ddns.net
