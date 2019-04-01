@@ -18,3 +18,7 @@ nexus:
 docker_registry:
   fqdn: nexus-test.ddns.net
   port: 5000
+
+sanity:
+  control_plane_interface: ens5
+  data_plane_interface: ens6
