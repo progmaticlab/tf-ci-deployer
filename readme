@@ -10,3 +10,28 @@ unzip
 wget
 sudo yum install rpm-build
 sudo yum install kernel
+
+ubuntu trusty node:
+
+git
+devscripts
+python-lxml
+autoconf
+libtool
+equivs
+scons
+sudo apt-get install libboost-all-dev
+libcurl4-openssl-dev
+liblog4cplus-dev
+sudo apt-get install google-mock
+sudo apt-get install libgoogle-perftools-dev
+cmake
+install from deb:
+    http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/
+    http://downloads.datastax.com/cpp-driver/ubuntu/14.04/cassandra/v2.4.0/
+install from source:
+    https://github.com/edenhill/librdkafka
+sudo add-apt-repository ppa:openjdk-r/ppa
+sudo apt-get update
+sudo apt-get install openjdk-8-jdk
+java -version  // "1.8.0_171"
