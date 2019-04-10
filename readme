@@ -1,37 +1,26 @@
 centos node:
 
-sudo yum install python-lxml (centos)
-autoconf
-automake
-bzip2
-libtool
-patch
-unzip
-wget
-sudo yum install rpm-build
-sudo yum install kernel
+sudo su
+sudo yum install python-lxml autoconf automake bzip2 libtool patch unzip wget rpm-build kernel
 
-ubuntu trusty node:
 
-git
-devscripts
-python-lxml
-autoconf
-libtool
-equivs
-scons
-sudo apt-get install libboost-all-dev
-libcurl4-openssl-dev
-liblog4cplus-dev
-sudo apt-get install google-mock
-sudo apt-get install libgoogle-perftools-dev
-cmake
-install from deb:
-    http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/
-    http://downloads.datastax.com/cpp-driver/ubuntu/14.04/cassandra/v2.4.0/
+
+ubuntu trusty/xenial node:
+
+sudo su
+apt-get update
+apt-get install -y git devscripts python-lxml autoconf libtool equivs scons libboost-all-dev libcurl4-openssl-dev liblog4cplus-dev google-mock libgoogle-perftools-dev cmake
+source /etc/lsb-release
+wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/${DISTRIB_RELEASE}/dependencies/libuv/v1.8.0/libuv_1.8.0-1_amd64.deb
+wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/${DISTRIB_RELEASE}/dependencies/libuv/v1.8.0/libuv-dev_1.8.0-1_amd64.deb
+wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/${DISTRIB_RELEASE}/cassandra/v2.4.0/cassandra-cpp-driver_2.4.0-1_amd64.deb
+wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/${DISTRIB_RELEASE}/cassandra/v2.4.0/cassandra-cpp-driver-dev_2.4.0-1_amd64.deb
+apt-get install ./libuv_1.8.0-1_amd64.deb ./libuv-dev_1.8.0-1_amd64.deb ./cassandra-cpp-driver-dev_2.4.0-1_amd64.deb ./cassandra-cpp-driver_2.4.0-1_amd64.deb
+
 install from source:
     https://github.com/edenhill/librdkafka
-sudo add-apt-repository ppa:openjdk-r/ppa
-sudo apt-get update
-sudo apt-get install openjdk-8-jdk
+
+add-apt-repository ppa:openjdk-r/ppa
+apt-get update
+apt-get install -y openjdk-8-jdk
 java -version  // "1.8.0_171"
