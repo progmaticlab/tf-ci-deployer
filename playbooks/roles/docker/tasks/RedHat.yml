@@ -9,7 +9,7 @@
 
 - name: install docker
   yum:
-    name: docker-ce-18.03.1.ce
+    name: docker-ce-18.06.3.ce
 
 - name: install easy_install
   package:

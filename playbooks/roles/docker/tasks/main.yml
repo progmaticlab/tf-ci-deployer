@@ -29,6 +29,9 @@
 - name: start docker daemon
   include: "start_docker_{{ ansible_system }}.yml"
 
+- name: add live-restore option
+  include: "live_restore_{{ ansible_system }}.yml
+
 - name: install python compose
   pip:
     name: docker-compose

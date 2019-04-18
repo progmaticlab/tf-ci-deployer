@@ -1,8 +1,0 @@
-
----
-- hosts: centos7-docker-builder
-  remote_user: "{{ remote_user }}"
-  become: yes
-  roles:
-#    - docker
-    - centos7-docker-builder

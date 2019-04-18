@@ -1,0 +1,47 @@
+---
+
+- name: create docker config directory
+  file:
+    path: "{{ nix_docker_config_directory }}"
+    state: directory
+    mode: 0755
+
+- name: ensure docker config file exists
+  file:
+    path: "{{ nix_docker_config_file }}"
+    state: touch
+
+- name: read docker config file
+  shell: "cat {{ nix_docker_config_file }}"
+  register: docker_daemon_file
+
+- name: convert entries to json
+  set_fact:
+    docker_daemon: "{{ docker_daemon_file.stdout | default('{}', true) | from_json }}"
+
+- name: register live-restore
+  set_fact:
+    live_restore: "{{ docker_daemon['live-restore'] | default(true) }}"
+
+- name: add live-restore to docker config
+  block:
+    - name: insert or update live-restore to docker daemon
+      set_fact:
+        docker_daemon: "{{ docker_daemon | combine({ 'live-restore': true }) }}"
+
+    - name: write config to daemon.json
+      copy:
+        content: "{{ docker_daemon | to_nice_json }}"
+        dest: "{{ nix_docker_config_file }}"
+
+    - name: reload systemd
+      shell: systemctl daemon-reload
+      when: ansible_os_family == 'RedHat'
+
+    - name: restart docker daemon
+      service:
+        enabled: yes
+        name: docker
+        state: restarted
+
+  when: not live_restore
