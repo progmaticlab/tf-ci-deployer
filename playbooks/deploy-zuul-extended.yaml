@@ -16,3 +16,12 @@
     - docker
     - zuul-hosts
     - zuul-executor
+
+- hosts: nodepool-launcher
+  remote_user: "{{ remote_user }}"
+  become: yes
+  roles:
+    - python
+    - docker
+    - zuul-hosts
+    - nodepool-launcher

@@ -20,6 +20,11 @@ all:
         remote_user: ubuntu
         zuul_front_port: 8080
         zuul_logs_port: 8082
+    zuul-executor:
+      hosts:
+        aoszuulexec1.ddns.net:
+        aoszuulexec2.ddns.net:
+        aoszuulexec3.ddns.net:
   vars:
     zuul_build_with_docker: true
     node_docker_port: 2375
