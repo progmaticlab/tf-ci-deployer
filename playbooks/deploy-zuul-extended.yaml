@@ -1,0 +1,18 @@
+---
+- hosts: zuul-scheduler
+  remote_user: "{{ remote_user }}"
+  become: yes
+  roles:
+    - python
+    - docker
+    - zuul-hosts
+    - zuul-scheduler
+
+- hosts: zuul-executor
+  remote_user: "{{ remote_user }}"
+  become: yes
+  roles:
+    - python
+    - docker
+    - zuul-hosts
+    - zuul-executor

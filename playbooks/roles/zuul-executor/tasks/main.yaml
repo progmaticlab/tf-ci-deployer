@@ -1,0 +1,53 @@
+---
+- name: create required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: 0777
+  with_items:
+    - /opt/zuul-executor/ssh_keys
+    - /opt/zuul-executor/.ssh
+    - /var/www/logs
+    - /var/log/zuul
+    - /var/lib/zuul/build
+    - /var/lib/zuul/git
+    - /var/lib/zuul/ssh
+
+- name: copy config files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    force: true
+  with_items:
+    - {src: "./", dest: "/opt/zuul-executor"}
+    - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/zuul-executor/ssh_keys"}
+
+- name: protect SSH private keys
+  file:
+    path: /opt/zuul-executor/ssh_keys/{{ item }}_rsa
+    mode: 0600
+  with_items:
+    - admin
+    - zuul
+    - nodepool
+
+- name: construct authorized_keys for zuul
+  shell: "cat /opt/zuul/ssh_keys/{{ item }}_rsa.pub >> /opt/zuul-executor/.ssh/authorized_keys"
+  with_items:
+    - nodepool
+
+- name: construct known_hosts for gerrit
+  shell: "ssh-keyscan -p {{ item.port }} -t ecdsa {{ item.host }} >> /opt/zuul-executor/.ssh/known_hosts"
+  with_items:
+    - {host: "{{ gerrit_host }}", port: 22}
+    - {host: "{{ gerrit_host }}", port: 29418}
+
+- name: apply zuul configuration
+  template:
+    src: zuul.conf.j2
+    dest: /opt//opt/zuul-executor/etc_zuul/zuul.conf
+
+- name: start zuul-executor service
+  docker_service:
+    project_src: /opt/zuul-executor/

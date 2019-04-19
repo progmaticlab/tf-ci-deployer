@@ -1,0 +1,18 @@
+---
+- name: Check if zuul-scheduler host is set
+  fail:
+    msg: zuul-scheduler group is not defined or empty
+  when: groups["zuul-scheduler"] is not defined or (groups["zuul-scheduler"]|length == 0)
+
+- name: Collect zuul-scheduler host
+  set_fact:
+    zuul_scheduler_host: groups["zuul-scheduler"][0]
+
+- name: Check if gerrit host is set
+  fail:
+    msg: gerrit group is not defined or empty
+  when: groups["gerrit"] is not defined or (groups["gerrit"]|length == 0)
+
+  - name: Collect gerrit host
+    set_fact:
+      gerrit_host: groups["gerrit"][0]

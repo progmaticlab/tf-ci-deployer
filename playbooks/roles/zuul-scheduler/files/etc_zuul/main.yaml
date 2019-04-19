@@ -1,0 +1,80 @@
+- tenant:
+    name: opencontrail
+    max-job-timeout: -1
+    source:
+      gerrit:
+        config-projects:
+          - {{ zuul_config_project }}
+        untrusted-projects:
+          - Juniper/contrail
+          - {{ zuul_zuul_jobs_project }}:
+              shadow: {{ zuul_config_project }}
+          - Juniper/contrail-analytics
+          - Juniper/contrail-ansible
+          - Juniper/contrail-ansible-deployer
+          - Juniper/contrail-ansible-internal
+          - Juniper/contrail-api-client
+          - Juniper/contrail-build
+          - Juniper/contrail-common
+          - Juniper/contrail-community-docs
+          - Juniper/contrail-container-builder
+          - Juniper/contrail-controller
+          - Juniper/contrail-deployers-containers
+          - Juniper/contrail-dev-env
+          - Juniper/contrail-docker
+          - Juniper/contrail-docs
+          - Juniper/contrail-dpdk
+          - Juniper/contrail-fabric-utils
+          - Juniper/contrail-generateDS
+          - Juniper/contrail-go-api
+          - Juniper/contrail-heat
+          - Juniper/contrail-helm-deployer
+          - Juniper/contrail-horizon
+          - Juniper/contrail-infra
+          - Juniper/contrail-infra-doc
+          - Juniper/contrail-java-api
+          - Juniper/contrail-kolla-ansible:
+              exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
+          - Juniper/contrail-neutron-plugin
+          - Juniper/contrail-nova-vif-driver
+          - Juniper/contrail-packages
+          - Juniper/contrail-packaging
+          - Juniper/contrail-provisioning
+          - Juniper/contrail-puppet
+          - Juniper/contrail-sandesh
+          - Juniper/contrail-server-manager
+          - Juniper/contrail-specs
+          - Juniper/contrail-test
+          - Juniper/contrail-test-ci
+          - Juniper/contrail-third-party
+          - Juniper/contrail-third-party-cache
+          - {{ zuul_third_party_packages }}
+          - Juniper/contrail-tripleo-heat-templates
+          - Juniper/contrail-tripleo-puppet
+          - Juniper/contrail-vro-plugin
+          - Juniper/contrail-vrouter
+          - Juniper/contrail-vrouter-java-api
+          - Juniper/contrail-webui-third-party
+          - Juniper/contrail-web-controller
+          - Juniper/contrail-web-core
+          - Juniper/contrail-web-server-manager
+          - Juniper/contrail-web-storage
+          - Juniper/contrail-windows
+          - Juniper/contrail-windows-docker-driver
+          - Juniper/contrail-vcenter-manager
+          - Juniper/contrail-vcenter-plugin
+          - Juniper/contrail-vnc
+          - Juniper/horizon
+          - Juniper/nova
+          - Juniper/openshift-ansible
+          - Juniper/openstack-helm:
+              exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
+          - Juniper/openstack-helm-infra:
+              exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
+          - Juniper/puppet-contrail
+          - Juniper/vijava
+          - tungstenfabric/docs
+          - tungstenfabric/tungsten-test-runner
+          - Juniper/zuul-jobs
+          - Juniper/zuul:
+              exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
