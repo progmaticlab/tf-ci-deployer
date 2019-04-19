@@ -1,0 +1,27 @@
+---
+- name: create required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: 0777
+  with_items:
+    - /opt/nodepool-builder/etc_nodepool
+    - /var/log/zuul
+
+- name: copy config files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    force: true
+  with_items:
+    - {src: "./", dest: "/opt/nodepool-builder"}
+
+- name: apply nodepool configuration
+  template:
+    src: nodepool.yaml.j2
+    dest: /opt/nodepool-builder/etc_nodepool/nodepool.yaml
+
+- name: start nodepool-builder service
+  docker_service:
+    project_src: /opt/nodepool-launcher/
