@@ -25,6 +25,12 @@ all:
         aoszuulexec1.ddns.net:
         aoszuulexec2.ddns.net:
         aoszuulexec3.ddns.net:
+    nodepool-builder:
+      hosts:
+        nodepool-builder.ddns.net:
+    nodepool-launcher:
+      hosts:
+        nodepool-launcher.ddns.net:
   vars:
     zuul_build_with_docker: true
     node_docker_port: 2375
@@ -33,6 +39,7 @@ all:
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
     gerrit_ssh_keys_generate: true
     gerrit_create_zuul_user: true
+    gerrit_source_url: "https://review.opencontrail.org"
     gerrit_repos:
       - {dest_namespace: "Juniper", project: "contrail"}
       - {dest_namespace: "Juniper", project: "contrail-analytics"}
