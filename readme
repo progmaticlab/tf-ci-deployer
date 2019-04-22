@@ -9,6 +9,11 @@ Host *
     StrictHostKeyChecking no
 EOF
 
+on zuul node:
+sudo apt-get udpate
+sudo apt-get upgrade
+sudo apt-get install -y ansible
+
 
 
 workers preparation:

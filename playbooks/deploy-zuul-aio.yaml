@@ -1,0 +1,10 @@
+---
+- hosts: zuul
+  remote_user: "{{ remote_user }}"
+  become: yes
+  roles:
+    - docker
+    - zuul
+  pre_tasks:
+  - name: install python for ansible
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
