@@ -17,11 +17,11 @@
 
 - name: convert entries to json
   set_fact:
-    docker_daemon: "{{ docker_daemon_file.stdout | default('{}', false) | from_json }}"
+    docker_daemon: "{{ docker_daemon_file.stdout | default('{}', true) | from_json }}"
 
 - name: register live-restore
   set_fact:
-    live_restore: "{{ docker_daemon['live-restore'] | default(true) }}"
+    live_restore: "{{ docker_daemon['live-restore'] | default(false) }}"
 
 - name: add live-restore to docker config
   block:
