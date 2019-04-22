@@ -17,7 +17,7 @@
 
 - name: convert entries to json
   set_fact:
-    docker_daemon: "{{ docker_daemon_file.stdout | default('{}', true) | from_json }}"
+    docker_daemon: "{{ docker_daemon_file.stdout | default('{}', false) | from_json }}"
 
 - name: register live-restore
   set_fact:
