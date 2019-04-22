@@ -1,7 +1,19 @@
 ---
+- hosts: "zuul-*,nodepool-*"
+  remote_user: "{{ remote_user }}"
+  become: yes
+  gather_facts: no
+  roles:
+    - python
+  pre_tasks:
+  - name: install python for ansible
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+
 - hosts: zuul-scheduler
   remote_user: "{{ remote_user }}"
   become: yes
+  gather_facts: yes
   roles:
     - python
     - docker
@@ -11,6 +23,7 @@
 - hosts: zuul-executor
   remote_user: "{{ remote_user }}"
   become: yes
+  gather_facts: yes
   roles:
     - python
     - docker
@@ -20,6 +33,7 @@
 - hosts: nodepool-launcher
   remote_user: "{{ remote_user }}"
   become: yes
+  gather_facts: yes
   roles:
     - python
     - docker
@@ -29,6 +43,7 @@
 - hosts: nodepool-builder
   remote_user: "{{ remote_user }}"
   become: yes
+  gather_facts: yes
   roles:
     - python
     - docker
