@@ -1,8 +1,22 @@
+zuul/nexus/gerrit nodes preparation:
+
+# store some private key that is added to all machines to authorized_hosts as default (it can be a key from OpenStack)
+cat >.ssh/id_rsa
+chmod 400 .ssh/id_rsa 
+# configure ssh client
+cat <EOF >.ssh/config
+Host *
+    StrictHostKeyChecking no
+EOF
+
+
+
+workers preparation:
+
 centos node:
 
 sudo su
 sudo yum install python-lxml autoconf automake bzip2 libtool patch unzip wget rpm-build kernel
-
 
 
 ubuntu trusty/xenial node:
@@ -16,11 +30,11 @@ wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/${DISTRIB_RELEASE}/depe
 wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/${DISTRIB_RELEASE}/cassandra/v2.4.0/cassandra-cpp-driver_2.4.0-1_amd64.deb
 wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/${DISTRIB_RELEASE}/cassandra/v2.4.0/cassandra-cpp-driver-dev_2.4.0-1_amd64.deb
 apt-get install ./libuv_1.8.0-1_amd64.deb ./libuv-dev_1.8.0-1_amd64.deb ./cassandra-cpp-driver-dev_2.4.0-1_amd64.deb ./cassandra-cpp-driver_2.4.0-1_amd64.deb
-
-install from source:
-    https://github.com/edenhill/librdkafka
-
 add-apt-repository ppa:openjdk-r/ppa
 apt-get update
 apt-get install -y openjdk-8-jdk
 java -version  // "1.8.0_171"
+
+install from source:
+    https://github.com/edenhill/librdkafka
+
