@@ -1,3 +1,4 @@
 ---
+
 - name: install python for ansible
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)

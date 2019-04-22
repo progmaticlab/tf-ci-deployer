@@ -5,8 +5,6 @@ all:
         gerrit-test.ddns.net:
       vars:
         remote_user: ubuntu
-        gerrit_oauth_client_id: cbb0e2c7098bdbdde3c3
-        gerrit_oauth_client_secret: a4356301e414066d94ddd353c04a1e706ae75641
         force_update_repos: true
     nexus:
       hosts:
@@ -66,7 +64,7 @@ all:
       - {dest_namespace: "Juniper", project: "contrail-infra"}
       - {dest_namespace: "Juniper", project: "contrail-infra-doc"}
       - {dest_namespace: "Juniper", project: "contrail-java-api"}
-      - {dest_namespace: "Juniper", project: "contrail-kolla-ansible", src_namespace: "progmaticlab"}
+      - {dest_namespace: "Juniper", project: "contrail-kolla-ansible"}
       - {dest_namespace: "Juniper", project: "contrail-neutron-plugin"}
       - {dest_namespace: "Juniper", project: "contrail-nova-vif-driver"}
       - {dest_namespace: "Juniper", project: "contrail-packages"}
@@ -105,9 +103,6 @@ all:
       - {dest_namespace: "Juniper", project: "openstack-helm"}
       - {dest_namespace: "Juniper", project: "openstack-helm-infra"}
       - {dest_namespace: "Juniper", project: "puppet-contrail"}
-      - {dest_namespace: "Juniper", project: "tf-ci-config-docker", src_namespace: "progmaticlab"}
-      - {dest_namespace: "Juniper", project: "tf-ci-zuul-jobs-docker", src_namespace: "progmaticlab"}
-      - {dest_namespace: "Juniper", project: "tf-third-party-packages", src_namespace: "progmaticlab"}
       - {dest_namespace: "Juniper", project: "vijava"}
       - {dest_namespace: "Juniper", project: "zuul", src_namespace: "progmaticlab"}
       - {dest_namespace: "Juniper", project: "zuul-jobs"}
