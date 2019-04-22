@@ -13,6 +13,6 @@
     msg: gerrit group is not defined or empty
   when: groups["gerrit"] is not defined or (groups["gerrit"]|length == 0)
 
-  - name: Collect gerrit host
-    set_fact:
-      gerrit_host: groups["gerrit"][0]
+- name: Collect gerrit host
+  set_fact:
+    gerrit_host: groups["gerrit"][0]
