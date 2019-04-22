@@ -14,6 +14,13 @@
     - /var/lib/zuul/git
     - /var/lib/zuul/ssh
 
+- name: Ensure zuul user exists
+  user:
+    name: "zuul"
+    state: present
+    groups: docker
+    append: yes
+
 - name: copy config files
   copy:
     src: "{{ item.src }}"
