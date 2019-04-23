@@ -8,8 +8,6 @@ services:
     environment:
       no_proxy: "${no_proxy}"
     command: "zuul-executor -d"
-    depends_on:
-      - scheduler
     image: progmaticlab/zuul-executor:2.5.3
     pid: host
     ipc: host

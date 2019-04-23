@@ -5,9 +5,6 @@ version: '2'
 services:
   web:
     command: "zuul-web -d"
-    depends_on:
-      - scheduler
-      - mysql
     image: progmaticlab/zuul-web:2.5.3
     pid: host
     ipc: host
@@ -19,7 +16,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
   front:
-    inage: nginx:1.15
+    image: nginx:1.15
     depends_on:
       - web
     ports:
