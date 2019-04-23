@@ -5,7 +5,6 @@ all:
         gerrit-test.ddns.net:
       vars:
         remote_user: ubuntu
-        force_update_repos: true
     nexus:
       hosts:
         nexus-test.ddns.net:
@@ -39,6 +38,7 @@ all:
     gerrit_force_ssh_keys_generate: false
     gerrit_force_create_zuul_user: false
     gerrit_source_url: "https://review.opencontrail.org"
+    force_update_repos: true
     gerrit_repos:
       - {dest_namespace: "Juniper", project: "contrail"}
       - {dest_namespace: "Juniper", project: "contrail-analytics"}

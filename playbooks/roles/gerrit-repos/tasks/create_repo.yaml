@@ -30,7 +30,7 @@
     status_code: 204
   when:
     - repo.status == 200
-    - force_update_repos
+    - force_update_repos | default(false)
 
 - name: create gerrit project {{ target_namespace }}/{{ project_name }}
   uri:
@@ -42,12 +42,12 @@
       Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
     status_code: 201
-  when: repo.status == 404 or force_update_repos
+  when: repo.status == 404 or (force_update_repos | default(false))
 
 - name: remove existing git repository {{ target_namespace }}/{{ project_name }}
   shell: "docker exec -t gerrit_gerrit_1 rm -rf /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
-  when: repo.status == 404 or force_update_repos
+  when: repo.status == 404 or (force_update_repos | default(false))
 
 - name: clone git repository {{ target_namespace }}/{{ project_name }}
   shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
-  when: repo.status == 404 or force_update_repos
+  when: repo.status == 404 or (force_update_repos | default(false))

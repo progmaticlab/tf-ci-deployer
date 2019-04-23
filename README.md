@@ -13,6 +13,7 @@ all:
     gerrit_force_ssh_keys_generate: true
     gerrit_force_create_zuul_user: true
     gerrit_source_url: "https://review.openstack.org"
+    force_update_repos: true
     gerrit_repos:
       - {dest_namespace: "Juniper", project: "zuul", src_namespace: "progmaticlab"}
   children:
@@ -20,12 +21,10 @@ all:
       hosts:
         gerrit.tungsten.io:
       vars:
-        force_update_repos: true
         gerrit_front_port: 80
 ```
 
 There are several variables there:
-  - **force_update_repos** forces to recreate already existing gerrit projects
   - **force_update_repos** is used to force recreate gerrit's projects
   - **gerrit_force_create_zuul_user** forces to create *zuul* user in gerrit
   - **gerrit_front_port** stores gerrit webpage port
