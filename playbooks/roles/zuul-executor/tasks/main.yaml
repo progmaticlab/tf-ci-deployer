@@ -11,7 +11,7 @@
     - /opt/zuul-executor/etc_zuul
     - /var/www/logs
     - /var/log/zuul
-    - /var/lib/zuul/build
+    - /var/lib/zuul/builds
     - /var/lib/zuul/git
     - /var/lib/zuul/ssh
 
