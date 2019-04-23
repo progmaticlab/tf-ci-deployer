@@ -33,7 +33,7 @@
     - nodepool
 
 - name: construct authorized_keys for zuul
-  shell: "cat /opt/zuul/ssh_keys/{{ item }}_rsa.pub >> /opt/zuul-scheduler/.ssh/authorized_keys"
+  shell: "cat /opt/zuul-scheduler/ssh_keys/{{ item }}_rsa.pub >> /opt/zuul-scheduler/.ssh/authorized_keys"
   with_items:
     - nodepool
 
