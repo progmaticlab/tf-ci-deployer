@@ -4,7 +4,7 @@
     name: gerrit-prepare-urllib
 
 - name: create gerrit repositories
-  include: create-repo.yaml
+  include: create_repo.yaml
   vars:
     gerrit_source_url: "{{ item.gerrit_source_url | default(gerrit_source_url) }}"
     source_namespace: "{{ item.src_namespace | default(item.dest_namespace) }}"
