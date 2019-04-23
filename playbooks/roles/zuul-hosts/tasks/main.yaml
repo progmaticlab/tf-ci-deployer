@@ -15,7 +15,7 @@
 
 - name: Collect gerrit host
   set_fact:
-    gerrit_host: "{{ groups["gerrit"][0] }}"
+    gerrit_host: "{{ groups['gerrit'][0] }}"
 
 - name: Trace hosts
   debug:
