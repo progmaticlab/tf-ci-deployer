@@ -23,12 +23,32 @@
   set_fact:
     live_restore: "{{ docker_daemon['live-restore'] | default(false) }}"
 
+- name: register mtu
+  set_fact:
+    mtu: "{{ docker_daemon['mtu'] | default(0) }}"
+
 - name: add live-restore to docker config
   block:
-    - name: insert or update live-restore to docker daemon
+    - name: insert or update live-restore
       set_fact:
         docker_daemon: "{{ docker_daemon | combine({ 'live-restore': true }) }}"
+    - name: set changed flag
+      set_fact:
+        config_changed: true
+  when: not live_restore
 
+- name: add mtu to docker config
+  block:
+    - name: insert or update mtu
+      set_fact:
+        docker_daemon: "{{ docker_daemon | combine({ 'mtu': ansible_default_ipv4.mtu }) }}"
+    - name: set changed flag
+      set_fact:
+        config_changed: true
+  when: mtu != ansible_default_ipv4.mtu
+
+- name: store docker config and reload daemon
+  block:
     - name: write config to daemon.json
       copy:
         content: "{{ docker_daemon | to_nice_json }}"
@@ -43,5 +63,5 @@
         enabled: yes
         name: docker
         state: restarted
+  when: config_changed
 
-  when: not live_restore
