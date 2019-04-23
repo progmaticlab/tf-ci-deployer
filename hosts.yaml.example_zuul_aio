@@ -57,16 +57,16 @@ all:
       - {dest_namespace: "Juniper", project: "contrail-nova-vif-driver"}
       - {dest_namespace: "Juniper", project: "contrail-packages"}
       - {dest_namespace: "Juniper", project: "contrail-packaging"}
-      - {dest_namespace: "Juniper", project: "contrail-project-config", src_namespace: "progmaticlab"}
+      - {dest_namespace: "Juniper", project: "contrail-project-config", src_namespace: "progmaticlab", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "Juniper", project: "contrail-provisioning"}
-      - {dest_namespace: "Juniper", project: "contrail-publisher"}
+      - {dest_namespace: "Juniper", project: "contrail-publisher", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "Juniper", project: "contrail-puppet"}
       - {dest_namespace: "Juniper", project: "contrail-sandesh"}
       - {dest_namespace: "Juniper", project: "contrail-server-manager"}
       - {dest_namespace: "Juniper", project: "contrail-specs"}
       - {dest_namespace: "Juniper", project: "contrail-test"}
       - {dest_namespace: "Juniper", project: "contrail-test-ci"}
-      - {dest_namespace: "Juniper", project: "contrail-third-party", src_namespace: "progmaticlab"}
+      - {dest_namespace: "Juniper", project: "contrail-third-party", src_namespace: "progmaticlab", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "Juniper", project: "contrail-third-party-cache"}
       - {dest_namespace: "Juniper", project: "contrail-third-party-packages"}
       - {dest_namespace: "Juniper", project: "contrail-tripleo-heat-templates"}
@@ -84,7 +84,7 @@ all:
       - {dest_namespace: "Juniper", project: "contrail-webui-third-party"}
       - {dest_namespace: "Juniper", project: "contrail-windows"}
       - {dest_namespace: "Juniper", project: "contrail-windows-docker-driver"}
-      - {dest_namespace: "Juniper", project: "contrail-zuul-jobs", src_namespace: "progmaticlab"}
+      - {dest_namespace: "Juniper", project: "contrail-zuul-jobs", src_namespace: "progmaticlab", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "Juniper", project: "horizon"}
       - {dest_namespace: "Juniper", project: "nova"}
       - {dest_namespace: "Juniper", project: "openshift-ansible"}
@@ -92,7 +92,7 @@ all:
       - {dest_namespace: "Juniper", project: "openstack-helm-infra"}
       - {dest_namespace: "Juniper", project: "puppet-contrail"}
       - {dest_namespace: "Juniper", project: "vijava"}
-      - {dest_namespace: "Juniper", project: "zuul", src_namespace: "progmaticlab"}
+      - {dest_namespace: "Juniper", project: "zuul", src_namespace: "progmaticlab", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "Juniper", project: "zuul-jobs"}
       - {dest_namespace: "tungsten-infra", project: "ci-utils"}
       - {dest_namespace: "tungsten-infra", project: "containerregistry"}
