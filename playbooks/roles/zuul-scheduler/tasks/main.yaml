@@ -48,6 +48,11 @@
     src: zuul.conf.j2
     dest: /opt/zuul-scheduler/etc_zuul/zuul.conf
 
+- name: apply zuul compose file
+  template:
+    src: docker-compose.yaml.j2
+    dest: /opt/zuul-scheduler/docker-compose.yaml
+
 - name: start zuul-scheduler service
   docker_service:
     project_src: /opt/zuul-scheduler/
