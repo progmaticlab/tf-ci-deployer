@@ -11,28 +11,15 @@
     recurse: yes
   delegate_to: localhost
   become: no
-  when:
-    - gerrit_ssh_keys_generate is defined
-    - gerrit_ssh_keys_generate
 
-- name: generate SSH keys for gerrit
-  block:
-    - name: check if key exists
-      stat:
-        path: "{{ gerrit_ssh_keys }}/{{ item }}_rsa"
-      register: stat_result
-    - name: generate SSH key {{ item }}_rsa for gerrit
-      command: "ssh-keygen -m pem -f {{ gerrit_ssh_keys }}/{{ item }}_rsa -N '' -q"
-      when: stat_result.stat.exists == False
+- name: add Contrail's insecure registry
+  include: "generate_key.yml key_name={{ item }}"
   delegate_to: localhost
   become: no
   with_items:
     - admin
     - zuul
     - nodepool
-  when:
-    - gerrit_ssh_keys_generate is defined
-    - gerrit_ssh_keys_generate
 
 - name: authenticate to gerrit
   include_role:
@@ -56,7 +43,6 @@
     headers:
       Cookie: "{{ gerrit_cookies }}"
   register: zuul_user_check
-  when: gerrit_create_zuul_user is defined and gerrit_create_zuul_user == true
 
 - name: create zuul gerrit account
   uri:
@@ -73,8 +59,7 @@
       Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
   when:
-    - zuul_user_check.status == 404
-    - gerrit_create_zuul_user is defined and gerrit_create_zuul_user == true
+    - zuul_user_check.status == 404 or (gerrit_force_create_zuul_user | default(false))
 
 - name: add zuul SSH key to gerrit
   uri:
@@ -86,6 +71,3 @@
       Content-Type: text/plain
       Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
-  when:
-    - zuul_user_check.status == 200
-    - gerrit_ssh_keys_generate == true
