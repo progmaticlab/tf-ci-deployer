@@ -4,9 +4,9 @@
     name: gerrit-prepare-urllib
 
 - name: create gerrit repositories
-  include_role:
-    name: gerrit-create-repo
+  include: create-repo.yaml
   vars:
+    gerrit_source_url: "{{ item.gerrit_source_url | default(gerrit_source_url) }}"
     source_namespace: "{{ item.src_namespace | default(item.dest_namespace) }}"
     target_namespace: "{{ item.dest_namespace }}"
     project_name: "{{ item.project }}"

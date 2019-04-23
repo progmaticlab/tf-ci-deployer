@@ -41,7 +41,6 @@
   shell: "docker exec -t gerrit_gerrit_1 rm -rf /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
   when: repo.status == 404 or force_update_repos
 
-# TODO: allow to overwrite gerrit_source_url for individual repo
 - name: clone git repository {{ target_namespace }}/{{ project_name }}
   shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ gerrit_source_url }}/{{ source_namespace }}/{{ project_name }}.git /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
   when: repo.status == 404 or force_update_repos

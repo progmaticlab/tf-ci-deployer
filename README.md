@@ -12,6 +12,7 @@ all:
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
     gerrit_force_ssh_keys_generate: true
     gerrit_force_create_zuul_user: true
+    gerrit_source_url: "https://review.openstack.org"
     gerrit_repos:
       - {dest_namespace: "Juniper", project: "zuul", src_namespace: "progmaticlab"}
   children:
@@ -33,6 +34,7 @@ There are several variables there:
   - **gerrit_force_ssh_keys_generate** forces gerrit ssh keys generation
   - **gerrit_ssh_keys** stores local directory path where to store priv\pub keys for gerrit
   - **gerrit_url** stores gerrit's external url
+  - **gerrit_source_url** stores source URL for all gerrit projects to import from. This URL can be redefined in individual project
 
 To deploy gerrit service, run:
 ```
