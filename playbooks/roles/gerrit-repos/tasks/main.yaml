@@ -4,12 +4,5 @@
     name: gerrit-prepare-urllib
 
 - name: create gerrit repositories
-  include: create_repo.yaml
-  vars:
-    gerrit_source_url: "{{ item.gerrit_source_url | default(gerrit_source_url) }}"
-    source_namespace: "{{ item.src_namespace | default(item.dest_namespace) }}"
-    target_namespace: "{{ item.dest_namespace }}"
-    project_name: "{{ item.project }}"
-    gerrit_user_cookie: "{{ login.set_cookie }}"
-    xsrf_cookie: "{{ xsrf.set_cookie }}"
+  include: "create_repo.yaml repo_data={{ item }}"
   with_items: "{{ gerrit_repos }}"

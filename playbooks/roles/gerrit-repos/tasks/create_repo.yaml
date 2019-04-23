@@ -1,5 +1,12 @@
 ---
 
+- name: define vars for import repo
+  set_fact:
+    source_url: "{{ repo_data.gerrit_source_url | default(gerrit_source_url) }}"
+    source_namespace: "{{ repo_data.src_namespace | default(repo_data.dest_namespace) }}"
+    target_namespace: "{{ repo_data.dest_namespace }}"
+    project_name: "{{ repo_data.project }}"
+
 - name: check if gerrit project already exists
   uri:
     url: "http://{{ gerrit_host }}/projects/{{ target_namespace }}%2F{{ project_name }}"
@@ -42,5 +49,5 @@
   when: repo.status == 404 or force_update_repos
 
 - name: clone git repository {{ target_namespace }}/{{ project_name }}
-  shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ gerrit_source_url }}/{{ source_namespace }}/{{ project_name }}.git /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
+  shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
   when: repo.status == 404 or force_update_repos
