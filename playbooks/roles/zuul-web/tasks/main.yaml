@@ -19,6 +19,11 @@
     src: zuul.conf.j2
     dest: /opt/zuul-web/etc_zuul/zuul.conf
 
+- name: apply docker-compose configuration
+  template:
+    src: docker-compose.yaml.j2
+    dest: /opt/zuul-web/docker-compose.yaml
+
 - name: apply nginx configuration
   template:
     src: zuul.nginx.conf.j2
