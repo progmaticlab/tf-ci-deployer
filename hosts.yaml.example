@@ -110,8 +110,8 @@ all:
       - {dest_namespace: "Juniper", project: "puppet-contrail"}
       - {dest_namespace: "Juniper", project: "vijava"}
       - {dest_namespace: "Juniper", project: "zuul", src_namespace: "progmaticlab", gerrit_source_url: "https://github.com"}
-      - {dest_namespace: "Juniper", project: "zuul-jobs"}
-      - {dest_namespace: "tungsten-infra", project: "ci-utils"}
-      - {dest_namespace: "tungsten-infra", project: "containerregistry"}
-      - {dest_namespace: "tungstenfabric", project: "docs"}
-      - {dest_namespace: "tungstenfabric", project: "tungsten-test-runner"}
+      - {dest_namespace: "Juniper", project: "zuul-jobs", gerrit_source_url: "https://github.com"}
+      - {dest_namespace: "tungsten-infra", project: "ci-utils", gerrit_source_url: "https://github.com"}
+      - {dest_namespace: "tungsten-infra", project: "containerregistry", gerrit_source_url: "https://github.com"}
+      - {dest_namespace: "tungstenfabric", project: "docs", gerrit_source_url: "https://github.com"}
+      - {dest_namespace: "tungstenfabric", project: "tungsten-test-runner", gerrit_source_url: "https://github.com"}
