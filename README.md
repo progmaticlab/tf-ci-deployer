@@ -7,11 +7,11 @@ Initial gerrit host configuration is placed in ansible inventory file
 ```
 all:
   vars:
-    gerrit_host: "http://gerrit.tungsten.io"
-    gerrit_url: "http://{{ gerrit_host }}"
+    gerrit_host: "gerrit.internal"
+    gerrit_url: "http://gerrit.external"
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
-    gerrit_ssh_keys_generate: true
-    gerrit_create_zuul_user: true
+    gerrit_force_ssh_keys_generate: true
+    gerrit_force_create_zuul_user: true
     gerrit_repos:
       - {dest_namespace: "Juniper", project: "zuul", src_namespace: "progmaticlab"}
   children:
@@ -26,11 +26,11 @@ all:
 There are several variables there:
   - **force_update_repos** forces to recreate already existing gerrit projects
   - **force_update_repos** is used to force recreate gerrit's projects
-  - **gerrit_create_zuul_user** forces to create *zuul* user in gerrit
+  - **gerrit_force_create_zuul_user** forces to create *zuul* user in gerrit
   - **gerrit_front_port** stores gerrit webpage port
-  - **gerrit_host** stores gerrit host name
+  - **gerrit_host** stores gerrit internal host name
   - **gerrit_repos** stores list of required repositories to import into gerrit from github.com
-  - **gerrit_ssh_keys_generate** forces gerrit ssh keys generation
+  - **gerrit_force_ssh_keys_generate** forces gerrit ssh keys generation
   - **gerrit_ssh_keys** stores local directory path where to store priv\pub keys for gerrit
   - **gerrit_url** stores gerrit's external url
 
@@ -52,8 +52,8 @@ Initial zuul host configuration is placed in ansible inventory file
 all:
   vars:
     zuul_build_with_docker: false
-    gerrit_host: "gerrit.tungsten.io"
-    gerrit_url: "http://{{ gerrit_host }}"
+    gerrit_host: "gerrit.internal"
+    gerrit_url: "http://gerrit.external"
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
   children:
     zuul:
@@ -65,7 +65,7 @@ all:
 ```
 
 There are several variables there:
-  - **gerrit_host** stores gerrit host name
+  - **gerrit_host** stores gerrit internal host name
   - **gerrit_ssh_keys** stores local directory path where to store priv\pub keys for gerrit
   - **gerrit_url** stores gerrit's external url
   - **zuul_front_port** stores zuul webpage port
