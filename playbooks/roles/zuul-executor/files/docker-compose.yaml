@@ -11,6 +11,8 @@ services:
     image: progmaticlab/zuul-executor:2.5.3
     pid: host
     ipc: host
+    ports:
+      - "7900:7900"
     volumes:
       - "./etc_zuul:/etc/zuul"
       - "./ssh_keys:/var/ssh"

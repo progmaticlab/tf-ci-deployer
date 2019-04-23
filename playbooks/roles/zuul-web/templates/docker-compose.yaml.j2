@@ -11,7 +11,7 @@ services:
     volumes:
       - "./etc_zuul:/etc/zuul"
       - "/var/log/zuul:/var/log/zuul"
-      - "zuul_static:/var/lib/zuul/static"
+      - "zuul_static:/var/lib/zuul/public_html:z"
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
@@ -23,7 +23,7 @@ services:
       - "{{ zuul_front_port }}:8080"
     volumes:
       - "/var/log/zuul:/var/log/zuul"
-      - "zuul_static:/usr/share/nginx/html"
+      - "zuul_static:/usr/share/nginx/html:z"
       - "/opt/zuul-web/zuul.nginx.conf:/etc/nginx/conf.d/default.conf"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
