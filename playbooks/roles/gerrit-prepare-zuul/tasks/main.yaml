@@ -14,8 +14,6 @@
 
 - name: add Contrail's insecure registry
   include: "generate_key.yaml key_name={{ item }}"
-  delegate_to: localhost
-  become: no
   with_items:
     - admin
     - zuul

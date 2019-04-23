@@ -4,7 +4,11 @@
   stat:
     path: "{{ gerrit_ssh_keys }}/{{ key_name }}_rsa"
   register: stat_result
+  delegate_to: localhost
+  become: no
 
 - name: generate SSH key {{ key_name }}_rsa for gerrit
   command: "ssh-keygen -m pem -f {{ gerrit_ssh_keys }}/{{ key_name }}_rsa -N '' -q"
+  delegate_to: localhost
+  become: no
   when: not stat_result.stat.exists or (gerrit_force_ssh_keys_generate | default(false))
