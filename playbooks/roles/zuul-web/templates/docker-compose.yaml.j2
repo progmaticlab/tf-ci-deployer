@@ -24,7 +24,7 @@ services:
     volumes:
       - "/var/log/zuul:/var/log/zuul"
       - "zuul_static:/usr/share/nginx/html"
-      - "/opt/zuul-nginx/zuul.nginx.conf:/etc/nginx/conf.d/default.conf"
+      - "/opt/zuul-web/zuul.nginx.conf:/etc/nginx/conf.d/default.conf"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
 
