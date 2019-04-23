@@ -48,7 +48,7 @@
     - python
     - docker
     - zuul-hosts
-    - nodepool-launcher
+    - zuul-nodepool-launcher
 
 - hosts: nodepool-builder
   remote_user: "{{ remote_user }}"
@@ -58,4 +58,4 @@
     - python
     - docker
     - zuul-hosts
-    - nodepool-builder
+    - zuul-nodepool-builder
