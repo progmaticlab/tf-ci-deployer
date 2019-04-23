@@ -8,6 +8,7 @@
   with_items:
     - /opt/zuul-executor/ssh_keys
     - /opt/zuul-executor/.ssh
+    - /opt/zuul-executor/etc_zuul
     - /var/www/logs
     - /var/log/zuul
     - /var/lib/zuul/build
