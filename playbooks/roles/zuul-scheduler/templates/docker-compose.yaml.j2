@@ -21,7 +21,6 @@ services:
     environment:
       no_proxy: "${no_proxy}"
     command: "zuul-scheduler -d"
-#    command: "tail -f /dev/null"
     image: progmaticlab/zuul-scheduler:2.5.3
     pid: host
     ipc: host

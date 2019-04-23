@@ -5,7 +5,6 @@ version: '2'
 services:
   web:
     command: "zuul-web -d"
-#    command: "tail -f /dev/null"
     depends_on:
       - scheduler
       - mysql
