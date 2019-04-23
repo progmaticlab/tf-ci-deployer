@@ -25,7 +25,7 @@ driver=gerrit
 server={{ gerrit_host }}
 sshkey=/var/ssh/zuul_rsa
 user=zuul
-baseurl={{ gerrit_url }}
+baseurl=http://{{ gerrit_host }}
 
 [connection "mysql"]
 name=mysql
