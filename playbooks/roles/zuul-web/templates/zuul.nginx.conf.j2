@@ -1,5 +1,5 @@
 upstream scheduler {
-	server scheduler:8001;
+	server {{ zuul_scheduler_host }}:8001;
 }
 
 upstream web {

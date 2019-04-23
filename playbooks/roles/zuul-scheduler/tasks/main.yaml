@@ -46,7 +46,7 @@
 - name: apply zuul configuration
   template:
     src: zuul.conf.j2
-    dest: /opt//opt/zuul-scheduler/etc_zuul/zuul.conf
+    dest: /opt/zuul-scheduler/etc_zuul/zuul.conf
 
 - name: start zuul-scheduler service
   docker_service:

@@ -22,6 +22,10 @@ all:
         aoszuulexec1.ddns.net:
         aoszuulexec2.ddns.net:
         aoszuulexec3.ddns.net:
+    zuul-web:
+      hosts:
+        aoszuulweb1.ddns.net:
+        aoszuulweb2.ddns.net:
     nodepool-builder:
       hosts:
         nodepool-builder.ddns.net:

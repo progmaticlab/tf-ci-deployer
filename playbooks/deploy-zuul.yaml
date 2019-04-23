@@ -30,6 +30,16 @@
     - zuul-hosts
     - zuul-executor
 
+- hosts: zuul-web
+  remote_user: "{{ remote_user }}"
+  become: yes
+  gather_facts: yes
+  roles:
+    - python
+    - docker
+    - zuul-hosts
+    - zuul-web
+
 - hosts: nodepool-launcher
   remote_user: "{{ remote_user }}"
   become: yes

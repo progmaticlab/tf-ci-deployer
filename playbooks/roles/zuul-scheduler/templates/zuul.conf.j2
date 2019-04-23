@@ -4,20 +4,15 @@ check_job_registration=true
 
 [gearman_server]
 start=true
-log_config=/etc/zuul/gearman-logging.conf
+log_config=/etc/zuul-scheduler/gearman-logging.conf
 
 [zookeeper]
 hosts={{ zuul_scheduler_host }}
 
 [scheduler]
-tenant_config=/etc/zuul/main.yaml
-log_config=/etc/zuul/scheduler-logging.conf
+tenant_config=/etc/zuul-scheduler/main.yaml
+log_config=/etc/zuul-scheduler/scheduler-logging.conf
 state_dir=/var/lib/zuul
-
-[web]
-log_config=/etc/zuul/web-logging.conf
-listen_address=
-listen_port=
 
 [connection "gerrit"]
 name=gerrit

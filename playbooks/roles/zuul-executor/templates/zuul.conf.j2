@@ -5,17 +5,17 @@ check_job_registration=true
 [merger]
 git_dir=/var/lib/zuul/git
 zuul_url=
-log_config=/etc/zuul/merger-logging.conf
+log_config=/etc/zuul-executor/merger-logging.conf
 git_user_email=zuul@opencontrail.org
 git_user_name=OpenContrail Zuul
 
 [executor]
-log_config=executor-logging.conf
+log_config=/opt/zuul-executor/executor-logging.conf
 private_key_file=/var/ssh/nodepool_rsa
 job_dir=/var/lib/zuul/builds
 default_username=root
 disk_limit_per_job=4096
-variables=/etc/zuul/site-variables.yaml
+variables=/etc/zuul-executor/site-variables.yaml
 hostname={{ ansible_ssh_host }}
 user=root
 trusted_ro_dirs=

@@ -1,0 +1,36 @@
+# Version 2 is the latest that is supported by docker-compose in
+# Ubuntu Xenial.
+version: '2'
+
+services:
+  web:
+    command: "zuul-web -d"
+#    command: "tail -f /dev/null"
+    depends_on:
+      - scheduler
+      - mysql
+    image: progmaticlab/zuul-web:2.5.3
+    pid: host
+    ipc: host
+    volumes:
+      - "./etc_zuul:/etc/zuul"
+      - "/var/log/zuul:/var/log/zuul"
+      - "zuul_static:/var/lib/zuul/static"
+      - "/var/run:/var/run"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+  front:
+    inage: nginx:1.15
+    depends_on:
+      - web
+    ports:
+      - "{{ zuul_front_port }}:8080"
+    volumes:
+      - "/var/log/zuul:/var/log/zuul"
+      - "zuul_static:/usr/share/nginx/html"
+      - "/opt/zuul-nginx/zuul.nginx.conf:/etc/nginx/conf.d/default.conf"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+
+volumes:
+  zuul_static:
