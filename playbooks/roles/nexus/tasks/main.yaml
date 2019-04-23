@@ -1,7 +1,7 @@
 ---
 - name: create nexus etc directory
   file:
-    path: /etc/nexus
+    path: /opt/nexus
     state: directory
 
 - name: create share directory
@@ -23,9 +23,9 @@
 - name: apply docker-compose.yaml
   template:
     src: docker-compose.yaml.j2
-    dest: /etc/nexus/docker-compose.yaml
+    dest: /opt/nexus/docker-compose.yaml
 
 - name: start nexus service
   docker_service:
-    project_src: /etc/nexus
+    project_src: /opt/nexus
 
