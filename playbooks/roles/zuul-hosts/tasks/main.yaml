@@ -6,13 +6,19 @@
 
 - name: Collect zuul-scheduler host
   set_fact:
-    zuul_scheduler_host: groups["zuul-scheduler"][0]
+    zuul_scheduler_host: "{{ groups['zuul-scheduler'][0] }}"
 
 - name: Check if gerrit host is set
   fail:
     msg: gerrit group is not defined or empty
-  when: groups["gerrit"] is not defined or (groups["gerrit"]|length == 0)
+  when: groups["gerrit"] is not defined or (groups['gerrit']|length == 0)
 
 - name: Collect gerrit host
   set_fact:
-    gerrit_host: groups["gerrit"][0]
+    gerrit_host: "{{ groups["gerrit"][0] }}"
+
+- name: Trace hosts
+  debug:
+    msg: |
+      "zuul_scheduler_host: {{ zuul_scheduler_host }}"
+      "gerrit_host: {{ gerrit_host }}"
