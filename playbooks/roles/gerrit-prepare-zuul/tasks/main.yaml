@@ -13,7 +13,7 @@
   become: no
 
 - name: add Contrail's insecure registry
-  include: "generate_key.yml key_name={{ item }}"
+  include: "generate_key.yaml key_name={{ item }}"
   delegate_to: localhost
   become: no
   with_items:
