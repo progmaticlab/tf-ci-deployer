@@ -35,6 +35,7 @@ all:
   vars:
     zuul_build_with_docker: true
     node_docker_port: 2375
+    nexus_site: "nexus.site.com"
     gerrit_front_port: 80
     gerrit_host: "internal.gerrit.name"
     gerrit_url: "http://aosgerritd.ddns.net:{{ gerrit_front_port }}"

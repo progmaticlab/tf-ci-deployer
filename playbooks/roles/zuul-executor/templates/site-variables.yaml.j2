@@ -1,10 +1,7 @@
 ---
-#zuul_site_mirror_fqdn: 148.251.5.90
-#zuul_site_mirror_fqdn: "mirror.{{ nodepool.region | lower }}.{{ nodepool.cloud | lower }}.opencontrail.org"
-zuul_site_mirror_fqdn: nexus-test.ddns.net
+zuul_site_mirror_fqdn: {{ nexus_site }}
 nexus:
-  fqdn: nexus-test.ddns.net
-#  ip: '10.84.5.85'
+  fqdn: {{ nexus_site }}
   registry:
     tungsten_ci: 5001
     tungsten_nightly: 5002
@@ -16,7 +13,7 @@ nexus:
     yum_tpc: 'yum-tungsten-tpc'
     maven: 'maven-public'
 docker_registry:
-  fqdn: nexus-test.ddns.net
+  fqdn: {{ nexus_site }}
   port: 5000
 
 sanity:
@@ -26,4 +23,4 @@ sanity:
 # settings to avoid creation of sanity docker repos
 #  docker:
 #    port: 32810
-#    fqdn: nexus-test.ddns.net
+#    fqdn: {{ nexus_site }}
