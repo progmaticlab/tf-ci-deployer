@@ -9,7 +9,7 @@
     project_path: "/var/gerrit/git/{{ repo_data.dest_namespace }}/{{ repo_data.project }}.git"
 
 - name: check if project is present on disk
-  shell: "docker exec -t gerrit_gerrit_1 ls {{ project_path }}"
+  shell: "docker exec -t gerrit_gerrit_1 ls {{ project_path }}.git"
   ignore_errors: true
   no_log: true
   register: path_check_result
