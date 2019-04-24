@@ -9,6 +9,8 @@
   file:
     path: /var/lib/gerrit
     state: directory
+    owner: 1000
+    group: 1000
     recurse: yes
 
 - name: create gerrit db directory
