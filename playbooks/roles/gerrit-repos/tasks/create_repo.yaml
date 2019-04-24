@@ -6,6 +6,12 @@
     source_namespace: "{{ repo_data.src_namespace | default(repo_data.dest_namespace) }}"
     target_namespace: "{{ repo_data.dest_namespace }}"
     project_name: "{{ repo_data.project }}"
+    project_path: "/var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
+
+- name: check if project is present on disk
+  stat:
+    path: "{{ project_path }}"
+  register: stat_result
 
 - name: check if gerrit project already exists
   uri:
@@ -30,7 +36,11 @@
     status_code: 204
   when:
     - repo.status == 200
-    - force_update_repos | default(false)
+    - (force_update_repos | default(false)) or not stat_result.stat.exists
+
+- name: remove existing git repository {{ target_namespace }}/{{ project_name }}
+  shell: "docker exec -t gerrit_gerrit_1 rm -rf {{ project_path }}"
+  when: repo.status == 404 or (force_update_repos | default(false))
 
 - name: create gerrit project {{ target_namespace }}/{{ project_name }}
   uri:
@@ -42,12 +52,18 @@
       Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
     status_code: 201
-  when: repo.status == 404 or (force_update_repos | default(false))
-
-- name: remove existing git repository {{ target_namespace }}/{{ project_name }}
-  shell: "docker exec -t gerrit_gerrit_1 rm -rf /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
-  when: repo.status == 404 or (force_update_repos | default(false))
+  when: repo.status == 404 or (force_update_repos | default(false)) or not stat_result.stat.exists
 
 - name: clone git repository {{ target_namespace }}/{{ project_name }}
-  shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git /var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
-  when: repo.status == 404 or (force_update_repos | default(false))
+  shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git {{ project_path }}"
+  when: repo.status == 404 or (force_update_repos | default(false)) or not stat_result.stat.exists
+
+# disk gerrit force
+#    0      0     0             del_disk | !g !d | 
+#    0      0     1             del_disk | !g !d | 
+#    0      1     0 del_gerrit           | !g !d | 
+#    0      1     1 del_gerrit           | !g !d | 
+#    1      0     0             del_disk | !g !d | 
+#    1      0     1             del_disk | !g !d | 
+#    1      1     0                      |  g  d | do not create both
+#    1      1     1 del_gerrit  del_disk | !g !d | 
