@@ -22,8 +22,6 @@ services:
       no_proxy: "${no_proxy}"
     command: "zuul-scheduler -d"
     image: progmaticlab/zuul-scheduler:2.5.3
-    pid: host
-    ipc: host
     ports:
       - "4730:4730"
       - "8001:8001"

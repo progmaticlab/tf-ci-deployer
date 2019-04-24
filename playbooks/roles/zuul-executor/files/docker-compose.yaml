@@ -9,8 +9,6 @@ services:
       no_proxy: "${no_proxy}"
     command: "zuul-executor -d"
     image: progmaticlab/zuul-executor:2.5.3
-    pid: host
-    ipc: host
     ports:
       - "7900:7900"
     volumes:

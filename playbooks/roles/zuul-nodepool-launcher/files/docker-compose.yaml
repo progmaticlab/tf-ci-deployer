@@ -6,8 +6,6 @@ services:
   launcher:
     command: "nodepool-launcher -d"
     image: progmaticlab/nodepool-launcher:0.5.1
-    pid: host
-    ipc: host
     volumes:
       - "./etc_nodepool:/etc/nodepool"
       - "/var/log/zuul:/var/log/zuul"

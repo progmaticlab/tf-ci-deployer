@@ -6,8 +6,6 @@ services:
   web:
     command: "zuul-web -d"
     image: progmaticlab/zuul-web:2.5.3
-    pid: host
-    ipc: host
     volumes:
       - "./etc_zuul:/etc/zuul"
       - "/var/log/zuul:/var/log/zuul"

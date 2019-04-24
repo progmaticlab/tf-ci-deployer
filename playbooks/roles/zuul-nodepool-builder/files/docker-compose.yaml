@@ -6,8 +6,6 @@ services:
   launcher:
     command: "nodepool-builder -d"
     image: progmaticlab/nodepool-builder:0.5.1
-    pid: host
-    ipc: host
     volumes:
       - "./etc_nodepool:/etc/nodepool"
       - "/var/log/zuul:/var/log/zuul"
