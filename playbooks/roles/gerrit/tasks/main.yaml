@@ -9,9 +9,10 @@
   file:
     path: /var/lib/gerrit
     state: directory
-    owner: 1000
-    group: 1000
     recurse: yes
+
+- name: set uid/gid for gerrit folder
+  shell: "chown 1000:1000 /var/lib/gerrit"
 
 - name: create gerrit db directory
   file:
