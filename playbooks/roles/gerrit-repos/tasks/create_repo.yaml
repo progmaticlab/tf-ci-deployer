@@ -6,12 +6,13 @@
     source_namespace: "{{ repo_data.src_namespace | default(repo_data.dest_namespace) }}"
     target_namespace: "{{ repo_data.dest_namespace }}"
     project_name: "{{ repo_data.project }}"
-    project_path: "/var/lib/gerrit/git/{{ repo_data.dest_namespace }}/{{ repo_data.project }}.git"
+    project_path: "/var/gerrit/git/{{ repo_data.dest_namespace }}/{{ repo_data.project }}.git"
 
 - name: check if project is present on disk
-  stat:
-    path: "{{ project_path }}"
-  register: stat_result
+  shell: "docker exec -t gerrit_gerrit_1 ls {{ project_path }}"
+  ignore_errors: true
+  no_log: true
+  register: path_check_result
 
 - name: check if gerrit project already exists
   uri:
@@ -36,12 +37,10 @@
     status_code: 204
   when:
     - repo.status == 200
-    - (force_update_repos | default(false)) or not stat_result.stat.exists
+    - (force_update_repos | default(false)) or path_check_result.rc != 0
 
 - name: remove existing git repository {{ target_namespace }}/{{ project_name }}
-  file:
-    path: "{{ project_path }}"
-    state: absent
+  shell: "docker exec -t gerrit_gerrit_1 rm -rf {{ project_path }}"
   when: repo.status == 404 or (force_update_repos | default(false))
 
 - name: create gerrit project {{ target_namespace }}/{{ project_name }}
@@ -54,11 +53,11 @@
       Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
     status_code: 201
-  when: repo.status == 404 or (force_update_repos | default(false)) or not stat_result.stat.exists
+  when: repo.status == 404 or (force_update_repos | default(false)) or path_check_result.rc != 0
 
 - name: clone git repository {{ target_namespace }}/{{ project_name }}
-  shell: "git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git {{ project_path }}"
-  when: repo.status == 404 or (force_update_repos | default(false)) or not stat_result.stat.exists
+  shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git {{ project_path }}"
+  when: repo.status == 404 or (force_update_repos | default(false)) or path_check_result.rc != 0
 
 # disk gerrit force
 #    0      0     0             del_disk | !g !d | 

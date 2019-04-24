@@ -13,7 +13,9 @@ services:
     depends_on:
       - mariadb
     volumes:
-      - /var/lib/gerrit:/var/gerrit
+      - gerrit-git-volume:/var/gerrit/git
+      - gerrit-index-volume:/var/gerrit/index
+      - gerrit-cache-volume:/var/gerrit/cache
     restart: always
 
   mariadb:
@@ -24,5 +26,11 @@ services:
       - MYSQL_PASSWORD=gerritsecret
       - MYSQL_DATABASE=gerritdb
     volumes:
-      - /var/lib/gerritdb:/var/lib/mysql
+      - gerrit-db-volume:/var/lib/mysql
     restart: always
+
+volumes:
+  gerrit-git-volume:
+  gerrit-db-volume:
+  gerrit-index-volume:
+  gerrit-cache-volume:
