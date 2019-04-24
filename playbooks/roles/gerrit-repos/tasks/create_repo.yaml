@@ -6,7 +6,7 @@
     source_namespace: "{{ repo_data.src_namespace | default(repo_data.dest_namespace) }}"
     target_namespace: "{{ repo_data.dest_namespace }}"
     project_name: "{{ repo_data.project }}"
-    project_path: "/var/gerrit/git/{{ repo_data.dest_namespace }}/{{ repo_data.project }}.git"
+    project_path: "/var/lib/gerrit/git/{{ repo_data.dest_namespace }}/{{ repo_data.project }}.git"
 
 - name: check if project is present on disk
   stat:
@@ -39,7 +39,9 @@
     - (force_update_repos | default(false)) or not stat_result.stat.exists
 
 - name: remove existing git repository {{ target_namespace }}/{{ project_name }}
-  shell: "docker exec -t gerrit_gerrit_1 rm -rf {{ project_path }}"
+  file:
+    path: "{{ project_path }}"
+    state: absent
   when: repo.status == 404 or (force_update_repos | default(false))
 
 - name: create gerrit project {{ target_namespace }}/{{ project_name }}
@@ -55,7 +57,7 @@
   when: repo.status == 404 or (force_update_repos | default(false)) or not stat_result.stat.exists
 
 - name: clone git repository {{ target_namespace }}/{{ project_name }}
-  shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git {{ project_path }}"
+  shell: "git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git {{ project_path }}"
   when: repo.status == 404 or (force_update_repos | default(false)) or not stat_result.stat.exists
 
 # disk gerrit force

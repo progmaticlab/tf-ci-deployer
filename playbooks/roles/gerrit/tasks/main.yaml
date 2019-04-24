@@ -5,6 +5,18 @@
     state: directory
     recurse: yes
 
+- name: create gerrit lib directory
+  file:
+    path: /var/lib/gerrit
+    state: directory
+    recurse: yes
+
+- name: create gerrit db directory
+  file:
+    path: /var/lib/gerritdb
+    state: directory
+    recurse: yes
+
 - name: collect gerrit oauth2 plugin
   get_url:
     url: https://github.com/davido/gerrit-oauth-provider/releases/download/v2.16.1/gerrit-oauth-provider.jar
