@@ -6,7 +6,7 @@
     source_namespace: "{{ repo_data.src_namespace | default(repo_data.dest_namespace) }}"
     target_namespace: "{{ repo_data.dest_namespace }}"
     project_name: "{{ repo_data.project }}"
-    project_path: "/var/gerrit/git/{{ target_namespace }}/{{ project_name }}.git"
+    project_path: "/var/gerrit/git/{{ repo_data.dest_namespace }}/{{ repo_data.project }}.git"
 
 - name: check if project is present on disk
   stat:
