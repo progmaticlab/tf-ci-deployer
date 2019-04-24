@@ -39,32 +39,24 @@
     - repo.status == 200
     - (force_update_repos | default(false)) or path_check_result.rc != 0
 
-- name: remove existing git repository {{ target_namespace }}/{{ project_name }}
-  shell: "docker exec -t gerrit_gerrit_1 rm -rf {{ project_path }}"
-  when: repo.status == 404 or (force_update_repos | default(false))
+- name: create and clone project
+  block:
+    - name: create gerrit project {{ target_namespace }}/{{ project_name }}
+      uri:
+        url: "http://{{ gerrit_host }}/projects/{{ target_namespace }}%2F{{ project_name }}"
+        method: PUT
+        body_format: json
+        body: '{}'
+        headers:
+          Cookie: "{{ gerrit_cookies }}"
+          x-gerrit-auth: "{{ gerrit_auth }}"
+        status_code: 201
 
-- name: create gerrit project {{ target_namespace }}/{{ project_name }}
-  uri:
-    url: "http://{{ gerrit_host }}/projects/{{ target_namespace }}%2F{{ project_name }}"
-    method: PUT
-    body_format: json
-    body: '{}'
-    headers:
-      Cookie: "{{ gerrit_cookies }}"
-      x-gerrit-auth: "{{ gerrit_auth }}"
-    status_code: 201
+    # gerrit creates empty project so we need to remove the existing dir anyway
+    - name: remove existing git repository {{ target_namespace }}/{{ project_name }}
+      shell: "docker exec -t gerrit_gerrit_1 rm -rf {{ project_path }}"
+
+    - name: clone git repository {{ target_namespace }}/{{ project_name }}
+      shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git {{ project_path }}"
+
   when: repo.status == 404 or (force_update_repos | default(false)) or path_check_result.rc != 0
-
-- name: clone git repository {{ target_namespace }}/{{ project_name }}
-  shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git {{ project_path }}"
-  when: repo.status == 404 or (force_update_repos | default(false)) or path_check_result.rc != 0
-
-# disk gerrit force
-#    0      0     0             del_disk | !g !d | 
-#    0      0     1             del_disk | !g !d | 
-#    0      1     0 del_gerrit           | !g !d | 
-#    0      1     1 del_gerrit           | !g !d | 
-#    1      0     0             del_disk | !g !d | 
-#    1      0     1             del_disk | !g !d | 
-#    1      1     0                      |  g  d | do not create both
-#    1      1     1 del_gerrit  del_disk | !g !d | 
