@@ -21,7 +21,7 @@
 
 - name: protect SSH private keys
   file:
-    path: /opt/zuul-executor/ssh_keys/{{ item }}_rsa
+    path: /opt/nodepool-launcher/ssh_keys/{{ item }}_rsa
     mode: 0600
   with_items:
     - admin
@@ -39,7 +39,7 @@
     repo: "ssh://zuul@{{ gerrit_host }}:29418/{{ zuul_config_project }}"
     dest: /opt/nodepool-launcher/config
     force: true
-    key_file: "/var/ssh/zuul_rsa"
+    key_file: /opt/nodepool-launcher/ssh_keys/zuul_rsa
 
 - name: start nodepool-launcher service
   docker_service:
