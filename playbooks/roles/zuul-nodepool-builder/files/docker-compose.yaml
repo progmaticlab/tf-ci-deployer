@@ -11,6 +11,7 @@ services:
       - "/var/log/zuul:/var/log/zuul"
       - "./ssh_keys:/var/ssh"
       - "./.ssh:/root/.ssh"
+      - "/opt/nodepool/images:/opt/nodepool_dib"
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"

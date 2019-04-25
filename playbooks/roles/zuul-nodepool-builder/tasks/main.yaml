@@ -8,6 +8,7 @@
   with_items:
     - /opt/nodepool-builder/etc_nodepool
     - /opt/nodepool-builder/.ssh
+    - /opt/nodepool/images
     - /var/log/zuul
 
 - name: copy config files
@@ -38,6 +39,7 @@
   git:
     repo: "ssh://zuul@{{ gerrit_host }}:29418/{{ zuul_config_project }}"
     dest: /opt/nodepool-builder/config
+    accept_hostkey: no
     force: true
     key_file: /opt/nodepool-builder/ssh_keys/zuul_rsa
 
