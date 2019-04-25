@@ -16,11 +16,29 @@
     force: true
   with_items:
     - {src: "./", dest: "/opt/nodepool-launcher"}
+    - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/nodepool-launcher/ssh_keys"}
 
-- name: apply nodepool configuration
-  template:
-    src: nodepool.yaml.j2
-    dest: /opt/nodepool-launcher/etc_nodepool/nodepool.yaml
+- name: protect SSH private keys
+  file:
+    path: /opt/zuul-executor/ssh_keys/{{ item }}_rsa
+    mode: 0600
+  with_items:
+    - admin
+    - zuul
+    - nodepool
+
+- name: construct known_hosts for gerrit
+  shell: "ssh-keyscan -p {{ item.port }} -t ecdsa {{ item.host }} >> /opt/nodepool-launcher/.ssh/known_hosts"
+  with_items:
+    - {host: "{{ gerrit_host }}", port: 22}
+    - {host: "{{ gerrit_host }}", port: 29418}
+
+- name: "clone {{ zuul_config_project }}"
+  git:
+    repo: "ssh://zuul@{{ gerrit_host }}:29418/{{ zuul_config_project }}"
+    dest: /opt/nodepool-launcher/config
+    force: true
+    key_file: "/var/ssh/zuul_rsa"
 
 - name: start nodepool-launcher service
   docker_service:

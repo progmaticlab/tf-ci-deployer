@@ -6,9 +6,13 @@ services:
   launcher:
     command: "nodepool-launcher -d"
     image: progmaticlab/nodepool-launcher:0.5.1
+    environment:
+      ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/zuul_rsa.pub
     volumes:
-      - "./etc_nodepool:/etc/nodepool"
+      - "./config/nodepool:/etc/nodepool"
       - "/var/log/zuul:/var/log/zuul"
+      - "./ssh_keys:/var/ssh"
+      - "./.ssh:/root/.ssh"
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"

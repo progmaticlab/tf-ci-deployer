@@ -34,6 +34,7 @@ all:
         nodepool-launcher.ddns.net:
   vars:
     zuul_build_with_docker: true
+    zuul_config_project: "Juniper/contrail-project-config"
     node_docker_port: 2375
     nexus_site: "nexus.site.com"
     gerrit_front_port: 80

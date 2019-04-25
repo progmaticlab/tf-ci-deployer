@@ -3,12 +3,14 @@
 version: '2'
 
 services:
-  launcher:
+  builder:
     command: "nodepool-builder -d"
     image: progmaticlab/nodepool-builder:0.5.1
     volumes:
-      - "./etc_nodepool:/etc/nodepool"
+      - "./config/nodepool:/etc/nodepool"
       - "/var/log/zuul:/var/log/zuul"
+      - "./ssh_keys:/var/ssh"
+      - "./.ssh:/root/.ssh"
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
