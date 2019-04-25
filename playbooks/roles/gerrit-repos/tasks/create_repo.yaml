@@ -58,5 +58,6 @@
 
     - name: clone git repository {{ target_namespace }}/{{ project_name }}
       shell: "docker exec -t gerrit_gerrit_1 git clone --mirror {{ source_url }}/{{ source_namespace }}/{{ project_name }}.git {{ project_path }}"
+      no_log: true
 
   when: repo.status == 404 or (force_update_repos | default(false)) or path_check_result.rc != 0
