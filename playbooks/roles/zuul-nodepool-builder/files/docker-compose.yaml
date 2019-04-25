@@ -6,6 +6,8 @@ services:
   builder:
     command: "nodepool-builder -d"
     image: progmaticlab/nodepool-builder:0.5.1
+    environment:
+      OS_CLIENT_CONFIG_FILE: /etc/cloud/cloud.yaml
     volumes:
       - "./config/nodepool:/etc/nodepool"
       - "/var/log/zuul:/var/log/zuul"
