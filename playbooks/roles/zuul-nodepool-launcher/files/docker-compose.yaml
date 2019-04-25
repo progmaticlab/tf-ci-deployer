@@ -11,7 +11,8 @@ services:
       OS_CLIENT_CONFIG_FILE: /etc/cloud/cloud.yaml
     volumes:
       - "./config/nodepool:/etc/nodepool"
-      - "/var/log/zuul:/var/log/zuul"
+      - "/etc/cloud/cloud.yaml:/etc/cloud/cloud.yaml:ro"
+      - "/var/log/zuul:/var/log/nodepool"
       - "./ssh_keys:/var/ssh"
       - "./.ssh:/root/.ssh"
       - "/opt/nodepool/images:/opt/nodepool_dib"

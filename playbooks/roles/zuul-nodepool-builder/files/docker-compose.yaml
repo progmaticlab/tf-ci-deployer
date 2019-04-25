@@ -7,13 +7,20 @@ services:
     command: "nodepool-builder -d"
     image: progmaticlab/nodepool-builder:0.5.1
     environment:
+      ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/zuul_rsa.pub
       OS_CLIENT_CONFIG_FILE: /etc/cloud/cloud.yaml
+    privileged: true
+    pid: host
+    network_mode: host
     volumes:
       - "./config/nodepool:/etc/nodepool"
-      - "/var/log/zuul:/var/log/zuul"
+      - "/etc/cloud/cloud.yaml:/etc/cloud/cloud.yaml:ro"
+      - "/var/log/zuul:/var/log/nodepool"
       - "./ssh_keys:/var/ssh"
       - "./.ssh:/root/.ssh"
       - "/opt/nodepool/images:/opt/nodepool_dib"
       - "/var/run:/var/run"
+      - "/lib/modules:/lib/modules"
+      - "/bin/systemctl:/bin/systemctl"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
