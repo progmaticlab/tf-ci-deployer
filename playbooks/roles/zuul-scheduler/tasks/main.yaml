@@ -6,7 +6,6 @@
     recurse: yes
     mode: 0777
   with_items:
-    - /opt/zuul-scheduler/ssh_keys
     - /opt/zuul-scheduler/.ssh
     - /var/www/logs
     - /var/log/zuul

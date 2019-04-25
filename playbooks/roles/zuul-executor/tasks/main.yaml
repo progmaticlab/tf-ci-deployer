@@ -6,7 +6,6 @@
     recurse: yes
     mode: 0777
   with_items:
-    - /opt/zuul-executor/ssh_keys
     - /opt/zuul-executor/.ssh
     - /opt/zuul-executor/etc_zuul
     - /var/www/logs

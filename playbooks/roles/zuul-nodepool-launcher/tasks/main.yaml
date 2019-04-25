@@ -7,6 +7,7 @@
     mode: 0777
   with_items:
     - /opt/nodepool-launcher/etc_nodepool
+    - /opt/nodepool-launcher/.ssh
     - /var/log/zuul
 
 - name: copy config files
