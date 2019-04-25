@@ -39,7 +39,7 @@
   git:
     repo: "ssh://zuul@{{ gerrit_host }}:29418/{{ zuul_config_project }}"
     dest: /opt/nodepool-launcher/config
-    accept_hostkey: no
+    accept_hostkey: yes
     force: true
     key_file: /opt/nodepool-launcher/ssh_keys/zuul_rsa
 
