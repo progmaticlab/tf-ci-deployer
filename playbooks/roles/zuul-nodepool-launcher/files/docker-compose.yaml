@@ -7,7 +7,7 @@ services:
     command: "nodepool-launcher -d"
     image: progmaticlab/nodepool-launcher:0.5.1
     environment:
-      ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/zuul_rsa.pub
+      ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/nodepool_rsa.pub
       OS_CLIENT_CONFIG_FILE: /etc/cloud/cloud.yaml
     volumes:
       - "./config/nodepool:/etc/nodepool"
