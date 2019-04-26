@@ -11,13 +11,12 @@
     - /opt/nodepool/images
     - /var/log/zuul
 
-- name: copy config files
+- name: copy ssh keys
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     force: true
   with_items:
-    - {src: "./", dest: "/opt/nodepool-builder"}
     - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/nodepool-builder/ssh_keys"}
 
 - name: protect SSH private keys
@@ -42,6 +41,14 @@
     accept_hostkey: yes
     force: true
     key_file: /opt/nodepool-builder/ssh_keys/zuul_rsa
+
+- name: copy config files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    force: true
+  with_items:
+    - {src: "./", dest: "/opt/nodepool-builder"}
 
 - name: start nodepool-builder service
   docker_service:

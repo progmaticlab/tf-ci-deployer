@@ -11,7 +11,7 @@
     - /opt/nodepool/images
     - /var/log/zuul
 
-- name: copy config files
+- name: copy ssh keys
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -42,6 +42,14 @@
     accept_hostkey: yes
     force: true
     key_file: /opt/nodepool-launcher/ssh_keys/zuul_rsa
+
+- name: copy config files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    force: true
+  with_items:
+    - {src: "./", dest: "/opt/nodepool-launcher"}
 
 - name: start nodepool-launcher service
   docker_service:

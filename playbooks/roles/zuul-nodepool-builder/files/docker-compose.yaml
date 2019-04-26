@@ -4,7 +4,7 @@ version: '2'
 
 services:
   builder:
-    command: "nodepool-builder -d"
+    command: "nodepool-builder -d -l /etc/nodepool/builder-logging.conf"
     image: progmaticlab/nodepool-builder:0.5.1
     environment:
       ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/nodepool_rsa.pub

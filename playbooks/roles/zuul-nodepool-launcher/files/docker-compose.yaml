@@ -4,7 +4,7 @@ version: '2'
 
 services:
   launcher:
-    command: "nodepool-launcher -d"
+    command: "nodepool-launcher -d -l /etc/nodepool/launcher-logging.conf"
     image: progmaticlab/nodepool-launcher:0.5.1
     environment:
       ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/nodepool_rsa.pub
