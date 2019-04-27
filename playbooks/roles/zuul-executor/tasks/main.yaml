@@ -58,7 +58,7 @@
 - name: apply site-variables template
   template:
     src: site-variables.yaml.j2
-    dest: /opt/zuul-executor/site-variables.yaml
+    dest: /opt/zuul-executor/etc_zuul/site-variables.yaml
 
 - name: start zuul-executor service
   docker_service:
