@@ -4,7 +4,7 @@
     path: "{{ item }}"
     state: directory
     recurse: yes
-    mode: 0777
+    mode: 0755
   with_items:
     - /opt/zuul-web/etc_zuul
 
