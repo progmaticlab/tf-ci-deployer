@@ -7,11 +7,21 @@
     mode: 0755
   with_items:
     - /opt/zuul-scheduler/.ssh
-    - /var/www/logs
     - /var/log/zuul
     - /var/lib/zuul/build
     - /var/lib/zuul/git
     - /var/lib/zuul/ssh
+
+# for now log server is placed in scheduler and accessed from executor with ubuntu user
+- name: create logs directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: ubuntu
+    recurse: yes
+    mode: 0755
+  with_items:
+    - /var/www/logs
 
 - name: copy config files
   copy:
