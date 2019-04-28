@@ -2,44 +2,44 @@ all:
   children:
     gerrit:
       hosts:
-        gerrit-test.ddns.net:
+        gerrit.internal:
       vars:
         remote_user: ubuntu
     nexus:
       hosts:
-        nexus-test.ddns.net:
+        nexus.internal:
       vars:
         remote_user: ubuntu
     zuul-scheduler:
       hosts:
-        aoszuuld.ddns.net:
+        zuul.internal:
       vars:
         remote_user: ubuntu
         zuul_front_port: 8080
         zuul_logs_port: 8082
     zuul-executor:
       hosts:
-        aoszuulexec1.ddns.net:
-        aoszuulexec2.ddns.net:
-        aoszuulexec3.ddns.net:
+        zuul1.internal:
+        zuul2.internal:
+        zuul3.internal:
     zuul-web:
       hosts:
-        aoszuulweb1.ddns.net:
-        aoszuulweb2.ddns.net:
+        zuul-web1.internal:
+        zuul-web2.internal:
     nodepool-builder:
       hosts:
-        nodepool-builder.ddns.net:
+        nodepool-builder.internal:
     nodepool-launcher:
       hosts:
-        nodepool-launcher.ddns.net:
+        nodepool-launcher.internal:
   vars:
-    zuul_build_with_docker: true
+    zuul_build_with_docker: false
     zuul_config_project: "Juniper/contrail-project-config"
     node_docker_port: 2375
-    nexus_site: "nexus.site.com"
+    nexus_site: "nexus.internal"
     gerrit_front_port: 80
     gerrit_host: "internal.gerrit.name"
-    gerrit_url: "http://aosgerritd.ddns.net:{{ gerrit_front_port }}"
+    gerrit_url: "http://gerrit.public:{{ gerrit_front_port }}"
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
     gerrit_force_ssh_keys_generate: false
     gerrit_force_create_zuul_user: false
