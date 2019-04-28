@@ -37,6 +37,7 @@ all:
     zuul_config_project: "Juniper/contrail-project-config"
     node_docker_port: 2375
     nexus_site: "nexus.internal"
+    zuul_log_url: "http://log_site.public:port"
     gerrit_front_port: 80
     gerrit_host: "internal.gerrit.name"
     gerrit_url: "http://gerrit.public:{{ gerrit_front_port }}"
