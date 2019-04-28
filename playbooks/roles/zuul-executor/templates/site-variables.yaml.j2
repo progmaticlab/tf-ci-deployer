@@ -1,7 +1,7 @@
 ---
-zuul_site_mirror_fqdn: {{ nexus_site }}
+zuul_site_mirror_fqdn: {{ nexus_host }}
 nexus:
-  fqdn: {{ nexus_site }}
+  fqdn: {{ nexus_host }}
   registry:
     tungsten_ci: 5001
     tungsten_nightly: 5002
@@ -13,7 +13,7 @@ nexus:
     yum_tpc: 'yum-tungsten-tpc'
     maven: 'maven-public'
 docker_registry:
-  fqdn: {{ nexus_site }}
+  fqdn: {{ nexus_host }}
   port: 5000
 
 zuul_log_url: "{{ zuul_log_url | default('http://logs.site.org:80') }}"
@@ -25,4 +25,4 @@ sanity:
 # settings to avoid creation of sanity docker repos
 #  docker:
 #    port: 32810
-#    fqdn: {{ nexus_site }}
+#    fqdn: {{ nexus_host }}
