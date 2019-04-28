@@ -25,6 +25,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     force: true
+    mode: 0644
   with_items:
     - {src: "./", dest: "/opt/zuul-executor"}
     - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/zuul-executor/ssh_keys"}
@@ -53,11 +54,13 @@
   template:
     src: zuul.conf.j2
     dest: /opt/zuul-executor/etc_zuul/zuul.conf
+    mode: 0644
 
 - name: apply site-variables template
   template:
     src: site-variables.yaml.j2
     dest: /opt/zuul-executor/etc_zuul/site-variables.yaml
+    mode: 0644
 
 - name: start zuul-executor service
   docker_service:

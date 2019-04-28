@@ -16,6 +16,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     force: true
+    mode: 0644
   with_items:
     - {src: "./", dest: "/opt/nodepool-launcher"}
     - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/nodepool-launcher/ssh_keys"}
@@ -48,6 +49,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     force: true
+    mode: 0644
   with_items:
     - {src: "./", dest: "/opt/nodepool-launcher"}
 

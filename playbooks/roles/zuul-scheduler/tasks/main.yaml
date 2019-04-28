@@ -28,6 +28,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     force: true
+    mode: 0644
   with_items:
     - {src: "./", dest: "/opt/zuul-scheduler"}
     - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/zuul-scheduler/ssh_keys"}
@@ -56,11 +57,13 @@
   template:
     src: zuul.conf.j2
     dest: /opt/zuul-scheduler/etc_zuul/zuul.conf
+    mode: 0644
 
 - name: apply zuul compose file
   template:
     src: docker-compose.yaml.j2
     dest: /opt/zuul-scheduler/docker-compose.yaml
+    mode: 0644
 
 - name: start zuul-scheduler service
   docker_service:
