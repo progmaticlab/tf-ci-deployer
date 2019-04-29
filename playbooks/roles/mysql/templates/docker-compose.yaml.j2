@@ -1,0 +1,11 @@
+# Version 2 is the latest that is supported by docker-compose in
+# Ubuntu Xenial.
+version: '2'
+
+services:
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+    ports:
+      - 3306:3306

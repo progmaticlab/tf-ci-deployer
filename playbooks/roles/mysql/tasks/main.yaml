@@ -1,0 +1,19 @@
+---
+- name: create required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: 0755
+  with_items:
+    - /opt/mysql
+
+- name: apply mysql configuration
+  template:
+    src: docker-compose.yaml.j2
+    dest: /opt/mysql/docker-compose.yaml
+    mode: 0644
+
+- name: start mysql
+  docker_service:
+    project_src: /opt/mysql

@@ -4,6 +4,9 @@ all:
       hosts:
         zk1.internal:
         zk2.internal:
+    mysql:
+      hosts:
+        mysql1.internal:
     gerrit:
       hosts:
         gerrit.internal:
@@ -42,6 +45,7 @@ all:
     node_docker_port: 2375
     nexus_host: "nexus.internal"
     zuul_log_url: "http://log_site.public:port"
+    mysql_root_password: rootsecret
     gerrit_front_port: 80
     gerrit_host: "internal.gerrit.name"
     gerrit_url: "http://gerrit.public:{{ gerrit_front_port }}"

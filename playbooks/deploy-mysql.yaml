@@ -1,0 +1,5 @@
+- hosts: mysql
+  become: yes
+  roles:
+    - docker
+    - mysql
