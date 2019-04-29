@@ -1,0 +1,6 @@
+- hosts: zookeeper
+  become: yes
+  roles:
+    - docker
+    - zookeeper-init
+    - zookeeper

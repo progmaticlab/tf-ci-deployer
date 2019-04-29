@@ -1,0 +1,14 @@
+# Version 2 is the latest that is supported by docker-compose in
+# Ubuntu Xenial.
+version: '2'
+
+services:
+  zk:
+    image: zookeeper
+    environment:
+      ZOO_MY_ID: "{{ zk_id }}"
+      ZOO_SERVERS: "{{ zk_servers }}"
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888

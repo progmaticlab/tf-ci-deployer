@@ -1,0 +1,29 @@
+---
+- name: set zookeeper environment
+  set_fact:
+    zk_id: "{{ zk_cluster_info[inventory_hostname]|int }}"
+
+- name: trace zookeeper environment
+  debug:
+    msg: |
+      "zk:id: {{ zk_id }}"
+      "zk_servers: {{ zk_servers }}"
+
+- name: create required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: 0755
+  with_items:
+    - /opt/zookeeper
+
+- name: apply zookepper configuration
+  template:
+    src: docker-compose.yaml.j2
+    dest: /opt/zookeeper/docker-compose.yaml
+    mode: 0644
+
+- name: start zookepper
+  docker_service:
+    project_src: /opt/zookeeper

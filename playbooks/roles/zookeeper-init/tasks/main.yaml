@@ -1,0 +1,27 @@
+---
+- name: check if zookeeper host group is defined
+  fail:
+    msg: zookeeper group is not defined or empty
+  run_once: yes
+  when: groups["zookeeper"] is not defined
+
+- set_fact:
+    zk_id_last: 1
+  run_once: yes
+
+- name: calculate zookeeper cluster parameters
+  set_fact:
+    zk_cluster_info: '{{ zk_cluster_info|default({}) | combine({item : zk_id_last}) }}'
+    zk_servers: '{{ zk_servers|default("") + "server." + zk_id_last|string + "=" + item + ":2888:3888 " }}'
+    zk_id_last: '{{ zk_id_last|int + 1 }}'
+  with_list: '{{ groups["zookeeper"] }}'
+  run_once: yes
+  when: groups["zookeeper"] is defined
+
+- name: trace zookeeper cluster parameters
+  debug:
+    msg: |
+      "zk_cluster_info: {{ zk_cluster_info }}"
+      "zk_servers: {{ zk_servers }}"
+  run_once: yes
+  when: groups["zookeeper"] is defined
