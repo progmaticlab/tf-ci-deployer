@@ -2,5 +2,4 @@
   become: yes
   roles:
     - docker
-    - zookeeper-init
     - zookeeper
