@@ -35,6 +35,11 @@
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}
 
+- name: remove config derectory
+  file:
+    path: /opt/nodepool-builder/config
+    state: absent
+
 - name: "clone {{ zuul_config_project }}"
   git:
     repo: "ssh://zuul@{{ gerrit_host }}:29418/{{ zuul_config_project }}"
