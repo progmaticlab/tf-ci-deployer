@@ -1,0 +1,35 @@
+---
+- name: create required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: 0755
+  with_items:
+    - /opt/zuul-scheduler
+
+- name: copy initdb scripts
+  copy:
+    src: ./
+    dest: /opt/zuul-scheduler/
+    force: true
+    mode: 0755
+
+- name: run initdb script in docker
+  docker_container:
+    image: python:3-alpine
+    name: zuul-initdb
+    command: "sh /home/entrypoint.sh"
+    env:
+      MYSQL_HOST: "{{ mysql_host }}"
+      MYSQL_ROOT_PASSWD: "{{ mysql_root_password }}"
+      MYSQL_USER: "{{ zuul_mysql_username }}"
+      MYSQL_PASSWD: "{{ zuul_mysql_password }}"
+      ZUUL_DATABASE: "{{ zuul_mysql_db_main }}"
+      BUILD_NUMBER_DATABASE: "{{ zuul_mysql_db_build_number }}"
+    pull: yes
+    detach: no
+    recreate: yes
+    volumes:
+      - "/opt/zuul-scheduler/create_db.py:/home/create_db.py"
+      - "/opt/zuul-scheduler/entrypoint.sh:/home/entrypoint.sh"

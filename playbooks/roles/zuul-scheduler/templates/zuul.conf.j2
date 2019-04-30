@@ -7,7 +7,7 @@ start=true
 log_config=/etc/zuul/gearman-logging.conf
 
 [zookeeper]
-hosts={{ zuul_scheduler_host }}
+hosts={{ zookeeper_host }}
 
 [scheduler]
 tenant_config=/etc/zuul/main.yaml
@@ -23,6 +23,6 @@ user=zuul
 baseurl=http://{{ gerrit_host }}
 
 [connection "mysql"]
-name=mysql
+name={{ mysql_host }}
 driver=sql
-dburi=mysql+pymysql://zuul:secret@mysql/zuul
+dburi=mysql+pymysql://{{ zuul_mysql_username }}:{{ zuul_mysql_password }}@{{ mysql_host }}/{{ zuul_mysql_db_main }}

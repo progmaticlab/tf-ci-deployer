@@ -22,6 +22,7 @@
   become: yes
   gather_facts: yes
   roles:
+    - zuul-initdb
     - zuul-scheduler
 
 - hosts: zuul-executor

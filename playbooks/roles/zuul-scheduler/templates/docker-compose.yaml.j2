@@ -3,21 +3,7 @@
 version: '2'
 
 services:
-  zk:
-    image: zookeeper
-    ports:
-      - "2181:2181"
-  mysql:
-    image: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: zuul
-      MYSQL_USER: zuul
-      MYSQL_PASSWORD: secret
   scheduler:
-    depends_on:
-      - zk
-      - mysql
     environment:
       no_proxy: "${no_proxy}"
     command: "zuul-scheduler -d"

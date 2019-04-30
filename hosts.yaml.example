@@ -45,7 +45,13 @@ all:
     node_docker_port: 2375
     nexus_host: "nexus.internal"
     zuul_log_url: "http://log_site.public:port"
+    zookeeper_host: z11.internal
+    mysql_host: mysql1.internal
     mysql_root_password: rootsecret
+    zuul_mysql_username: zuul
+    zuul_mysql_password: secret
+    zuul_mysql_db_main: zuul
+    zuul_mysql_db_build_number: zuul_buildnumber
     gerrit_front_port: 80
     gerrit_host: "internal.gerrit.name"
     gerrit_url: "http://gerrit.public:{{ gerrit_front_port }}"
