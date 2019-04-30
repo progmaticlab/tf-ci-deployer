@@ -18,6 +18,7 @@
 - name: run initdb script in docker
   docker_container:
     image: python:3-alpine
+    network_mode: "host"
     name: zuul-initdb
     command: "sh /home/entrypoint.sh"
     env:

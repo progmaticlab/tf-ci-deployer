@@ -73,8 +73,10 @@ There are several variables there:
   - **zuul_logs_port** stores zuul logs server port
   - **zuul_build_with_docker** used special zuul configuration projects to build Tungsten Fabric with docker containers
 
-To deploy zuul service, run:
+To deploy zuul services, run:
 ```
+    ansible-playbook playbooks/deploy-mysql.yaml -i hosts.yaml
+    ansible-playbook playbooks/deploy-zookeeper.yaml -i hosts.yaml
     ansible-playbook playbooks/deploy-zuul.yaml -i hosts.yaml
 ```
 

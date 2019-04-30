@@ -73,7 +73,7 @@ all:
       - {dest_namespace: "Juniper", project: "contrail-container-builder"}
       - {dest_namespace: "Juniper", project: "contrail-controller"}
       - {dest_namespace: "Juniper", project: "contrail-deployers-containers"}
-      - {dest_namespace: "Juniper", project: "contrail-dev-env"}
+      - {dest_namespace: "Juniper", project: "contrail-dev-env", src_namespace: "progmaticlab", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "Juniper", project: "contrail-docker"}
       - {dest_namespace: "Juniper", project: "contrail-docs"}
       - {dest_namespace: "Juniper", project: "contrail-dpdk"}
