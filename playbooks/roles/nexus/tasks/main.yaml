@@ -20,10 +20,11 @@
     state: present
     groups: "docker"
 
-- name: apply nexus config
+- name: apply nginx configuration
   template:
-    src: nexus.properties.j2
-    dest: /opt/nexus/nexus.properties
+    src: nexus.nginx.conf.j2
+    dest: /opt/nexus/nexus.nginx.conf
+    mode: 0644
 
 - name: apply docker-compose.yaml
   template:
