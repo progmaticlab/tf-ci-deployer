@@ -3,10 +3,10 @@ version: '3'
 services:
   nexus:
     image: sonatype/nexus3:3.15.2
-    ports:
-      - "80:8081"
+    network_mode: host
     volumes:
       - nexus-data:/nexus-data
+      - ./nexus.properties:/opt/sonatype/nexus/etc/nexus.properties
     deploy:
       restart_policy:
         condition: on-failure

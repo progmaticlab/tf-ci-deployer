@@ -20,6 +20,11 @@
     state: present
     groups: "docker"
 
+- name: apply nexus config
+  template:
+    src: nexus.properties.j2
+    dest: /opt/nexus/nexus.properties
+
 - name: apply docker-compose.yaml
   template:
     src: docker-compose.yaml.j2
