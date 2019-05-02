@@ -7,6 +7,7 @@ services:
     volumes:
       - nexus-data:/nexus-data
       - ./nexus.properties:/opt/sonatype/nexus/etc/nexus.properties
+      - ./nexus.properties:/opt/sonatype/sonatype-work/nexus3/etc/nexus.properties
     deploy:
       restart_policy:
         condition: on-failure
