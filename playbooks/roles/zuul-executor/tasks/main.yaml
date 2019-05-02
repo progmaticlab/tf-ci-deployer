@@ -65,3 +65,5 @@
 - name: start zuul-executor service
   docker_service:
     project_src: /opt/zuul-executor/
+  state: present
+  restarted: yes

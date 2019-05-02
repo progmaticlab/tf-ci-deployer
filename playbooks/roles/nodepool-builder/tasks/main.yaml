@@ -60,3 +60,5 @@
 - name: start nodepool-builder service
   docker_service:
     project_src: /opt/nodepool-builder/
+  state: present
+  restarted: yes
