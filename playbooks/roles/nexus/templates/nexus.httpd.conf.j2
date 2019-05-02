@@ -12,3 +12,5 @@ ProxyPreserveHost On
   ErrorLog logs/{{ nexus_host }}/error.log
   CustomLog logs/{{ nexus_host }}/access.log common
 </VirtualHost>
+
+LoadModule mpm_event_module modules/mod_mpm_event.so

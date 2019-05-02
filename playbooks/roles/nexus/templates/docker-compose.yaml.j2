@@ -11,7 +11,7 @@ services:
         condition: on-failure
         delay: 5s
   rproxy:
-    image: httpd:alpine
+    image: httpd:2.4.39-alpine
     depends_on:
       - nexus
     ports:
