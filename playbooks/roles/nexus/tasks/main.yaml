@@ -20,11 +20,10 @@
     state: present
     groups: "docker"
 
-# from https://help.sonatype.com/repomanager3/installation/run-behind-a-reverse-proxy#app
-- name: apply apache configuration
+- name: apply nginx configuration
   template:
-    src: nexus.httpd.conf.j2
-    dest: /opt/nexus/nexus.httpd.conf
+    src: nexus.nginx.conf.j2
+    dest: /opt/nexus/nexus.nginx.conf
     mode: 0644
 
 - name: apply docker-compose.yaml

@@ -11,13 +11,12 @@ services:
         condition: on-failure
         delay: 5s
   rproxy:
-    image: httpd:2.4.39-alpine
+    image: nginx:1.15
+    network_mode: host
     depends_on:
       - nexus
-    ports:
-      - "80:80"
     volumes:
-      - "/opt/nexus/nexus.httpd.conf:/usr/local/apache2/conf/httpd.conf"
+      - "/opt/nexus/nexus.nginx.conf:/etc/nginx/conf.d/default.conf"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
 
