@@ -6,10 +6,7 @@ services:
     network_mode: host
     volumes:
       - nexus-data:/nexus-data
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
+    restart: always
   rproxy:
     image: nginx:1.15
     network_mode: host
