@@ -9,9 +9,6 @@ services:
     environment:
       ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/nodepool_rsa.pub
       OS_CLIENT_CONFIG_FILE: /etc/cloud/cloud.yaml
-    privileged: true
-    pid: host
-    network_mode: host
     volumes:
       - "./config/nodepool:/etc/nodepool"
       - "/etc/cloud/cloud.yaml:/etc/cloud/cloud.yaml:ro"
