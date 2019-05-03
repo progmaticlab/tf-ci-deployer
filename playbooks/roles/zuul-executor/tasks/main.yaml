@@ -65,10 +65,4 @@
 - name: start zuul-executor service
   docker_service:
     project_src: /opt/zuul-executor/
-
-- name: restart container
-  docker_container:
-    state: started
-    restart: yes
-    name: zuul-executor_executor_1
-    image: progmaticlab/zuul-executor:2.5.3
+    restarted: true

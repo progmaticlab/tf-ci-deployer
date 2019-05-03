@@ -60,10 +60,4 @@
 - name: start nodepool-builder service
   docker_service:
     project_src: /opt/nodepool-builder/
-
-- name: restart container
-  docker_container:
-    state: started
-    restart: yes
-    name: nodepool-builder_builder_1
-    image: progmaticlab/nodepool-builder:0.5.1
+    restarted: true
