@@ -61,5 +61,3 @@
 - name: start nodepool-launcher service
   docker_service:
     project_src: /opt/nodepool-launcher/
-  state: present
-  restarted: yes
