@@ -61,3 +61,9 @@
 - name: start nodepool-launcher service
   docker_service:
     project_src: /opt/nodepool-launcher/
+
+- name: restart container
+  docker:
+    name: nodepool-launcher_launcher_1
+    image: progmaticlab/nodepool-launcher:0.5.1
+    state: restarted
