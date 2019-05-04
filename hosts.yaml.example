@@ -126,8 +126,6 @@ all:
       - {dest_namespace: "Juniper", project: "openstack-helm-infra"}
       - {dest_namespace: "Juniper", project: "puppet-contrail"}
       - {dest_namespace: "Juniper", project: "vijava"}
-      - {dest_namespace: "Juniper", project: "zuul", src_namespace: "progmaticlab", gerrit_source_url: "https://github.com"}
-      - {dest_namespace: "Juniper", project: "zuul-jobs", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "tungsten-infra", project: "ci-utils", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "tungsten-infra", project: "containerregistry", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "tungstenfabric", project: "docs", gerrit_source_url: "https://github.com"}

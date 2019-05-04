@@ -2,6 +2,15 @@
     name: opencontrail
     max-job-timeout: -1
     source:
+      github:
+        untrusted-projects:
+          - Juniper/zuul-jobs:
+              shadow: Juniper/contrail-project-config
+          - Juniper/contrail-publisher
+          - Juniper/zuul:
+              exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
+          - tungsten-infra/ci-utils
+          - tungsten-infra/containerregistry
       gerrit:
         config-projects:
           - Juniper/contrail-project-config
@@ -61,6 +70,7 @@
           - Juniper/contrail-web-storage
           - Juniper/contrail-windows
           - Juniper/contrail-windows-docker-driver
+          - Juniper/contrail-windows-test
           - Juniper/contrail-vcenter-manager
           - Juniper/contrail-vcenter-plugin
           - Juniper/contrail-vnc
@@ -75,6 +85,4 @@
           - Juniper/vijava
           - tungstenfabric/docs
           - tungstenfabric/tungsten-test-runner
-          - Juniper/zuul-jobs
-          - Juniper/zuul:
-              exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
+          - tungstenfabric-infra/periodic-nightly
