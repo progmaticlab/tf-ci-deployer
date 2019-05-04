@@ -118,6 +118,7 @@ all:
       - {dest_namespace: "Juniper", project: "contrail-webui-third-party"}
       - {dest_namespace: "Juniper", project: "contrail-windows"}
       - {dest_namespace: "Juniper", project: "contrail-windows-docker-driver"}
+      - {dest_namespace: "Juniper", project: "contrail-windows-test"}
       - {dest_namespace: "Juniper", project: "contrail-zuul-jobs", src_namespace: "progmaticlab", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "Juniper", project: "horizon"}
       - {dest_namespace: "Juniper", project: "nova"}
@@ -130,3 +131,4 @@ all:
       - {dest_namespace: "tungsten-infra", project: "containerregistry", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "tungstenfabric", project: "docs", gerrit_source_url: "https://github.com"}
       - {dest_namespace: "tungstenfabric", project: "tungsten-test-runner", gerrit_source_url: "https://github.com"}
+      - {dest_namespace: "tungstenfabric-infra", project: "periodic-nightly"}
