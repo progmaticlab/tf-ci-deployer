@@ -22,7 +22,7 @@ sshkey=/var/ssh/zuul_rsa
 user=zuul
 baseurl=http://{{ gerrit_host }}
 
-[connection github]
+[connection "github"]
 driver=github
 
 [connection "mysql"]
