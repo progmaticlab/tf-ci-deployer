@@ -28,20 +28,15 @@
     mode: 0644
   with_items:
     - {src: "./", dest: "/opt/zuul-executor"}
-    - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/zuul-executor/ssh_keys"}
+    - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
+    - {src: "{{ gerrit_ssh_keys }}/nodepool_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
 
 - name: protect SSH private keys
   file:
     path: /opt/zuul-executor/ssh_keys/{{ item }}_rsa
     mode: 0600
   with_items:
-    - admin
     - zuul
-    - nodepool
-
-- name: construct authorized_keys for zuul
-  shell: "cat /opt/zuul-executor/ssh_keys/{{ item }}_rsa.pub >> /opt/zuul-executor/.ssh/authorized_keys"
-  with_items:
     - nodepool
 
 - name: construct known_hosts for gerrit

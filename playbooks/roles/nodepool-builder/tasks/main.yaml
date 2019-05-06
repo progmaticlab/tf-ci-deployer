@@ -18,22 +18,15 @@
     force: true
     mode: 0644
   with_items:
-    - {src: "{{ gerrit_ssh_keys }}/", dest: "/opt/nodepool-builder/ssh_keys"}
+    - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/nodepool-builder/ssh_keys/"}
+    - {src: "{{ gerrit_ssh_keys }}/nodepool_rsa.pub", dest: "/opt/nodepool-builder/ssh_keys/"}
 
 - name: protect SSH private keys
   file:
     path: /opt/nodepool-builder/ssh_keys/{{ item }}_rsa
     mode: 0600
   with_items:
-    - admin
     - zuul
-    - nodepool
-
-- name: construct known_hosts for gerrit
-  shell: "ssh-keyscan -p {{ item.port }} -t ecdsa {{ item.host }} >> /opt/nodepool-builder/.ssh/known_hosts"
-  with_items:
-    - {host: "{{ gerrit_host }}", port: 22}
-    - {host: "{{ gerrit_host }}", port: 29418}
 
 - name: remove config derectory
   file:
