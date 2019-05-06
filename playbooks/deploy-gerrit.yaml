@@ -19,4 +19,4 @@
 
 - hosts: localhost
   roles:
-    - gerrit-prepare-zuul
+    - gerrit-create-account

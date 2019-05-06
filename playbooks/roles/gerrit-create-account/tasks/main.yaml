@@ -1,39 +1,7 @@
 ---
-- name: "create {{ gerrit_ssh_keys }} directory"
-  file:
-    path: "{{ gerrit_ssh_keys }}"
-    state: directory
-    recurse: yes
-  delegate_to: localhost
-  become: no
-
-- name: add Contrail's insecure registry
-  include: "generate_key.yaml key_name={{ item }}"
-  with_items:
-    - admin
-    - zuul
-    - nodepool
-    - logserver
-
-- name: wait for gerrit service
-  wait_for:
-    host: "{{ gerrit_host }}"
-    port: "{{ gerrit_front_port }}"
-
 - name: authenticate to gerrit
   include_role:
     name: gerrit-prepare-urllib
-
-- name: add admin SSH key to gerrit
-  uri:
-    url: "http://{{ gerrit_host }}/accounts/self/sshkeys"
-    method: POST
-    body: "{{ lookup('file', '{{ gerrit_ssh_keys }}/admin_rsa.pub') }}"
-    status_code: 201
-    headers:
-      Content-Type: text/plain
-      Cookie: "{{ gerrit_cookies }}"
-      x-gerrit-auth: "{{ gerrit_auth }}"
 
 - name: check if zuul user exists
   uri:
