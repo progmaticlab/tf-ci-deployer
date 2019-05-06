@@ -1,9 +1,12 @@
 ---
+- name: create zuul group
+  group:
+    name: zuul
+
 - name: create zuul user
   user:
     name: zuul
     group: zuul
-    generate_ssh_key: yes
     system: yes
 
 - name: create required directories
@@ -15,6 +18,7 @@
   with_items:
     - /opt/zuul-logserver/
     - /var/log/zuul
+    - /home/zuul/.ssh
 
 # for now log server is placed in scheduler and accessed from executor with zuul user
 - name: create logserver data directory
