@@ -16,7 +16,3 @@
   roles:
     - docker
     - gerrit
-
-- hosts: localhost
-  roles:
-    - gerrit-create-account
