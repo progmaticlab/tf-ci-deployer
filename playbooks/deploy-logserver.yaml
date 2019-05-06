@@ -1,4 +1,4 @@
-- hosts: mysql
+- hosts: zuul-logs
   remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: no
