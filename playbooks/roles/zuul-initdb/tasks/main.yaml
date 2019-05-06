@@ -20,7 +20,7 @@
     image: python:3-alpine
     network_mode: "host"
     name: zuul-initdb
-    command: "sh /home/entrypoint.sh"
+    command: "sh /root/entrypoint.sh"
     env:
       MYSQL_HOST: "{{ mysql_host }}"
       MYSQL_ROOT_PASSWD: "{{ mysql_root_password }}"
@@ -32,5 +32,5 @@
     detach: no
     recreate: yes
     volumes:
-      - "/opt/zuul-scheduler/create_db.py:/home/create_db.py"
-      - "/opt/zuul-scheduler/entrypoint.sh:/home/entrypoint.sh"
+      - "/opt/zuul-scheduler/create_db.py:/root/create_db.py"
+      - "/opt/zuul-scheduler/entrypoint.sh:/root/entrypoint.sh"

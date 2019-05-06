@@ -2,4 +2,4 @@
 set -e
 
 pip install mysql-connector
-python /home/create_db.py
+python /root/create_db.py
