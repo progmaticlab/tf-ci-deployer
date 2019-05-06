@@ -17,14 +17,3 @@ docker_registry:
   port: 5000
 
 zuul_log_url: "{{ zuul_log_url | default('http://logs.site.org:80') }}"
-
-sanity:
-  docker_registry_port: 
-  control_plane_interface: ens3
-  data_plane_interface: ens4
-
-
-# settings to avoid creation of sanity docker repos
-#  docker:
-#    port: 32810
-#    fqdn: {{ nexus_host }}
