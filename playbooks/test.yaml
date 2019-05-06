@@ -1,6 +1,6 @@
 ---
 - hosts: gerrit
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ remote_user|default(ansible_user_id) }}"
   tasks:
   - name: test variables
     debug:

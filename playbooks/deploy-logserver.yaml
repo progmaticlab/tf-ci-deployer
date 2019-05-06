@@ -1,5 +1,5 @@
 - hosts: zuul-logs
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ remote_user|default(ansible_user_id) }}"
   become: yes
   gather_facts: no
   roles:
@@ -9,7 +9,7 @@
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
 
 - hosts: zuul-logs
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ remote_user|default(ansible_user_id) }}"
   become: yes
   roles:
     - docker
