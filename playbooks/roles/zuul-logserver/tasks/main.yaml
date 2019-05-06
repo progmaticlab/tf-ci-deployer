@@ -26,15 +26,12 @@
     recurse: yes
     mode: 0775
 
-- name: copy logserver public ssh key
-  copy:
-    src: "{{ gerrit_ssh_keys }}/logserver_rsa.pub"
-    dest: "/opt/zuul-logserver/logserver_rsa.pub"
-    force: true
-    mode: 0644
+- name: "collect {{ gerrit_ssh_keys }}/logserver_rsa.pub' ssh key"
+  set_fact:
+    logserver_pubkey: "{{ lookup('file', '{{ gerrit_ssh_keys }}/logserver_rsa.pub') }}"
 
-- name: add logserver public ssh key to authorized_keys
-  shell: "cat /opt/zuul-logserver/logserver_rsa.pub >> /home/zuul/.ssh/authorized_keys"
+- name: add logserver public ssh key to zuul's authorized_keys
+  shell: "echo {{ logserver_pubkey }} >> /home/zuul/.ssh/authorized_keys"
 
 - name: fix /home/zuul/.ssh/authorized_keys security
   file:
@@ -45,8 +42,8 @@
 
 - name: copy logserver configuration files
   copy:
-    src: "./"
-    dest: "/opt/zuul-logserver/"
+    src: "httpd.conf"
+    dest: "/opt/zuul-logserver/httpd.conf"
     force: true
 
 - name: apply logserver compose file
