@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  remote_user: "{{ remote_user|default(ansible_user_id) }}"
+  remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: no
   roles:
@@ -10,7 +10,7 @@
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
 
 - hosts: all
-  remote_user: "{{ remote_user|default(ansible_user_id) }}"
+  remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: yes
   roles:
@@ -18,7 +18,7 @@
     - zuul-hosts
 
 - hosts: zuul-scheduler
-  remote_user: "{{ remote_user|default(ansible_user_id) }}"
+  remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: yes
   roles:
@@ -26,28 +26,28 @@
     - zuul-scheduler
 
 - hosts: zuul-executor
-  remote_user: "{{ remote_user|default(ansible_user_id) }}"
+  remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: yes
   roles:
     - zuul-executor
 
 - hosts: zuul-web
-  remote_user: "{{ remote_user|default(ansible_user_id) }}"
+  remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: yes
   roles:
     - zuul-web
 
 - hosts: nodepool-launcher
-  remote_user: "{{ remote_user|default(ansible_user_id) }}"
+  remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: yes
   roles:
     - nodepool-launcher
 
 - hosts: nodepool-builder
-  remote_user: "{{ remote_user|default(ansible_user_id) }}"
+  remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: yes
   roles:
