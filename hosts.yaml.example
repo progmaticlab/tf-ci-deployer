@@ -4,9 +4,13 @@ all:
       hosts:
         zk1.internal:
         zk2.internal:
+      vars:
+        remote_user: ubuntu
     mysql:
       hosts:
         mysql1.internal:
+      vars:
+        remote_user: ubuntu
     gerrit:
       hosts:
         gerrit.internal:
@@ -29,16 +33,30 @@ all:
         zuul1.internal:
         zuul2.internal:
         zuul3.internal:
+      vars:
+        remote_user: ubuntu
     zuul-web:
       hosts:
         zuul-web1.internal:
         zuul-web2.internal:
+      vars:
+        remote_user: ubuntu
+    zuul-logs:
+      hosts:
+        zuul-logserver1.internal:
+        zuul-logserver2.internal:
+      vars:
+        remote_user: ubuntu
     nodepool-builder:
       hosts:
         nodepool-builder.internal:
+      vars:
+        remote_user: ubuntu
     nodepool-launcher:
       hosts:
         nodepool-launcher.internal:
+      vars:
+        remote_user: ubuntu
   vars:
     zuul_build_with_docker: false
     zuul_config_project: "Juniper/contrail-project-config"

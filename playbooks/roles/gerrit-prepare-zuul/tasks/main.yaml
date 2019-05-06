@@ -1,9 +1,4 @@
 ---
-- name: wait for gerrit service
-  wait_for:
-    host: "{{ gerrit_host }}"
-    port: "{{ gerrit_front_port }}"
-
 - name: "create {{ gerrit_ssh_keys }} directory"
   file:
     path: "{{ gerrit_ssh_keys }}"
@@ -18,6 +13,12 @@
     - admin
     - zuul
     - nodepool
+    - logserver
+
+- name: wait for gerrit service
+  wait_for:
+    host: "{{ gerrit_host }}"
+    port: "{{ gerrit_front_port }}"
 
 - name: authenticate to gerrit
   include_role:

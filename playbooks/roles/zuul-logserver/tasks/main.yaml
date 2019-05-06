@@ -1,0 +1,60 @@
+---
+- name: create zuul user
+  user:
+    name: zuul
+    group: zuul
+    generate_ssh_key: yes
+    system: yes
+
+- name: create required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: 0755
+  with_items:
+    - /opt/zuul-logserver/
+    - /var/log/zuul
+
+# for now log server is placed in scheduler and accessed from executor with zuul user
+- name: create logserver data directory
+  file:
+    path: "{{ logserver_data_directory }}"
+    state: directory
+    owner: zuul
+    group: zuul
+    recurse: yes
+    mode: 0775
+
+- name: copy logserver public ssh key
+  copy:
+    src: "{{ gerrit_ssh_keys }}/logserver_rsa.pub"
+    dest: "/opt/zuul-logserver/logserver_rsa.pub"
+    force: true
+    mode: 0644
+
+- name: add logserver public ssh key to authorized_keys
+  shell: "cat /opt/zuul-logserver/logserver_rsa.pub >> /home/zuul/.ssh/authorized_keys"
+
+- name: fix /home/zuul/.ssh/authorized_keys security
+  file:
+    path: /home/zuul/.ssh/authorized_keys
+    owner: zuul
+    group: zuul
+    mode: 0644
+
+- name: copy logserver configuration files
+  copy:
+    src: "./"
+    dest: "/opt/zuul-logserver/"
+    force: true
+
+- name: apply logserver compose file
+  template:
+    src: docker-compose.yaml.j2
+    dest: /opt/zuul-logserver/docker-compose.yaml
+    mode: 0644
+
+- name: start logserver
+  docker_service:
+    project_src: /opt/zuul-logserver/

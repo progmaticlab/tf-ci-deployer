@@ -1,5 +1,4 @@
----
-- hosts: gerrit
+- hosts: mysql
   remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: no
@@ -9,14 +8,9 @@
   - name: install python for ansible
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
 
-- hosts: gerrit
+- hosts: zuul-logs
   remote_user: "{{ remote_user }}"
   become: yes
-  gather_facts: yes
   roles:
     - docker
-    - gerrit
-
-- hosts: localhost
-  roles:
-    - gerrit-prepare-zuul
+    - zuul-logserver
