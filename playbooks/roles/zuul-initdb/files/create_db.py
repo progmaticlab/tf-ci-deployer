@@ -24,6 +24,23 @@ def create_user(conn):
 
     return username
 
+def init_cachedb(conn, db_name):
+    c = conn.cursor()
+    try:
+        c.execute(
+            """CREATE TABLE IF NOT EXISTS {}.build_metadata_cache (
+                    build_number INT,
+                    zuul_buildset_id VARCHAR(36),
+                    version varchar(100),
+                    INDEX (version, build_number),
+                    INDEX (version, zuul_buildset_id)
+                );""".format(db_name))
+    except mysql.connector.Error as err:
+        sys.stderr.write("failed to create table {}.build_metadata_cache".format(db_name))
+        raise err
+
+    c.close()
+
 def create_dbs(conn, username):
     zuul_db_name = os.environ["ZUUL_DATABASE"]
     buildnumber_db_name = os.environ["BUILD_NUMBER_DATABASE"]
@@ -50,6 +67,7 @@ def create_dbs(conn, username):
         raise err
 
     c.close()
+    init_cachedb(conn, buildnumber_db_name)
 
 if __name__ == "__main__":
     try:
