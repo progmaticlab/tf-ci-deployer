@@ -69,7 +69,7 @@ all:
     zuul_mysql_username: zuul
     zuul_mysql_password: secret
     zuul_mysql_db_main: zuul
-    zuul_mysql_db_build_number: zuul_buildnumber
+    zuul_mysql_db_build_number: zuul_job_cache
     gerrit_front_port: 80
     gerrit_host: "internal.gerrit.name"
     gerrit_url: "http://gerrit.public:{{ gerrit_front_port }}"
