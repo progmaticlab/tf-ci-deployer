@@ -9,7 +9,10 @@ services:
     environment:
       ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/nodepool_rsa.pub
       OS_CLIENT_CONFIG_FILE: /etc/cloud/cloud.yaml
+    # to be able to mount loop devices
     privileged: true
+    # to avoid strange MTU issue
+    network: host
     volumes:
       - "./config/nodepool:/etc/nodepool"
       - "/etc/cloud/cloud.yaml:/etc/cloud/cloud.yaml:ro"
