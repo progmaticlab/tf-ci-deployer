@@ -77,6 +77,8 @@ To deploy zuul services, run:
 ```
     ansible-playbook playbooks/deploy-mysql.yaml -i hosts.yaml
     ansible-playbook playbooks/deploy-zookeeper.yaml -i hosts.yaml
+    ansible-playbook playbooks/deploy-nodepool.yaml -i hosts.yaml
+    ansible-playbook playbooks/deploy-logserver.yaml -i hosts.yaml
     ansible-playbook playbooks/deploy-zuul.yaml -i hosts.yaml
 ```
 
