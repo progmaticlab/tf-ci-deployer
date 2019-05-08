@@ -12,7 +12,7 @@ services:
     # to be able to mount loop devices
     privileged: true
     # to avoid strange MTU issue
-    network: host
+    network_mode: host
     volumes:
       - "./config/nodepool:/etc/nodepool"
       - "/etc/cloud/cloud.yaml:/etc/cloud/cloud.yaml:ro"
