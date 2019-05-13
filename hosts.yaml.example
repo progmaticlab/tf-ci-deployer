@@ -60,6 +60,7 @@ all:
     zuul_config_project: "Juniper/contrail-project-config"
     zuul_front_port: 8080
     zuul_logs_port: 8082
+    image_web_server: "nexus/repository/"
     node_docker_port: 2375
     nexus_host: "nexus.internal"
     zuul_log_url: "http://log_site.public:port"
