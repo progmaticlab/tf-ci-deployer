@@ -22,3 +22,8 @@ gerrit:
   scheme: "http"
 
 image_web_server: "{{ image_web_server | default('') }}"
+
+# input parameters for configure-mirrors
+mirror_fqdn: "{{ nexus_host }}/repository"
+pypi_mirror: "http://{{ nexus_host }}/repository/pypi/simple"
+wheel_mirror: ""
