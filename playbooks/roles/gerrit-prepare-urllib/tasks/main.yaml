@@ -6,7 +6,7 @@
 
 - name: get gerrit first login screen
   uri:
-    url: "http://{{ gerrit_host }}/a/accounts/self/sshkeys"
+    url: "http://{{ gerrit_host }}:{{ gerrit_front_port }}/a/accounts/self/sshkeys"
     method: GET
     user: admin
     password: secret
@@ -14,7 +14,7 @@
 
 - name: create authentication cookie for later requests to gerrit
   uri:
-    url: "http://{{ gerrit_host }}/login/?account_id=1000000"
+    url: "http://{{ gerrit_host }}:{{ gerrit_front_port }}/login/?account_id=1000000"
     method: GET
     status_code: 302
     follow_redirects: false
@@ -22,7 +22,7 @@
 
 - name: store xsrf token for later requests to gerrit
   uri:
-    url: "http://{{ gerrit_host }}/"
+    url: "http://{{ gerrit_host }}:{{ gerrit_front_port }}/"
     method: GET
     headers:
       Cookie: "{{ gerrit_login.set_cookie }}"

@@ -30,7 +30,7 @@
 
 - name: check if zuul user exists
   uri:
-    url: "http://{{ gerrit_host }}/accounts/zuul"
+    url: "http://{{ gerrit_host }}:{{ gerrit_front_port }}/accounts/zuul"
     status_code: 200, 404
     headers:
       Cookie: "{{ gerrit_cookies }}"
@@ -38,7 +38,7 @@
 
 - name: create zuul gerrit account
   uri:
-    url: "http://{{ gerrit_host }}/accounts/zuul"
+    url: "http://{{ gerrit_host }}:{{ gerrit_front_port }}/accounts/zuul"
     method: PUT
     status_code: 201
     body_format: json
@@ -55,7 +55,7 @@
 
 - name: add zuul SSH key to gerrit
   uri:
-    url: "http://{{ gerrit_host }}/accounts/zuul/sshkeys"
+    url: "http://{{ gerrit_host }}:{{ gerrit_front_port }}/accounts/zuul/sshkeys"
     method: POST
     body: "{{ lookup('file', '{{ gerrit_ssh_keys }}/zuul_rsa.pub') }}"
     status_code: 201
