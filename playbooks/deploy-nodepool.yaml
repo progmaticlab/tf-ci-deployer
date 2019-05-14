@@ -9,13 +9,15 @@
   - name: install python for ansible
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
 
-- hosts: nodepool
+- hosts: nodepool*
   remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: yes
   roles:
     - docker
-    - zuul-hosts
+    - role: zuul-prepare
+      vars:
+        zuul_build_nodepool_containers: true
 
 - hosts: nodepool-launcher
   remote_user: "{{ remote_user }}"

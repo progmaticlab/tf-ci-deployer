@@ -7,7 +7,7 @@ services:
     environment:
       no_proxy: "${no_proxy}"
     command: "zuul-scheduler -d"
-    image: progmaticlab/zuul-scheduler:2.5.3
+    image: {{ ZUUL_DOCKERREPO }}/zuul-scheduler:{{ ZUUL_VERSION }}
     ports:
       - "4730:4730"
       - "8001:8001"

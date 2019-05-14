@@ -3,12 +3,16 @@
 version: '2'
 
 services:
-  launcher:
-    command: "nodepool-launcher -d -l /etc/nodepool/launcher-logging.conf"
-    image: progmaticlab/nodepool-launcher:0.5.1
+  builder:
+    command: "nodepool-builder -d -l /etc/nodepool/builder-logging.conf"
+    image: {{ NODEPOOL_DOCKERREPO }}/nodepool-builder:{{ NODEPOOL_VERSION }}
     environment:
       ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/nodepool_rsa.pub
       OS_CLIENT_CONFIG_FILE: /etc/cloud/cloud.yaml
+    # to be able to mount loop devices
+    privileged: true
+    # to avoid strange MTU issue
+    network_mode: host
     volumes:
       - "./config/nodepool:/etc/nodepool"
       - "/etc/cloud/cloud.yaml:/etc/cloud/cloud.yaml:ro"
@@ -17,5 +21,7 @@ services:
       - "./.ssh:/root/.ssh"
       - "/opt/nodepool/images:/opt/nodepool_dib"
       - "/var/run:/var/run"
+      - "/lib/modules:/lib/modules"
+      - "/bin/systemctl:/bin/systemctl"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"

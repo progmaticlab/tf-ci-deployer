@@ -1,0 +1,22 @@
+---
+- name: collect hosts configuration
+  include: collect-hosts.yaml
+
+- name: configure docker images tags
+  set_fact:
+    ZUUL_DOCKERREPO: progmaticlab
+    ZUUL_VERSION: "2.5.3"
+    NODEPOOL_DOCKERREPO: progmaticlab
+    NODEPOOL_VERSION: "0.5.1"
+
+- name: build zuul docker images
+  include: build-zuul.yaml
+  when:
+    - zuul_build_containers | default(false)
+    - zuul_build_zuul_containers | default(false)
+
+- name: build nodepool docker images
+  include: build-nodepool.yaml
+  when:
+    - zuul_build_containers | default(false)
+    - zuul_build_nodepool_containers | default(false)

@@ -50,6 +50,12 @@
   with_items:
     - {src: "./", dest: "/opt/nodepool-launcher"}
 
+- name: apply docker-compose configuration
+  template:
+    src: docker-compose.yaml.j2
+    dest: /opt/nodepool-launcher/docker-compose.yaml
+    mode: 0644
+
 - name: start nodepool-launcher service
   docker_service:
     project_src: /opt/nodepool-launcher/

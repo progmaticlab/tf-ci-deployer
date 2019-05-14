@@ -1,0 +1,25 @@
+- name: set up nodepool images tags
+  set_fact:
+    NODEPOOL_DOCKERREPO: local
+    NODEPOOL_VERSION: latest
+
+- name: trace nodepool git repositories
+  debug:
+    var: zuul_git_nodepool
+
+- name: clone nodepool git repository
+  git:
+    repo: "{{ zuul_git_nodepool }}"
+    version: "{{ zuul_git_nodepool_branch }}"
+    dest: /opt/zuul/git/nodepool
+    accept_hostkey: yes
+    force: true
+
+- name: build nodepool docker images
+  command: sh build-dockerimages.sh
+  args:
+    chdir: /opt/zuul/git/nodepool
+  environment:
+    NODEPOOL_CLEAN: 1
+    NODEPOOL_DOCKERREPO: "{{ NODEPOOL_DOCKERREPO }}"
+    NODEPOOL_VERSION: "{{ NODEPOOL_VERSION }}"

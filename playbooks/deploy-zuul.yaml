@@ -15,7 +15,9 @@
   gather_facts: yes
   roles:
     - docker
-    - zuul-hosts
+    - role: zuul-prepare
+      vars:
+        zuul_build_zuul_containers: true
 
 - hosts: zuul-scheduler
   remote_user: "{{ remote_user }}"

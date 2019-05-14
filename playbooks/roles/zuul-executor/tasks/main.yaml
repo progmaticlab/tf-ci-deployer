@@ -57,6 +57,12 @@
     dest: /opt/zuul-executor/etc_zuul/site-variables.yaml
     mode: 0644
 
+- name: apply docker-compose configuration
+  template:
+    src: docker-compose.yaml.j2
+    dest: /opt/zuul-executor/docker-compose.yaml
+    mode: 0644
+
 - name: start zuul-executor service
   docker_service:
     project_src: /opt/zuul-executor/

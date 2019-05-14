@@ -5,7 +5,7 @@ version: '2'
 services:
   web:
     command: "zuul-web -d"
-    image: progmaticlab/zuul-web:2.5.3
+    image: {{ ZUUL_DOCKERREPO }}/zuul-web:{{ ZUUL_VERSION }}
     volumes:
       - "./etc_zuul:/etc/zuul"
       - "/var/log/zuul:/var/log/zuul"

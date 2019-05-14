@@ -1,0 +1,26 @@
+---
+- name: set up zuul images tags
+  set_fact:
+    ZUUL_DOCKERREPO: local
+    ZUUL_VERSION: latest
+
+- name: trace zuul git repositories
+  debug:
+    var: zuul_git_zuul
+
+- name: clone zuul git repository
+  git:
+    repo: "{{ zuul_git_zuul }}"
+    version: "{{ zuul_git_zuul_branch }}"
+    dest: /opt/zuul/git/zuul
+    accept_hostkey: yes
+    force: true
+
+- name: build zuul docker images
+  command: sh build-docker.sh
+  args:
+    chdir: /opt/zuul/git/zuul
+  environment:
+    ZUUL_CLEAN: 1
+    ZUUL_DOCKERREPO: "{{ ZUUL_DOCKERREPO }}"
+    ZUUL_VERSION: "{{ ZUUL_VERSION }}"

@@ -71,6 +71,9 @@ all:
     zuul_mysql_password: secret
     zuul_mysql_db_main: zuul
     zuul_mysql_db_build_number: zuul_job_cache
+    zuul_build_containers: true
+    zuul_git_zuul: "https://github.com/progmaticlab/zuul.git"
+    zuul_git_nodepool: "https://github.com/progmaticlab/nodepool.git"
     gerrit_front_port: 80
     gerrit_host: "internal.gerrit.name"
     gerrit_url: "http://gerrit.public:{{ gerrit_front_port }}"
