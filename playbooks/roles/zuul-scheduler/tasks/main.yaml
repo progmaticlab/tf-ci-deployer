@@ -6,7 +6,7 @@
     tasks_from: zuul
   vars:
     - component: scheduler
-  when: zuul_build_containers | default(false)
+  when: zuul_build_containers
 
 - name: create required directories
   file:

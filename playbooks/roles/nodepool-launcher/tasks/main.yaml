@@ -6,7 +6,7 @@
     tasks_from: nodepool
   vars:
     - component: launcher
-  when: nodepool_build_containers | default(false)
+  when: nodepool_build_containers
 
 - name: create required directories
   file:
