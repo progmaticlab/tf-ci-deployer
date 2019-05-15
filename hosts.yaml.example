@@ -4,64 +4,39 @@ all:
       hosts:
         zk1.internal:
         zk2.internal:
-      vars:
-        remote_user: ubuntu
     mysql:
       hosts:
         mysql1.internal:
-      vars:
-        remote_user: ubuntu
     gerrit:
       hosts:
         gerrit.internal:
-      vars:
-        remote_user: ubuntu
     nexus:
       hosts:
         nexus.internal:
-      vars:
-        remote_user: ubuntu
     zuul-scheduler:
       hosts:
         zuul.internal:
-      vars:
-        remote_user: ubuntu
     zuul-executor:
       hosts:
         zuul1.internal:
         zuul2.internal:
         zuul3.internal:
-      vars:
-        remote_user: ubuntu
     zuul-web:
       hosts:
         zuul-web1.internal:
         zuul-web2.internal:
-      vars:
-        remote_user: ubuntu
     zuul-logs:
       hosts:
         zuul-logserver1.internal:
         zuul-logserver2.internal:
-      vars:
-        remote_user: ubuntu
     nodepool-builder:
       hosts:
         nodepool-builder.internal:
-      vars:
-        remote_user: ubuntu
     nodepool-launcher:
       hosts:
         nodepool-launcher.internal:
-      vars:
-        remote_user: ubuntu
   vars:
-    zuul_build_with_docker: false
-    zuul_config_project: "Juniper/contrail-project-config"
-    zuul_front_port: 8080
-    zuul_logs_port: 8082
     image_web_server: "nexus/repository/"
-    node_docker_port: 2375
     nexus_host: "nexus.internal"
     zuul_log_url: "http://log_site.public:port"
     zookeeper_host: z11.internal
@@ -71,16 +46,10 @@ all:
     zuul_mysql_password: secret
     zuul_mysql_db_main: zuul
     zuul_mysql_db_build_number: zuul_job_cache
-    zuul_build_containers: true
-    zuul_git_zuul: "https://github.com/progmaticlab/zuul.git"
-    zuul_git_nodepool: "https://github.com/progmaticlab/nodepool.git"
-    gerrit_front_port: 80
+
     gerrit_host: "internal.gerrit.name"
-    gerrit_url: "http://gerrit.public:{{ gerrit_front_port }}"
-    gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
-    gerrit_force_create_zuul_user: false
+    gerrit_public_host: "gerrit.public"
     gerrit_source_url: "https://review.opencontrail.org"
-    force_update_repos: true
     gerrit_repos:
       - {dest_namespace: "Juniper", project: "contrail"}
       - {dest_namespace: "Juniper", project: "contrail-analytics"}

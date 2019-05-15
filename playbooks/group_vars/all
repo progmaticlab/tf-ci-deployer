@@ -1,0 +1,22 @@
+---
+remote_user: ubuntu
+
+zuul_config_project: "Juniper/contrail-project-config"
+zuul_front_port: 8080
+zuul_logs_port: 8082
+
+zuul_build_containers: false
+zuul_git_url: "https://github.com/progmaticlab/zuul.git"
+nodepool_build_containers: false
+nodepool_git_url: "https://github.com/progmaticlab/nodepool.git"
+
+gerrit_scheme: "http"
+gerrit_front_port: 80
+gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
+gerrit_force_create_zuul_user: false
+force_update_repos: false
+
+ZUUL_DOCKERREPO: progmaticlab
+ZUUL_VERSION: "2.5.3"
+NODEPOOL_DOCKERREPO: progmaticlab
+NODEPOOL_VERSION: "0.5.1"

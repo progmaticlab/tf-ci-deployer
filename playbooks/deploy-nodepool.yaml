@@ -15,9 +15,7 @@
   gather_facts: yes
   roles:
     - docker
-    - role: zuul-prepare
-      vars:
-        zuul_build_nodepool_containers: true
+    - zuul-prepare
 
 - hosts: nodepool-launcher
   remote_user: "{{ remote_user }}"

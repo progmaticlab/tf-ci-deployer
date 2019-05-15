@@ -2,7 +2,7 @@ FROM gerritcodereview/gerrit:2.16.1-centos7
 
 COPY --chown=gerrit:gerrit gerrit-oauth-provider.jar /var/gerrit/plugins/
 
-ENV CANONICAL_WEB_URL {{ gerrit_url }}
+ENV CANONICAL_WEB_URL {{ gerrit_scheme }}://{{ gerrit_url }}:{{ gerrit_front_port }}
 
 CMD git config -f /var/gerrit/etc/gerrit.config database.type "mariadb" && \
     git config -f /var/gerrit/etc/gerrit.config database.hostname "mariadb" && \
@@ -12,7 +12,7 @@ CMD git config -f /var/gerrit/etc/gerrit.config database.type "mariadb" && \
     git config -f /var/gerrit/etc/secure.config database.password "gerritsecret" && \
     git config -f /var/gerrit/etc/gerrit.config gerrit.ui "POLYGERRIT" && \
     git config -f /var/gerrit/etc/gerrit.config sendemail.enable false && \
-    git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl "{{ gerrit_url }}" && \
+    git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl "{{ gerrit_scheme }}://{{ gerrit_url }}:{{ gerrit_front_port }}" && \
     git config -f /var/gerrit/etc/gerrit.config noteDb.changes.autoMigrate true && \
 {% if gerrit_oauth_client_id is defined and gerrit_oauth_client_secret is defined %}
     git config -f /var/gerrit/etc/gerrit.config auth.type "OAUTH" && \

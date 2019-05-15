@@ -8,7 +8,7 @@ Initial gerrit host configuration is placed in ansible inventory file
 all:
   vars:
     gerrit_host: "gerrit.internal"
-    gerrit_url: "http://gerrit.external"
+    gerrit_public_host: "gerrit.external"
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
     gerrit_force_ssh_keys_generate: true
     gerrit_force_create_zuul_user: true
@@ -32,7 +32,7 @@ There are several variables there:
   - **gerrit_repos** stores list of required repositories to import into gerrit from github.com
   - **gerrit_force_ssh_keys_generate** forces gerrit ssh keys generation
   - **gerrit_ssh_keys** stores local directory path where to store priv\pub keys for gerrit
-  - **gerrit_url** stores gerrit's external url
+  - **gerrit_public_host** stores gerrit's external url
   - **gerrit_source_url** stores source URL for all gerrit projects to import from. This URL can be redefined in individual project
 
 To deploy gerrit service, run:
@@ -52,9 +52,8 @@ Initial zuul host configuration is placed in ansible inventory file
 ```
 all:
   vars:
-    zuul_build_with_docker: false
     gerrit_host: "gerrit.internal"
-    gerrit_url: "http://gerrit.external"
+    gerrit_public_host: "gerrit.external"
     gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
   children:
     zuul:
@@ -68,10 +67,9 @@ all:
 There are several variables there:
   - **gerrit_host** stores gerrit internal host name
   - **gerrit_ssh_keys** stores local directory path where to store priv\pub keys for gerrit
-  - **gerrit_url** stores gerrit's external url
+  - **gerrit_public_host** stores gerrit's external host
   - **zuul_front_port** stores zuul webpage port
   - **zuul_logs_port** stores zuul logs server port
-  - **zuul_build_with_docker** used special zuul configuration projects to build Tungsten Fabric with docker containers
 
 To deploy zuul services, run:
 ```

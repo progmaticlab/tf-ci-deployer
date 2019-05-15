@@ -19,6 +19,6 @@ docker_registry:
 zuul_log_url: "{{ zuul_log_url | default('http://logs.site.org:80') }}"
 
 gerrit:
-  scheme: "http"
+  scheme: "{{ gerrit_scheme }}"
 
 image_web_server: "{{ image_web_server | default('') }}"

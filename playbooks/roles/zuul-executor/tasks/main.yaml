@@ -1,4 +1,13 @@
 ---
+
+- name: build containers
+  include_role:
+    name: build
+    tasks_from: zuul
+  vars:
+    - component: executor
+  when: zuul_build_containers | default(false)
+
 - name: create required directories
   file:
     path: "{{ item }}"

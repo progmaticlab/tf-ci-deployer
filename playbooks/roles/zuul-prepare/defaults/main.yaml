@@ -1,4 +1,0 @@
-zuul_git_zuul: "https://github.com/progmaticlab/zuul.git"
-zuul_git_zuul_branch: "contrail/feature/zuulv3"
-zuul_git_nodepool: "https://github.com/progmaticlab/nodepool.git"
-zuul_git_nodepool_branch: "master"
