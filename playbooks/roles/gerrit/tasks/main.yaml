@@ -51,7 +51,7 @@
       Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
   when:
-    - zuul_user_check.status == 404 or (gerrit_force_create_zuul_user | default(false))
+    - zuul_user_check.status == 404 or gerrit_force_create_zuul_user
 
 - name: add zuul SSH key to gerrit
   uri:

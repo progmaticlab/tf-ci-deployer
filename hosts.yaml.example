@@ -1,41 +1,55 @@
 all:
   children:
-    zookeeper:
-      hosts:
-        zk1.internal:
-        zk2.internal:
-    mysql:
-      hosts:
-        mysql1.internal:
+    zuul:
+      chidlren:
+        zookeeper:
+          hosts:
+            zk1.internal:
+            zk2.internal:
+        mysql:
+          hosts:
+            mysql1.internal:
+        zuul-scheduler:
+          hosts:
+            zuul.internal:
+        zuul-executor:
+          hosts:
+            zuul1.internal:
+            zuul2.internal:
+            zuul3.internal:
+        zuul-web:
+          hosts:
+            zuul-web1.internal:
+            zuul-web2.internal:
+        zuul-logs:
+          hosts:
+            zuul-logserver1.internal:
+            zuul-logserver2.internal:
+      vars:
+        key: value
+    zuul:
+      chidlren:
+        nodepool-builder:
+          hosts:
+            nodepool-builder.internal:
+        nodepool-launcher:
+          hosts:
+            nodepool-launcher.internal:
+      vars:
+        key: value
     gerrit:
       hosts:
         gerrit.internal:
     nexus:
       hosts:
         nexus.internal:
-    zuul-scheduler:
-      hosts:
-        zuul.internal:
-    zuul-executor:
-      hosts:
-        zuul1.internal:
-        zuul2.internal:
-        zuul3.internal:
-    zuul-web:
-      hosts:
-        zuul-web1.internal:
-        zuul-web2.internal:
-    zuul-logs:
-      hosts:
-        zuul-logserver1.internal:
-        zuul-logserver2.internal:
-    nodepool-builder:
-      hosts:
-        nodepool-builder.internal:
-    nodepool-launcher:
-      hosts:
-        nodepool-launcher.internal:
   vars:
+    # please see some defaults in group_vars/all
+    # please note that definitions in group_vars/all have greater precedence than below vars
+    # if you need to redefine some of them please remove it in group_vars/all and define here
+
+    remote_user: ubuntu
+
     image_web_server: "nexus/repository/"
     nexus_host: "nexus.internal"
     zuul_log_url: "http://log_site.public:port"
@@ -44,8 +58,6 @@ all:
     mysql_root_password: rootsecret
     zuul_mysql_username: zuul
     zuul_mysql_password: secret
-    zuul_mysql_db_main: zuul
-    zuul_mysql_db_build_number: zuul_job_cache
 
     gerrit_host: "internal.gerrit.name"
     gerrit_public_host: "gerrit.public"

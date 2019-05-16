@@ -1,0 +1,4 @@
+---
+nodepool_build_containers: false
+nodepool_git_url: "https://github.com/progmaticlab/nodepool.git"
+zuul_config_project: "Juniper/contrail-project-config"

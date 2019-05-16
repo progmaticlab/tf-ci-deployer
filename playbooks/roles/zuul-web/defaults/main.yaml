@@ -1,0 +1,5 @@
+---
+zuul_front_port: 8080
+
+zuul_build_containers: false
+zuul_git_url: "https://github.com/progmaticlab/zuul.git"

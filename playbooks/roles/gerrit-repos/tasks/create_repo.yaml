@@ -38,7 +38,7 @@
     status_code: 204
   when:
     - repo.status == 200
-    - (force_update_repos | default(false)) or path_check_result.rc != 0
+    - force_update_repos or path_check_result.rc != 0
 
 - name: create and clone project
   block:
