@@ -1,7 +1,5 @@
 ---
 
-zuul_mysql_db_main: zuul
-
 gerrit_scheme: "http"
 gerrit_front_port: 80
 gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
