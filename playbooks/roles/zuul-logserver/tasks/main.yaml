@@ -1,23 +1,14 @@
 ---
-- name: create zuul group
-  group:
-    name: zuul
-
-- name: create zuul user
-  user:
-    name: zuul
-    group: zuul
-    system: yes
-
 - name: create required directories
   file:
     path: "{{ item }}"
     state: directory
     recurse: yes
     mode: 0755
+    owner: zuul
+    group: zuul
   with_items:
     - /opt/zuul-logserver/
-    - /var/log/zuul
     - /home/zuul/.ssh
 
 # for now log server is placed in scheduler and accessed from executor with zuul user
@@ -49,6 +40,8 @@
     src: "httpd.conf"
     dest: "/opt/zuul-logserver/httpd.conf"
     force: true
+    owner: zuul
+    group: zuul
 
 - name: apply logserver compose file
   template:

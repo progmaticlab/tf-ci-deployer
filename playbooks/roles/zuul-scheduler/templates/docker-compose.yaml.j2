@@ -14,7 +14,7 @@ services:
     volumes:
       - "./etc_zuul:/etc/zuul"
       - "./ssh_keys:/var/ssh"
-      - "./.ssh:/root/.ssh"
+      - "./.ssh:/home/zuul/.ssh"
       - "/var/log/zuul:/var/log/zuul"
       - "/var/lib/zuul:/var/lib/zuul"
       - "/var/run:/var/run"

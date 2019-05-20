@@ -14,20 +14,14 @@
     state: directory
     recurse: yes
     mode: 0755
+    owner: zuul
+    group: zuul
   with_items:
     - /opt/zuul-executor/.ssh
     - /opt/zuul-executor/etc_zuul
-    - /var/log/zuul
     - /var/lib/zuul/builds
     - /var/lib/zuul/git
     - /var/lib/zuul/ssh
-
-- name: Ensure zuul user exists
-  user:
-    name: "zuul"
-    state: present
-    groups: docker
-    append: yes
 
 - name: copy config files
   copy:
@@ -35,6 +29,8 @@
     dest: "{{ item.dest }}"
     force: true
     mode: 0644
+    owner: zuul
+    group: zuul
   with_items:
     - {src: "./", dest: "/opt/zuul-executor"}
     - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
@@ -44,6 +40,8 @@
   file:
     path: /opt/zuul-executor/ssh_keys/{{ item }}_rsa
     mode: 0600
+    owner: zuul
+    group: zuul
   with_items:
     - zuul
     - nodepool
@@ -54,17 +52,27 @@
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}
 
+- name: protect SSH private keys
+  file:
+    path: /opt/zuul-executor/.ssh/known_hosts
+    owner: zuul
+    group: zuul
+
 - name: apply zuul configuration
   template:
     src: zuul.conf.j2
     dest: /opt/zuul-executor/etc_zuul/zuul.conf
     mode: 0644
+    owner: zuul
+    group: zuul
 
 - name: apply site-variables template
   template:
     src: site-variables.yaml.j2
     dest: /opt/zuul-executor/etc_zuul/site-variables.yaml
     mode: 0644
+    owner: zuul
+    group: zuul
 
 - name: apply docker-compose configuration
   template:

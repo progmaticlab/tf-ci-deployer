@@ -5,6 +5,8 @@
     state: directory
     recurse: yes
     mode: 0755
+    owner: zuul
+    group: zuul
   with_items:
     - /opt/zuul-scheduler
 
@@ -14,6 +16,8 @@
     dest: /opt/zuul-scheduler/
     force: true
     mode: 0755
+    owner: zuul
+    group: zuul
 
 - name: run initdb script in docker
   docker_container:

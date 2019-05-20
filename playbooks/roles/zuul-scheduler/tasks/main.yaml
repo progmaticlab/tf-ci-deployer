@@ -18,9 +18,10 @@
     state: directory
     recurse: yes
     mode: 0755
+    owner: zuul
+    group: zuul
   with_items:
     - /opt/zuul-scheduler/.ssh
-    - /var/log/zuul
     - /var/lib/zuul/build
     - /var/lib/zuul/git
     - /var/lib/zuul/ssh
@@ -31,6 +32,8 @@
     dest: "{{ item.dest }}"
     force: true
     mode: 0644
+    owner: zuul
+    group: zuul
   with_items:
     - {src: "./", dest: "/opt/zuul-scheduler"}
     - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/zuul-scheduler/ssh_keys/"}
@@ -39,6 +42,8 @@
   file:
     path: /opt/zuul-scheduler/ssh_keys/{{ item }}_rsa
     mode: 0600
+    owner: zuul
+    group: zuul
   with_items:
     - zuul
 
@@ -48,11 +53,19 @@
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}
 
+- name: protect SSH private keys
+  file:
+    path: /opt/zuul-scheduler/.ssh/known_hosts
+    owner: zuul
+    group: zuul
+
 - name: apply zuul configuration
   template:
     src: zuul.conf.j2
     dest: /opt/zuul-scheduler/etc_zuul/zuul.conf
     mode: 0644
+    owner: zuul
+    group: zuul
 
 - name: apply zuul compose file
   template:
