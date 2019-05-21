@@ -28,3 +28,16 @@
   with_items:
     - /var/log/zuul
     - /var/lib/zuul
+    - /var/lib/zuul/builds
+    - /var/lib/zuul/git
+    - /var/lib/zuul/ssh
+    - /var/lib/zuul/keys
+
+- name: protect zuul keys folders
+  file:
+    path: "{{ item }}"
+    mode: 0700
+    owner: zuul
+    group: zuul
+  with_items:
+    - /var/lib/zuul/keys

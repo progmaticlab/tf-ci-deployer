@@ -19,9 +19,6 @@
   with_items:
     - /opt/zuul-executor/.ssh
     - /opt/zuul-executor/etc_zuul
-    - /var/lib/zuul/builds
-    - /var/lib/zuul/git
-    - /var/lib/zuul/ssh
 
 - name: copy config files
   copy:

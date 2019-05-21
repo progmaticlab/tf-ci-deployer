@@ -22,9 +22,6 @@
     group: zuul
   with_items:
     - /opt/zuul-scheduler/.ssh
-    - /var/lib/zuul/build
-    - /var/lib/zuul/git
-    - /var/lib/zuul/ssh
 
 - name: copy config files
   copy:
