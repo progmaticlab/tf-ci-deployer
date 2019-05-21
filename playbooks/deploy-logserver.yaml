@@ -13,4 +13,5 @@
   become: yes
   roles:
     - docker
+    - zuul-prepare
     - zuul-logserver
