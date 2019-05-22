@@ -6,4 +6,4 @@
     state: absent
   register: res
   retries: 5
-  until: res | success
+  until: res is success
