@@ -20,7 +20,7 @@ driver=gerrit
 server={{ gerrit_host }}
 sshkey=/var/ssh/zuul_rsa
 user=zuul
-baseurl=http://{{ gerrit_host }}
+baseurl={{ gerrit_scheme }}://{{ gerrit_host }}
 
 [connection "github"]
 driver=github
