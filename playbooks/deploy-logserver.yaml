@@ -12,6 +12,8 @@
   remote_user: "{{ remote_user }}"
   become: yes
   roles:
+    - ntp
+    - common
     - docker
     - zuul-prepare
     - zuul-logserver
