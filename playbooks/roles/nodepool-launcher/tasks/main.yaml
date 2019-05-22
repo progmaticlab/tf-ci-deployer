@@ -1,5 +1,14 @@
 ---
 
+- name: check cloud definition
+  stat:
+    path: /etc/cloud/cloud.yaml
+  register: stat_result_cloud
+
+- fail:
+    msg: "Please create /etc/cloud/cloud.yaml"
+  when: stat_result_cloud.stat.exists == False
+
 - name: build containers
   include_role:
     name: build
