@@ -14,5 +14,7 @@
   become: yes
   gather_facts: yes
   roles:
+    - common
+    - ntp
     - docker
     - nexus

@@ -1,19 +1,4 @@
 ---
-- name: install ntp packages
-  package:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - ntpdate
-    - ntp
-
-- name: set ntp service name
-  set_fact:
-    ntp_svc_name: "{{ 'ntp' if ansible_os_family == 'Debian' else 'ntpd' }}"
-
-- name: start ntp service
-  service: name={{ ntp_svc_name }} state=started enabled=yes
-
 # we need to remove python-requests installed by distutils
 # cause it conflicts with requests lib installed by pip during docker-compose install
 - name: remove python-requests installed by distutils
@@ -22,7 +7,7 @@
     state: absent
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - include: "{{ ansible_os_family }}.yml"
 

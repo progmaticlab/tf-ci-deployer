@@ -17,7 +17,7 @@
     state: present
   register: res
   retries: 5
-  until: res | success
+  until: res is success
 
 - name: Install common pre-requisites
   easy_install:
