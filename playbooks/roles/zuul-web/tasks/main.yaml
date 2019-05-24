@@ -14,6 +14,8 @@
     state: directory
     recurse: yes
     mode: 0750
+    owner: zuul
+    group: zuul
   with_items:
     - /opt/zuul-web/etc_zuul
 
@@ -23,12 +25,16 @@
     dest: "/opt/zuul-web"
     force: true
     mode: 0600
+    owner: zuul
+    group: zuul
 
 - name: apply zuul configuration
   template:
     src: zuul.conf.j2
     dest: /opt/zuul-web/etc_zuul/zuul.conf
     mode: 0600
+    owner: zuul
+    group: zuul
 
 - name: apply docker-compose configuration
   template:

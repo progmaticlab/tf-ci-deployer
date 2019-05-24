@@ -35,3 +35,11 @@
   docker_service:
     project_src: /opt/nexus
 
+- name: wait for nexus to come up
+  uri:
+    url: "http://{{ nexus_host }}/"
+    status_code: 200
+    register: result
+    until: result.status == 200
+    retries: 12
+    delay: 5

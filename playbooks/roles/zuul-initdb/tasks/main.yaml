@@ -4,7 +4,7 @@
     path: "{{ item }}"
     state: directory
     recurse: yes
-    mode: 0755
+    mode: 0750
     owner: zuul
     group: zuul
   with_items:
@@ -15,7 +15,7 @@
     src: ./
     dest: /opt/zuul-scheduler/
     force: true
-    mode: 0755
+    mode: 0750
     owner: zuul
     group: zuul
 
