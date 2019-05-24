@@ -17,6 +17,16 @@
     - component: builder
   when: nodepool_build_containers
 
+- name: detect if built container exists (check for latest tag)
+  when: not nodepool_build_containers
+  block:
+    - command: "docker image inspect {{ NODEPOOL_DOCKERREPO }}/nodepool-builder:latest"
+      register: di_check_res
+      no_log: true
+    - set_fact:
+        NODEPOOL_VERSION: latest
+      when: di_check_res is success
+
 - name: create required directories
   file:
     path: "{{ item }}"

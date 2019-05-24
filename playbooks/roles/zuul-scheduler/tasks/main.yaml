@@ -8,6 +8,16 @@
     - component: scheduler
   when: zuul_build_containers
 
+- name: detect if built container exists (check for latest tag)
+  when: not zuul_build_containers
+  block:
+    - command: "docker image inspect {{ ZUUL_DOCKERREPO }}/zuul-scheduler:latest"
+      register: di_check_res
+      no_log: true
+    - set_fact:
+        ZUUL_VERSION: latest
+      when: di_check_res is success
+
 - name: init DB
   include_role:
     name: zuul-initdb
