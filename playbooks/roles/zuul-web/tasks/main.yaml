@@ -13,7 +13,7 @@
     path: "{{ item }}"
     state: directory
     recurse: yes
-    mode: 0755
+    mode: 0750
   with_items:
     - /opt/zuul-web/etc_zuul
 
@@ -22,25 +22,25 @@
     src: "./"
     dest: "/opt/zuul-web"
     force: true
-    mode: 0644
+    mode: 0600
 
 - name: apply zuul configuration
   template:
     src: zuul.conf.j2
     dest: /opt/zuul-web/etc_zuul/zuul.conf
-    mode: 0644
+    mode: 0600
 
 - name: apply docker-compose configuration
   template:
     src: docker-compose.yaml.j2
     dest: /opt/zuul-web/docker-compose.yaml
-    mode: 0644
+    mode: 0600
 
 - name: apply nginx configuration
   template:
     src: zuul.nginx.conf.j2
     dest: /opt/zuul-web/zuul.nginx.conf
-    mode: 0644
+    mode: 0600
 
 - name: start zuul-web service
   docker_service:

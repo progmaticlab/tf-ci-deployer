@@ -13,7 +13,7 @@
     path: "{{ item }}"
     state: directory
     recurse: yes
-    mode: 0755
+    mode: 0750
     owner: zuul
     group: zuul
   with_items:
@@ -25,23 +25,13 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     force: true
-    mode: 0644
+    mode: 0600
     owner: zuul
     group: zuul
   with_items:
     - {src: "./", dest: "/opt/zuul-executor"}
     - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
     - {src: "{{ gerrit_ssh_keys }}/nodepool_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
-
-- name: protect SSH private keys
-  file:
-    path: /opt/zuul-executor/ssh_keys/{{ item }}_rsa
-    mode: 0600
-    owner: zuul
-    group: zuul
-  with_items:
-    - zuul
-    - nodepool
 
 - name: construct known_hosts for gerrit
   shell: "ssh-keyscan -p {{ item.port }} {{ item.host }} >> /opt/zuul-executor/.ssh/known_hosts"
@@ -55,7 +45,7 @@
 #     - {host: "review.opencontrail.org", port: 22}
 #     - {host: "review.opencontrail.org", port: 29418}
 
-- name: protect SSH private keys
+- name: protect SSH known_hosts file
   file:
     path: /opt/zuul-executor/.ssh/known_hosts
     owner: zuul
@@ -65,7 +55,7 @@
   template:
     src: zuul.conf.j2
     dest: /opt/zuul-executor/etc_zuul/zuul.conf
-    mode: 0644
+    mode: 0600
     owner: zuul
     group: zuul
 
@@ -73,7 +63,7 @@
   template:
     src: site-variables.yaml.j2
     dest: /opt/zuul-executor/etc_zuul/site-variables.yaml
-    mode: 0644
+    mode: 0600
     owner: zuul
     group: zuul
 
@@ -81,7 +71,7 @@
   template:
     src: docker-compose.yaml.j2
     dest: /opt/zuul-executor/docker-compose.yaml
-    mode: 0644
+    mode: 0600
 
 - name: start zuul-executor service
   docker_service:

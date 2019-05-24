@@ -22,7 +22,7 @@
     path: "{{ item }}"
     state: directory
     recurse: yes
-    mode: 0755
+    mode: 0750
   with_items:
     - /opt/nodepool-launcher/etc_nodepool
     - /opt/nodepool-launcher/.ssh
@@ -34,17 +34,10 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     force: true
-    mode: 0644
+    mode: 0600
   with_items:
     - {src: "./", dest: "/opt/nodepool-launcher"}
     - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/nodepool-launcher/ssh_keys/"}
-
-- name: protect SSH private keys
-  file:
-    path: /opt/nodepool-launcher/ssh_keys/{{ item }}_rsa
-    mode: 0600
-  with_items:
-    - zuul
 
 - name: remove config derectory
   file:
@@ -64,7 +57,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     force: true
-    mode: 0644
+    mode: 0600
   with_items:
     - {src: "./", dest: "/opt/nodepool-launcher"}
 
@@ -72,7 +65,7 @@
   template:
     src: docker-compose.yaml.j2
     dest: /opt/nodepool-launcher/docker-compose.yaml
-    mode: 0644
+    mode: 0600
 
 - name: start nodepool-launcher service
   docker_service:
