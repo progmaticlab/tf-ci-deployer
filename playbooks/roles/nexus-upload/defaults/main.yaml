@@ -3,5 +3,5 @@
 nexus_user: "admin"
 nexus_password: "admin123"
 images: "https://s3.eu-north-1.amazonaws.com/tf-ci/images.tgz"
-vmware-releases: "https://s3.eu-north-1.amazonaws.com/tf-ci/vmware-releases.tgz"
-contrail-ubuntu: "https://s3.eu-north-1.amazonaws.com/tf-ci/contrail-ubuntu.tgz"
+vmware_releases: "https://s3.eu-north-1.amazonaws.com/tf-ci/vmware-releases.tgz"
+contrail_ubuntu: "https://s3.eu-north-1.amazonaws.com/tf-ci/contrail-ubuntu.tgz"

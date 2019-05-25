@@ -3,6 +3,6 @@
 - name: "upload content for {{ item }}"
   include: upload.yaml archive={{ item }}
   with_items:
-    - {{ images }}
-    - {{ vmware_releases }}
-    - {{ contrail_ubuntu }}
+    - "{{ images }}"
+    - "{{ vmware_releases }}"
+    - "{{ contrail_ubuntu }}"

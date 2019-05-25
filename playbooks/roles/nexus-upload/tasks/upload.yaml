@@ -5,9 +5,15 @@
     url: "{{ archive }}"
     dest: /tmp/data.tgz
 
+- name: create dir for data
+  file:
+    path: /tmp/data
+    state: directory
+
 - name: unpack archive
   unarchive:
     src: /tmp/data.tgz
+    remote_src: true
     dest: /tmp/data
 
 - name: remove archive
@@ -17,7 +23,7 @@
 
 # with_filetree looks good but we need relative paths
 - name: upload data
-  command: "for f in $(find .); do curl -s -u {{ nexus_user }}:{{ nexus_password }} --upload-file $f http://{{ nexus_host }}/repository/${f} ; done"
+  shell: "for f in $(find .); do curl -s -u {{ nexus_user }}:{{ nexus_password }} --upload-file $f http://{{ nexus_host }}/repository/${f} ; done"
   args:
     chdir: "/tmp/data"
 
