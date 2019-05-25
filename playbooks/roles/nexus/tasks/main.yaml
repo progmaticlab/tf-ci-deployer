@@ -43,3 +43,10 @@
     until: result.status == 200
     retries: 12
     delay: 5
+
+- name: install jre and groovy to be able to configure nexus
+  package: groovy
+  state: present
+
+- name: configure nexus
+  command: configure_tf_ci_nexus.sh
