@@ -64,12 +64,10 @@
 
 - name: copy config files
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "./"
+    dest: "/opt/nodepool-launcher"
     force: true
     mode: 0600
-  with_items:
-    - {src: "./", dest: "/opt/nodepool-launcher"}
 
 - name: apply docker-compose configuration
   template:

@@ -50,5 +50,12 @@
     state: present
   become: true
 
+- name: copy config script to nexus
+  copy:
+    src: "./nexus-scripting"
+    dest: "/opt/nexus/"
+
 - name: configure nexus
   command: "configure_tf_ci_nexus.sh --username {{ nexus_user }} --password {{ nexus_password }}"
+  args:
+    chdir: "/opt/nexus/nexus-scripting"
