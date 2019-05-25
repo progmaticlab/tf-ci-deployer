@@ -44,7 +44,22 @@
     retries: 12
     delay: 5
 
-- name: install jre and groovy to be able to configure nexus
+- name: reset admin password for nexus
+  command: docker exec -it --user root nexus_nexus_1 java -jar /opt/sonatype/nexus/lib/support/nexus-orient-console.jar 'connect plocal:/opt/sonatype/sonatype-work/nexus3/db/security admin admin ; update user SET password="$shiro1$SHA-512$1024$NE+wqQq/TmjZMvfI7ENh/g==$V4yPw8T64UQ6GfJfxYq2hLsVrBY8D1v+bktfOxGdt4b/9BthpWPNUy/CBk6V9iA0nHpzYzJFWO8v/tZFtES8CA==" UPSERT WHERE id="admin"'
+
+- name: restart nexus
+  command: docker restart nexus_nexus_1
+
+- name: wait for nexus to come up
+  uri:
+    url: "http://{{ nexus_host }}/"
+    status_code: 200
+    register: result
+    until: result.status == 200
+    retries: 12
+    delay: 5
+
+- name: install groovy to be able to configure nexus
   package:
     name: groovy
     state: present
@@ -59,3 +74,4 @@
   command: "bash configure_tf_ci_nexus.sh --username {{ nexus_user }} --password {{ nexus_password }}"
   args:
     chdir: "/opt/nexus/nexus-scripting"
+  no_log: true
