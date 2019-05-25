@@ -45,8 +45,10 @@
     delay: 5
 
 - name: install jre and groovy to be able to configure nexus
-  package: groovy
-  state: present
+  package:
+    name: groovy
+    state: present
+  become: true
 
 - name: configure nexus
-  command: configure_tf_ci_nexus.sh
+  command: "configure_tf_ci_nexus.sh --username {{ nexus_user }} --password {{ nexus_password }}"
