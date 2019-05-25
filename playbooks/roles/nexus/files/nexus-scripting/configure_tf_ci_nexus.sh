@@ -75,7 +75,7 @@ function create_and_run_script {
 if curl -s -I -u $username:$default_password "$url/service/rest/v1/read-only" | grep -q "200 OK" ; then
   password=$default_password
   if [[ -n "$input_password" && "$input_password" != "$default_password" ]]; then
-    create_and_run_script tfci_setadminpassword tfCISetAdminPassword.groovy -d \"$input_password\"
+    create_and_run_script tfci_setadminpassword tfCISetAdminPassword.groovy -d $input_password
     password="$input_password"
   fi
 elif [[ -n "$input_password" && "$input_password" != "$default_password" ]]; then

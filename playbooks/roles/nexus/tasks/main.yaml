@@ -71,6 +71,6 @@
     dest: "/opt/nexus/"
 
 - name: configure nexus
-  command: "bash configure_tf_ci_nexus.sh --password {{ nexus_password }}"
+  command: "bash -e configure_tf_ci_nexus.sh --password {{ nexus_password }}"
   args:
     chdir: "/opt/nexus/nexus-scripting"
