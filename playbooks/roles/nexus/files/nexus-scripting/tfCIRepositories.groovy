@@ -282,8 +282,9 @@ create_yum_proxy('yum-tungsten-tpc',    'http://148.251.5.90/tpc')
 // Maven: created by default automatically???
 create_maven_hosted('maven-releases')
 create_maven_hosted('maven-snapshots')
+create_maven_hosted('vmware-releases')
 create_maven_proxy('maven-central', 'https://repo1.maven.org/maven2')
-create_maven_group('maven-public', ['maven-releases', 'maven-snapshots', 'maven-central'])
+create_maven_group('maven-public', ['maven-releases', 'maven-snapshots', 'maven-central', 'vmware-releases'])
 
 // Remove web proxies if any
 core.removeHTTPProxy()

@@ -56,7 +56,6 @@ function create_and_run_script {
   local name=$1
   local file=$2
   shift 2
-  local args=$@
   # using grape config that points to local Maven repo and Central Repository , default grape config fails on some downloads although artifacts are in Central
   # change the grapeConfig file to point to your repository manager, if you are already running one in your organization
   groovy \
@@ -68,7 +67,7 @@ function create_and_run_script {
   # Run script
   curl -v -X POST -u $username:$password \
     --header "Content-Type: text/plain" \
-    "$url/service/rest/v1/script/$name/run" "$args"
+    "$url/service/rest/v1/script/$name/run" $@
   printf "\nExecuted $name script with result $?\n\n\n"
 }
 
