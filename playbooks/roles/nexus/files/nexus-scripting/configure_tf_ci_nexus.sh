@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# script assumes that it can be run only by admin user to configure initial state of the nexus
+# script checks password first and changes it if non-default password is provided
+# script is idempotent
+
 username='admin'
-password='admin123'
+default_password='admin123'
 url='http://localhost:8081'
 create_update_groovy_script='complex-script/addUpdateScript.groovy'
 grape_config='complex-script/grapeConfig.xml'
@@ -11,7 +15,6 @@ function usage() {
     printf "$0"
     printf "Configure TF CI Nexus tool\\n"
     printf "Options:\\n"
-    printf "\\t[--username $username]\\n"
     printf "\\t[--password $password]\\n"
     printf "\\t[--url $url]\\n"
     printf "\\t[--create_update_groovy_script $create_update_groovy_script]\\n"
@@ -21,11 +24,8 @@ function usage() {
 
 while [[ -n "$1" ]] ; do
     case $1 in
-        '--username')
-            username="$2"
-            ;;
         '--password')
-            password="$2"
+            input_password="$2"
             ;;
         '--url')
             url="$2"
@@ -55,6 +55,8 @@ done
 function create_and_run_script {
   local name=$1
   local file=$2
+  shift 2
+  local args=$@
   # using grape config that points to local Maven repo and Central Repository , default grape config fails on some downloads although artifacts are in Central
   # change the grapeConfig file to point to your repository manager, if you are already running one in your organization
   groovy \
@@ -66,9 +68,27 @@ function create_and_run_script {
   # Run script
   curl -v -X POST -u $username:$password \
     --header "Content-Type: text/plain" \
-    "$url/service/rest/v1/script/$name/run"
+    "$url/service/rest/v1/script/$name/run" "$args"
   printf "\nExecuted $name script with result $?\n\n\n"
 }
+
+if curl -s -I -u $username:$default_password "$url/service/rest/v1/read-only" | grep -q "200 OK" ; then
+  password=$default_password
+  if [[ -n "$input_password" && "$input_password" != "$default_password" ]]; then
+    create_and_run_script tfci_setadminpassword tfCISetAdminPassword.groovy -d \"$input_password\"
+    password="$input_password"
+  fi
+elif [[ -n "$input_password" && "$input_password" != "$default_password" ]]; then
+  if curl -s -I -u $username:$input_password "$url/service/rest/v1/read-only" | grep -q "200 OK" ; then
+    password="$input_password"
+  else
+    echo "ERROR: neither default password nor provided are invalid."
+    exit 1
+  fi
+else
+  echo "ERROR: default password doesn't work and no password provided."
+  exit 1
+fi
 
 create_and_run_script tfci_repos tfCIRepositories.groovy
 create_and_run_script tfci_roles tfCIRoles.groovy
