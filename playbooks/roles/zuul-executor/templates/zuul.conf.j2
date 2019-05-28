@@ -38,12 +38,3 @@ server={{ gerrit_host }}
 sshkey=/var/ssh/zuul_rsa
 user=zuul
 baseurl={{ gerrit_scheme }}://{{ gerrit_host }}
-
-# TODO remove after debugging mirroring  
-#[connection "opencontrail_gerrit"]
-#name=opencontrail_gerrit
-#driver=gerrit
-#server=review.opencontrail.org
-#sshkey=/var/ssh/zuul_rsa
-#user=alexey-mr
-#baseurl=https://review.opencontrail.org
