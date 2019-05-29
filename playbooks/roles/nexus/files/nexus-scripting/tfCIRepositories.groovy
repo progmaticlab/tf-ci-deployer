@@ -246,10 +246,12 @@ def create_maven_group(name, members) {
 // Docker
 // Hosted
 create_docker_hosted('tungsten_ci', 5001)
-create_docker_hosted('tungsten_nightly', 5002)
+create_docker_hosted('tungsten_gate_cache', 5002)
+// unknown now
+// create_docker_hosted('tungsten_nightly', 5003)
+// create_docker_hosted('access', 5004)
 // Proxy
 create_docker_proxy('proxy', 5005, 'https://registry-1.docker.io')
-create_docker_proxy('access', 5010, 'https://registry-1.docker.io')
 
 // PyPI
 // Proxy
