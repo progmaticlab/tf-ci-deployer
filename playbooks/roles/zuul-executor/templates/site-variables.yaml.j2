@@ -7,9 +7,8 @@ nexus:
     tungsten_gate_cache: 5002
     proxy: 5005
   repos:
-    yum: 'yum-tungsten'
-    yum_nightly: 'yum-tungsten-nightly'
-    yum_tpc: 'yum-tungsten-tpc'
+    yum_tpc_source: 'yum-tpc-source'
+    yum_tpc_binary: 'yum-tpc-binary'
     maven: 'maven-public'
 docker_registry:
   fqdn: {{ nexus_host }}

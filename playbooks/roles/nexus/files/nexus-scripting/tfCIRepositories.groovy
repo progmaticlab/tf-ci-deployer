@@ -278,9 +278,12 @@ create_yum_proxy('centos7-os',          'http://centos.mirror.vexxhost.com/7/os/
 create_yum_proxy('centos7-updates',     'http://centos.mirror.vexxhost.com/7/updates/x86_64')
 create_yum_proxy('centos7-extras',      'http://centos.mirror.vexxhost.com/7/extras/x86_64')
 create_yum_proxy('centos7-centosplus',  'http://centos.mirror.vexxhost.com/7/centosplus/x86_64')
-create_yum_hosted('yum-tungsten-tpc', 1)
+// hosted tpc binary has third party packages that was taken somewhere and it doesn't depend on branch
+create_yum_hosted('yum-tpc-binary', 0)
+// hosted tpc source has build packages from third-party-packages repo and it depends on branch
+create_yum_hosted('yum-tpc-source', 1)
 
-// Maven: created by default automatically???
+// Maven
 create_maven_hosted('maven-releases')
 create_maven_hosted('maven-snapshots')
 create_maven_hosted('vmware-releases')
@@ -290,8 +293,3 @@ create_maven_group('maven-public', ['maven-releases', 'maven-snapshots', 'maven-
 // Remove web proxies if any
 core.removeHTTPProxy()
 core.removeHTTPSProxy()
-
-// TODO: Hosted are not needed
-//yum-tpc-test
-//yum-tungsten-nightly
-//yum-tungsten
