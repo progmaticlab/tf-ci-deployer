@@ -278,8 +278,7 @@ create_yum_proxy('centos7-os',          'http://centos.mirror.vexxhost.com/7/os/
 create_yum_proxy('centos7-updates',     'http://centos.mirror.vexxhost.com/7/updates/x86_64')
 create_yum_proxy('centos7-extras',      'http://centos.mirror.vexxhost.com/7/extras/x86_64')
 create_yum_proxy('centos7-centosplus',  'http://centos.mirror.vexxhost.com/7/centosplus/x86_64')
-// TODO: to be made hosted
-create_yum_proxy('yum-tungsten-tpc',    'http://148.251.5.90/tpc')
+create_yum_hosted('yum-tungsten-tpc')
 
 // Maven: created by default automatically???
 create_maven_hosted('maven-releases')
