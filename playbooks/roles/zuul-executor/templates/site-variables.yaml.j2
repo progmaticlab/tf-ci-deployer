@@ -10,6 +10,7 @@ nexus:
     yum_tpc_source: 'yum-tpc-source'
     yum_tpc_binary: 'yum-tpc-binary'
     maven: 'maven-public'
+  creds_path: '/etc/zuul/nexus_creds'
 docker_registry:
   fqdn: {{ nexus_host }}
   port: 5000
