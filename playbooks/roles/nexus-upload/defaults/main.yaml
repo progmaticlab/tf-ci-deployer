@@ -2,6 +2,8 @@
 
 nexus_user: "admin"
 nexus_password: "admin123"
-images: "https://s3.eu-north-1.amazonaws.com/tf-ci/images.tgz"
-vmware_releases: "https://s3.eu-north-1.amazonaws.com/tf-ci/vmware-releases.tgz"
-contrail_ubuntu: "https://s3.eu-north-1.amazonaws.com/tf-ci/contrail-ubuntu.tgz"
+nexus_predefined_repos:
+  - "https://s3.eu-north-1.amazonaws.com/tf-ci/images.tgz"
+  - "https://s3.eu-north-1.amazonaws.com/tf-ci/vmware-releases.tgz"
+  - "https://s3.eu-north-1.amazonaws.com/tf-ci/contrail-ubuntu.tgz"
+  - "https://s3.eu-north-1.amazonaws.com/tf-ci/yum-tpc-binary.tgz"

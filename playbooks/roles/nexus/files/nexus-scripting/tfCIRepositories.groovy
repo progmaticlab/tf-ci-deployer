@@ -246,10 +246,12 @@ def create_maven_group(name, members) {
 // Docker
 // Hosted
 create_docker_hosted('tungsten_ci', 5001)
-create_docker_hosted('tungsten_nightly', 5002)
+create_docker_hosted('tungsten_gate_cache', 5002)
+// unknown now
+// create_docker_hosted('tungsten_nightly', 5003)
+// create_docker_hosted('access', 5004)
 // Proxy
 create_docker_proxy('proxy', 5005, 'https://registry-1.docker.io')
-create_docker_proxy('access', 5010, 'https://registry-1.docker.io')
 
 // PyPI
 // Proxy
@@ -276,10 +278,12 @@ create_yum_proxy('centos7-os',          'http://centos.mirror.vexxhost.com/7/os/
 create_yum_proxy('centos7-updates',     'http://centos.mirror.vexxhost.com/7/updates/x86_64')
 create_yum_proxy('centos7-extras',      'http://centos.mirror.vexxhost.com/7/extras/x86_64')
 create_yum_proxy('centos7-centosplus',  'http://centos.mirror.vexxhost.com/7/centosplus/x86_64')
-// TODO: to be made hosted
-create_yum_proxy('yum-tungsten-tpc',    'http://148.251.5.90/tpc')
+// hosted tpc binary has third party packages that was taken somewhere and it doesn't depend on branch
+create_yum_hosted('yum-tpc-binary', '0')
+// hosted tpc source has build packages from third-party-packages repo and it depends on branch
+create_yum_hosted('yum-tpc-source', '1')
 
-// Maven: created by default automatically???
+// Maven
 create_maven_hosted('maven-releases')
 create_maven_hosted('maven-snapshots')
 create_maven_hosted('vmware-releases')
@@ -289,8 +293,3 @@ create_maven_group('maven-public', ['maven-releases', 'maven-snapshots', 'maven-
 // Remove web proxies if any
 core.removeHTTPProxy()
 core.removeHTTPSProxy()
-
-// TODO: Hosted are not needed
-//yum-tpc-test
-//yum-tungsten-nightly
-//yum-tungsten

@@ -5,8 +5,11 @@ import org.sonatype.nexus.security.anonymous.AnonymousConfiguration
 import org.sonatype.nexus.security.user.UserManager
 import org.sonatype.nexus.security.realm.RealmManager
 
-// List of privileges for pushing into tungsten_ci docker registry
-def tf_docker_priv = ['nx-repository-admin-docker-tungsten_ci-*', 'nx-repository-view-docker-tungsten_ci-*']
+// List of privileges for pushing into all ci docker registries
+def tf_docker_priv = ['nx-repository-admin-docker-tungsten_ci-*',
+                      'nx-repository-view-docker-tungsten_ci-*',
+                      'nx-repository-admin-docker-tungsten_gate_cache-*',
+                      'nx-repository-view-docker-tungsten_gate_cache-*']
 
 // Create or update tf docker role
 String tf_docker_role_id = 'tf-ci-docker'
