@@ -66,7 +66,7 @@
   template:
     src: zuul.conf.j2
     dest: /opt/zuul-executor/etc_zuul/zuul.conf
-    mode: 0600
+    mode: 0400
     owner: zuul
     group: zuul
 
@@ -74,9 +74,18 @@
   template:
     src: site-variables.yaml.j2
     dest: /opt/zuul-executor/etc_zuul/site-variables.yaml
-    mode: 0600
+    mode: 0400
     owner: zuul
     group: zuul
+
+- name: create a nexus credentials file
+  copy:
+    content: '--user {{ nexus_user }}:{{ nexus_password }}'
+    dest: /opt/zuul-executor/etc_zuul/nexus_creds
+    mode: 0400
+    owner: zuul
+    group: zuul
+  no_log: true
 
 - name: apply docker-compose configuration
   template:
