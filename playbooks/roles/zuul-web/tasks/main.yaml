@@ -8,12 +8,24 @@
     - component: web
   when: zuul_build_containers
 
+- name: detect if built container exists (check for latest tag)
+  when: not zuul_build_containers
+  block:
+    - command: "docker image inspect {{ ZUUL_DOCKERREPO }}/zuul-web:latest"
+      register: di_check_res
+      no_log: true
+    - set_fact:
+        ZUUL_VERSION: latest
+      when: di_check_res is success
+
 - name: create required directories
   file:
     path: "{{ item }}"
     state: directory
     recurse: yes
-    mode: 0755
+    mode: 0750
+    owner: zuul
+    group: zuul
   with_items:
     - /opt/zuul-web/etc_zuul
 
@@ -22,25 +34,29 @@
     src: "./"
     dest: "/opt/zuul-web"
     force: true
-    mode: 0644
+    mode: 0600
+    owner: zuul
+    group: zuul
 
 - name: apply zuul configuration
   template:
     src: zuul.conf.j2
     dest: /opt/zuul-web/etc_zuul/zuul.conf
-    mode: 0644
+    mode: 0600
+    owner: zuul
+    group: zuul
 
 - name: apply docker-compose configuration
   template:
     src: docker-compose.yaml.j2
     dest: /opt/zuul-web/docker-compose.yaml
-    mode: 0644
+    mode: 0600
 
 - name: apply nginx configuration
   template:
     src: zuul.nginx.conf.j2
     dest: /opt/zuul-web/zuul.nginx.conf
-    mode: 0644
+    mode: 0600
 
 - name: start zuul-web service
   docker_service:

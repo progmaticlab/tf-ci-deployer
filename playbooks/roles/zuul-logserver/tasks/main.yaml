@@ -11,7 +11,7 @@
     - /opt/zuul-logserver/
     - /home/zuul/.ssh
 
-# for now log server is placed in scheduler and accessed from executor with zuul user
+# for now log server is placed somewhere and accessed from executor with zuul user
 - name: create logserver data directory
   file:
     path: "{{ logserver_data_directory }}"
@@ -20,6 +20,11 @@
     group: zuul
     recurse: yes
     mode: 0775
+
+- name: extract static content for ARA reports
+  unarchive:
+    src: static.tgz
+    dest: "{{ logserver_data_directory }}"
 
 - name: "collect {{ gerrit_ssh_keys }}/logserver_rsa.pub' ssh key"
   set_fact:

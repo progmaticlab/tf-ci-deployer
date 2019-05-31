@@ -17,12 +17,22 @@
     - component: builder
   when: nodepool_build_containers
 
+- name: detect if built container exists (check for latest tag)
+  when: not nodepool_build_containers
+  block:
+    - command: "docker image inspect {{ NODEPOOL_DOCKERREPO }}/nodepool-builder:latest"
+      register: di_check_res
+      no_log: true
+    - set_fact:
+        NODEPOOL_VERSION: latest
+      when: di_check_res is success
+
 - name: create required directories
   file:
     path: "{{ item }}"
     state: directory
     recurse: yes
-    mode: 0755
+    mode: 0750
   with_items:
     - /opt/nodepool-builder/etc_nodepool
     - /opt/nodepool-builder/.ssh
@@ -34,19 +44,12 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     force: true
-    mode: 0644
+    mode: 0600
   with_items:
     - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/nodepool-builder/ssh_keys/"}
     - {src: "{{ gerrit_ssh_keys }}/nodepool_rsa.pub", dest: "/opt/nodepool-builder/ssh_keys/"}
 
-- name: protect SSH private keys
-  file:
-    path: /opt/nodepool-builder/ssh_keys/{{ item }}_rsa
-    mode: 0600
-  with_items:
-    - zuul
-
-- name: remove config derectory
+- name: remove config directory
   file:
     path: /opt/nodepool-builder/config
     state: absent
@@ -61,18 +64,16 @@
 
 - name: copy config files
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "./"
+    dest: "/opt/nodepool-builder"
     force: true
-    mode: 0644
-  with_items:
-    - {src: "./", dest: "/opt/nodepool-builder"}
+    mode: 0600
 
 - name: apply docker-compose configuration
   template:
     src: docker-compose.yaml.j2
     dest: /opt/nodepool-builder/docker-compose.yaml
-    mode: 0644
+    mode: 0600
 
 - name: start nodepool-builder service
   docker_service:

@@ -52,6 +52,8 @@ all:
 
     image_web_server: "nexus/repository/"
     nexus_host: "nexus.internal"
+    nexus_user: "admin"
+    nexus_password: "password"
     zuul_log_url: "http://log_site.public:port"
     zookeeper_host: z11.internal
     mysql_host: mysql1.internal

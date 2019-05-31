@@ -2,7 +2,6 @@
 
 - name: set up zuul images tags
   set_fact:
-    ZUUL_DOCKERREPO: local
     ZUUL_VERSION: latest
 
 - name: clone zuul git repository
