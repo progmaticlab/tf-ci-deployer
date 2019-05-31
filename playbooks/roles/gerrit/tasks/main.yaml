@@ -63,3 +63,27 @@
       Content-Type: text/plain
       Cookie: "{{ gerrit_cookies }}"
       x-gerrit-auth: "{{ gerrit_auth }}"
+
+
+# Create zuul user - this is for replication of events from the review.opencontrail.ors
+# to allow ssh for zuul to gerrit node for recloning of repos
+- name: Ensure zuul group exists
+  group:
+    name: zuul
+    state: present
+    gid: 9999
+
+- name: Ensure zuul user exists
+  user:
+    name: "zuul"
+    state: present
+    uid: 9999
+    groups: docker,zuul
+    append: yes
+
+file:
+    path: /home/zuul/.ssh
+    state: directory
+    recurse: yes
+
+# TODO: add authorized kees

@@ -5,6 +5,10 @@ import org.sonatype.nexus.repository.maven.VersionPolicy
 import org.sonatype.nexus.repository.maven.LayoutPolicy
 
 
+// Useful links 
+// https://github.com/sonatype/nexus-public/blob/master/plugins/nexus-script-plugin/src/main/java/org/sonatype/nexus/script/plugin/internal/provisioning/RepositoryApiImpl.groovy
+// https://github.com/sonatype/nexus-public/tree/master/components/nexus-security/src/main/java/org/sonatype/nexus/security
+
 def create_or_update_repo(name, configuration) {
     def repoManager = repository.getRepositoryManager()
     def existingRepository = repoManager.get(name)
@@ -177,7 +181,7 @@ def create_yum_hosted(name, depth) {
         recipeName: 'yum-hosted',
         online: true,
         attributes: [
-            repodataDepth: depth,
+            yum: ['repodataDepth': depth] as Map,
             storage: get_storage_opts(),
         ]
     )
