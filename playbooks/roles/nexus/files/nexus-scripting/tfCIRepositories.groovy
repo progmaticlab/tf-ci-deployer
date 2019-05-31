@@ -91,23 +91,26 @@ def get_maven_opts() {
     return maven_opts
 }
 
-def get_cleanup() {
+def get_cleanup(name) {
     def cleanup_opts = [
-        policyName: null
-    ]
+        policyName: name
+    ] as Map
     return cleanup_opts
 }
 
-def create_docker_hosted(name, port) {
-    configuration = new Configuration(
+def create_docker_hosted(name, port, cleanup=null) {
+    def attrs = [
+            docker: get_docker_opts(port),
+            storage: get_storage_opts(),
+    ] as Map
+    if (cleanup != null) {
+        attrs['cleanup'] = get_cleanup(cleanup)
+    }
+    def configuration = new Configuration(
         repositoryName: name,
         recipeName: 'docker-hosted',
         online: true,
-        attributes: [
-            docker: get_docker_opts(port),
-            storage: get_storage_opts(),
-            cleanup: get_cleanup()
-        ]
+        attributes: attrs
     )
     create_or_update_repo(name, configuration)
 }
@@ -127,7 +130,6 @@ def create_docker_proxy(name, port, remote) {
             httpclient: get_httpclient_opts(),
             storage: get_storage_opts(null),
             negativeCache: get_negative_cache_opts(),
-            cleanup: get_cleanup()
         ]
     )
     create_or_update_repo(name, configuration)
@@ -249,7 +251,7 @@ def create_maven_group(name, members) {
 
 // Docker
 // Hosted
-create_docker_hosted('tungsten_ci', 5001)
+create_docker_hosted('tungsten_ci', 5001, 'tf-cleanup-policy')
 create_docker_hosted('tungsten_gate_cache', 5002)
 // unknown now
 // create_docker_hosted('tungsten_nightly', 5003)
