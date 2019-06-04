@@ -275,6 +275,7 @@ create_raw_proxy('contrail-third-party', 'http://148.251.5.90/contrail-third-par
 // Yum
 // Proxy
 create_yum_proxy('docker-ce-stable',    'https://download.docker.com/linux/centos/7/x86_64/stable')
+create_yum_proxy('google-chrome',       'http://dl.google.com/linux/chrome/rpm/stable/x86_64')
 create_yum_proxy('openstack-newton',    'http://mirror.neu.edu.cn/centos/7/cloud/x86_64/openstack-newton')
 create_yum_proxy('openstack-ocata',     'http://mirror.centos.org/centos/7/cloud/x86_64/openstack-ocata')
 create_yum_proxy('openstack-queens',    'http://mirror.centos.org/centos/7/cloud/x86_64/openstack-queens')
