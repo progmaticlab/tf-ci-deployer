@@ -90,5 +90,6 @@ else
 fi
 
 create_and_run_script tfci_cleanup tfCICleanupPolicy.groovy
+create_and_run_script tfci_compact tfCIStorageCompactTask.groovy
 create_and_run_script tfci_repos tfCIRepositories.groovy
 create_and_run_script tfci_roles tfCIRoles.groovy

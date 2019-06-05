@@ -31,4 +31,4 @@ def create_or_update_cleanup_policy(name, format, lastBlobUpdated, lastDownloade
     }
 }
 
-create_or_update_cleanup_policy('tf-cleanup-policy', ALL_CLEANUP_POLICY_FORMAT, 3, 3)
+create_or_update_cleanup_policy('tf-cleanup-policy', ALL_CLEANUP_POLICY_FORMAT, 1, 1)
