@@ -13,7 +13,12 @@
 - name: apply gerrit Dockerfile
   template:
     src: Dockerfile.j2
-    dest: /etc/gerrit/gerrit-Dockerfile
+    dest: /etc/gerrit/Dockerfile
+
+- name: apply gerrit entrypoint.sh
+  template:
+    src: entrypoint.sh.j2
+    dest: /etc/gerrit/entrypoint.sh
 
 - name: apply gerrit docker-compose.yaml
   template:

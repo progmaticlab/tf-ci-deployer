@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export CANONICAL_WEB_URL="{{ gerrit_scheme }}://{{ gerrit_public_host }}:{{ gerrit_front_port }}"
+
+git config -f /var/gerrit/etc/gerrit.config database.type "mariadb"
+git config -f /var/gerrit/etc/gerrit.config database.hostname "mariadb"
+git config -f /var/gerrit/etc/gerrit.config database.port 3306
+git config -f /var/gerrit/etc/gerrit.config database.database "gerritdb"
+git config -f /var/gerrit/etc/gerrit.config database.username "gerrit"
+git config -f /var/gerrit/etc/secure.config database.password "gerritsecret"
+git config -f /var/gerrit/etc/gerrit.config gerrit.ui "POLYGERRIT"
+git config -f /var/gerrit/etc/gerrit.config sendemail.enable false
+git config -f /var/gerrit/etc/gerrit.config receive.maxBatchCommits = 50000
+git config -f /var/gerrit/etc/gerrit.config gerrit.canonicalWebUrl "$CANONICAL_WEB_URL"
+git config -f /var/gerrit/etc/gerrit.config noteDb.changes.autoMigrate true
+
+{% if gerrit_oauth_client_id is defined and gerrit_oauth_client_secret is defined %}
+git config -f /var/gerrit/etc/gerrit.config auth.type "OAUTH"
+git config -f /var/gerrit/etc/gerrit.config plugin.gerrit-oauth-provider-github-oauth.client-id "{{ gerrit_oauth_client_id }}"
+git config -f /var/gerrit/etc/gerrit.config plugin.gerrit-oauth-provider-github-oauth.client-secret "{{ gerrit_oauth_client_secret }}"
+{% endif %}
+
+java -jar /var/gerrit/bin/gerrit.war init --batch --install-all-plugins -d /var/gerrit
+/var/gerrit/bin/gerrit.sh run
