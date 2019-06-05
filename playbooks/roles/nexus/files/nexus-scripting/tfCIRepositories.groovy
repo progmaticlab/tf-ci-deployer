@@ -9,6 +9,15 @@ import org.sonatype.nexus.repository.maven.LayoutPolicy
 // https://github.com/sonatype/nexus-public/blob/master/plugins/nexus-script-plugin/src/main/java/org/sonatype/nexus/script/plugin/internal/provisioning/RepositoryApiImpl.groovy
 // https://github.com/sonatype/nexus-public/tree/master/components/nexus-security/src/main/java/org/sonatype/nexus/security
 
+
+def delete_repo(name) {
+    def repoManager = repository.getRepositoryManager()
+    def existingRepository = repoManager.get(name)
+    if (existingRepository != null) {
+        repoManager.delete(name)
+    }
+}
+
 def create_or_update_repo(name, configuration) {
     def repoManager = repository.getRepositoryManager()
     def existingRepository = repoManager.get(name)
@@ -251,6 +260,7 @@ def create_maven_group(name, members) {
 
 // Docker
 // Hosted
+delete_repo('tungsten_ci')
 create_docker_hosted('tungsten_ci', 5001, 'tf-cleanup-policy')
 create_docker_hosted('tungsten_gate_cache', 5002)
 // unknown now
