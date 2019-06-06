@@ -109,6 +109,7 @@ all:
       - {dest_namespace: "Juniper", project: "contrail-third-party-packages"}
       - {dest_namespace: "Juniper", project: "contrail-tripleo-heat-templates"}
       - {dest_namespace: "Juniper", project: "contrail-tripleo-puppet"}
+      - {dest_namespace: "Juniper", project: "contrail-vcenter-fabric-manager"}
       - {dest_namespace: "Juniper", project: "contrail-vcenter-manager"}
       - {dest_namespace: "Juniper", project: "contrail-vcenter-plugin"}
       - {dest_namespace: "Juniper", project: "contrail-vnc"}
