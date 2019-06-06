@@ -66,5 +66,6 @@ all:
     gerrit_source_url: "http://gerrit.sytes.net"
     gerrit_repos:
       - {dest_namespace: "tungstenfabric-tools", dest_project: "dev-env", src_namespace: "progmaticlab", src_project: "contrail-dev-env", gerrit_source_url: "https://github.com"}
-      - {dest_namespace: "tungstenfabric-infra", dest_project: "project-config", src_namespace: "progmaticlab", src_project: "contrail-project-config", gerrit_source_url: "https://github.com"}
-      - {dest_namespace: "tungstenfabric-infra", dest_project: "tungsten-zuul-jobs", src_namespace: "progmaticlab", src_project: "contrail-zuul-jobs", gerrit_source_url: "https://github.com"}
+      - {dest_namespace: "tungstenfabric-infra", dest_project: "project-config", src_namespace: "progmaticlab", src_project: "project-config", gerrit_source_url: "https://github.com"}
+      - {dest_namespace: "tungstenfabric-infra", dest_project: "tungsten-zuul-jobs", src_namespace: "progmaticlab", src_project: "tungsten-zuul-jobs", gerrit_source_url: "https://github.com"}
+      - {dest_namespace: "tungstenfabric-tools", dest_project: "puppet-contrail", src_namespace: "Juniper", src_project: "puppet-contrail", gerrit_source_url: "https://github.com"}
