@@ -7,7 +7,10 @@
     target_namespace: "{{ repo_data.dest_namespace }}"
     dest_project_name: "{{ repo_data.dest_project | default(repo_data.project) }}"
     src_project_name: "{{ repo_data.src_project | default(repo_data.project) }}"
-    project_path: "/var/gerrit/git/{{ repo_data.dest_namespace }}/{{ dest_project_name }}.git"
+
+- name: define project_path for import repo
+  set_fact:
+    project_path: "/var/gerrit/git/{{ target_namespace }}/{{ dest_project_name }}.git"
 
 - name: check if project is present on disk
   shell: "docker exec -t gerrit_gerrit_1 ls {{ project_path }}"
