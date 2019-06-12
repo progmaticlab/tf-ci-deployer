@@ -104,7 +104,7 @@ all:
       - {dest_namespace: "Juniper", project: "contrail-specs"}
       - {dest_namespace: "Juniper", project: "contrail-test"}
       - {dest_namespace: "Juniper", project: "contrail-test-ci"}
-      - {dest_namespace: "Juniper", project: "contrail-third-party", src_namespace: "progmaticlab", gerrit_source_url: "https://github.com"}
+      - {dest_namespace: "Juniper", project: "contrail-third-party"}
       - {dest_namespace: "Juniper", project: "contrail-third-party-cache"}
       - {dest_namespace: "Juniper", project: "contrail-third-party-packages"}
       - {dest_namespace: "Juniper", project: "contrail-tripleo-heat-templates"}
