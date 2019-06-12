@@ -35,11 +35,23 @@ def list_tasks() {
     }
 }
 
-def task_name = 'tf-ci-storage-compact'
 def cron = '0 0 1 * * ?'
-def task_properties = [:] as Map
-task_properties.put(
+def compact_task_properties = [:] as Map
+compact_task_properties.put(
     CompactBlobStoreTaskDescriptor.BLOB_STORE_NAME_FIELD_ID,
     BlobStoreManager.DEFAULT_BLOBSTORE_NAME)
-create_or_update_task(CompactBlobStoreTaskDescriptor.TYPE_ID, task_name, cron, task_properties)
+create_or_update_task(
+    CompactBlobStoreTaskDescriptor.TYPE_ID,
+    'tf-ci-storage-compact',
+    cron,
+    compact_task_properties)
+
+def gc_task_properties = [:] as Map
+task_properties.put('repositoryName', 'tungsten_ci')
+create_or_update_task(
+    'repository.docker.gc',
+    'tf-ci-tungsten_ci-gc',
+    cron,
+    gc_task_properties)
+
 list_tasks()
