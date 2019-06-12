@@ -11,8 +11,12 @@ import static org.sonatype.nexus.cleanup.storage.CleanupPolicy.ALL_CLEANUP_POLIC
 def create_or_update_cleanup_policy(name, format, lastBlobUpdated, lastDownloaded) {
     def storage = container.lookup(CleanupPolicyStorage.class.name)
     def cpc = new CleanupPolicyCriteria()
-    cpc.lastBlobUpdated = lastBlobUpdated
-    cpc.lastDownloaded = lastDownloaded
+    if (lastBlobUpdated) {
+        cpc.lastBlobUpdated = lastBlobUpdated
+    }
+    if (lastDownloaded) {
+        cpc.lastDownloaded = lastDownloaded
+    }
     def cpc_map = CleanupPolicyCriteria.toMap(cpc)
     def cp = storage.get(name)
     if (cp != null) {
@@ -31,4 +35,4 @@ def create_or_update_cleanup_policy(name, format, lastBlobUpdated, lastDownloade
     }
 }
 
-create_or_update_cleanup_policy('tf-cleanup-policy', ALL_CLEANUP_POLICY_FORMAT, 1, 1)
+create_or_update_cleanup_policy('tf-cleanup-policy', ALL_CLEANUP_POLICY_FORMAT, 1, 0)
