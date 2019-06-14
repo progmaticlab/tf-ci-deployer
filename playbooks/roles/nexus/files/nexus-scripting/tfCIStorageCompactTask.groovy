@@ -35,7 +35,10 @@ def list_tasks() {
     }
 }
 
-def cron = '0 0 1 * * ?'
+// System compact task that performs soft-delete is un by default
+// with schedule '0 0 1 * * ?'.
+// So, run compact task in an hour and gc in an hour after compact.
+
 def compact_task_properties = [:] as Map
 compact_task_properties.put(
     CompactBlobStoreTaskDescriptor.BLOB_STORE_NAME_FIELD_ID,
@@ -43,7 +46,7 @@ compact_task_properties.put(
 create_or_update_task(
     CompactBlobStoreTaskDescriptor.TYPE_ID,
     'tf-ci-storage-compact',
-    cron,
+    '0 0 2 * * ?',
     compact_task_properties)
 
 def gc_task_properties = [:] as Map
@@ -51,7 +54,7 @@ task_properties.put('repositoryName', 'tungsten_ci')
 create_or_update_task(
     'repository.docker.gc',
     'tf-ci-tungsten_ci-gc',
-    cron,
+    '0 0 3 * * ?',
     gc_task_properties)
 
 list_tasks()
