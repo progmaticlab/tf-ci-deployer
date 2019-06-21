@@ -36,5 +36,5 @@ name=gerrit
 driver=gerrit
 server={{ gerrit_host }}
 sshkey=/var/ssh/zuul_rsa
-user=zuul
+user={{ gerrit_user }}
 baseurl={{ gerrit_scheme }}://{{ gerrit_host }}
