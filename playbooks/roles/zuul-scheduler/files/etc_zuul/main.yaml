@@ -3,21 +3,21 @@
     max-job-timeout: -1
     source:
       github:
+        config-projects:
+          - progmaticlab/contrail-project-config
         untrusted-projects:
+          - progmaticlab/contrail-zuul-jobs:
+              shadow: progmaticlab/contrail-project-config
           - Juniper/zuul-jobs:
-              shadow: Juniper/contrail-project-config
-          - Juniper/contrail-publisher
+              shadow: progmaticlab/contrail-project-config
           - Juniper/zuul:
               exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
+          - Juniper/contrail-publisher
           - tungsten-infra/ci-utils
           - tungsten-infra/containerregistry
       gerrit:
-        config-projects:
-          - Juniper/contrail-project-config
         untrusted-projects:
           - Juniper/contrail
-          - Juniper/contrail-zuul-jobs:
-              shadow: Juniper/contrail-project-config
           - Juniper/contrail-analytics
           - Juniper/contrail-ansible
           - Juniper/contrail-ansible-deployer
