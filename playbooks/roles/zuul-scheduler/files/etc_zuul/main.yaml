@@ -15,6 +15,7 @@
           - Juniper/contrail-publisher
           - tungsten-infra/ci-utils
           - tungsten-infra/containerregistry
+          - tungstenfabric/tf-dev-env
       gerrit:
         untrusted-projects:
           - Juniper/contrail
@@ -29,7 +30,6 @@
           - Juniper/contrail-container-builder
           - Juniper/contrail-controller
           - Juniper/contrail-deployers-containers
-          - Juniper/contrail-dev-env
           - Juniper/contrail-docker
           - Juniper/contrail-docs
           - Juniper/contrail-dpdk
