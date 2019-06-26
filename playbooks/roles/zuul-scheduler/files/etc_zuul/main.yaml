@@ -10,7 +10,7 @@
               shadow: progmaticlab/contrail-project-config
           - Juniper/zuul-jobs:
               shadow: progmaticlab/contrail-project-config
-          - Juniper/zuul:
+          - tungstenfabric/zuul:
               exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
           - Juniper/contrail-publisher
           - tungsten-infra/ci-utils

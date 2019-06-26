@@ -5,7 +5,7 @@ gerrit_front_port: 80
 gerrit_ssh_keys: "{{ lookup('env', 'HOME') }}/gerrit/ssh"
 gerrit_user: "zuul-tf"
 
-ZUUL_DOCKERREPO: progmaticlab
+ZUUL_DOCKERREPO: tungstenfabric
 ZUUL_VERSION: "2.5.3"
-NODEPOOL_DOCKERREPO: progmaticlab
+NODEPOOL_DOCKERREPO: tungstenfabric
 NODEPOOL_VERSION: "0.5.1"

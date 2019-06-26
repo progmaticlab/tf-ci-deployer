@@ -1,4 +1,4 @@
-zuul_git_url: "https://github.com/progmaticlab/zuul.git"
+zuul_git_url: "https://github.com/tungstenfabric/zuul.git"
 zuul_git_branch: "contrail/feature/zuulv3"
-nodepool_git_url: "https://github.com/progmaticlab/nodepool.git"
+nodepool_git_url: "https://github.com/tungstenfabric/nodepool.git"
 nodepool_git_branch: "master"
