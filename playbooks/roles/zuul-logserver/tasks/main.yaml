@@ -57,3 +57,9 @@
 - name: start logserver
   docker_service:
     project_src: /opt/zuul-logserver/
+
+- name: logserver log rotate task
+  template:
+    src: zuul-log-rotate.j2
+    dest: /etc/cron.daily/zuul-log-rotate
+    mode: 0755
