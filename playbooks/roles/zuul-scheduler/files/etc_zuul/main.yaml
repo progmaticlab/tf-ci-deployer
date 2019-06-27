@@ -20,9 +20,7 @@
         untrusted-projects:
           - Juniper/contrail
           - Juniper/contrail-analytics
-          - Juniper/contrail-ansible
           - Juniper/contrail-ansible-deployer
-          - Juniper/contrail-ansible-internal
           - Juniper/contrail-api-client
           - Juniper/contrail-build
           - Juniper/contrail-common
@@ -30,7 +28,6 @@
           - Juniper/contrail-container-builder
           - Juniper/contrail-controller
           - Juniper/contrail-deployers-containers
-          - Juniper/contrail-docker
           - Juniper/contrail-docs
           - Juniper/contrail-dpdk
           - Juniper/contrail-fabric-utils
@@ -49,14 +46,11 @@
           - Juniper/contrail-packages
           - Juniper/contrail-packaging
           - Juniper/contrail-provisioning
-          - Juniper/contrail-puppet
           - Juniper/contrail-sandesh
-          - Juniper/contrail-server-manager
           - Juniper/contrail-specs
           - Juniper/contrail-test
           - Juniper/contrail-test-ci
           - Juniper/contrail-third-party
-          - Juniper/contrail-third-party-cache
           - Juniper/contrail-third-party-packages:
               exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
           - Juniper/contrail-tripleo-heat-templates
@@ -76,14 +70,11 @@
           - Juniper/contrail-vcenter-manager
           - Juniper/contrail-vcenter-plugin
           - Juniper/contrail-vnc
-          - Juniper/horizon
-          - Juniper/nova
           - Juniper/openshift-ansible
           - Juniper/openstack-helm:
               exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
           - Juniper/openstack-helm-infra:
               exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
-          - Juniper/puppet-contrail
           - Juniper/vijava
           - tungstenfabric/docs
           - tungstenfabric/tungsten-test-runner
