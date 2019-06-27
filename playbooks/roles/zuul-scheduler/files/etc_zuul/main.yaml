@@ -75,6 +75,7 @@
               exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
           - Juniper/openstack-helm-infra:
               exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
+          - Juniper/puppet-contrail
           - Juniper/vijava
           - tungstenfabric/docs
           - tungstenfabric/tungsten-test-runner
