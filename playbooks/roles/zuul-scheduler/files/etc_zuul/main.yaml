@@ -51,8 +51,7 @@
           - Juniper/contrail-test
           - Juniper/contrail-test-ci
           - Juniper/contrail-third-party
-          - Juniper/contrail-third-party-packages:
-              exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
+          - Juniper/contrail-third-party-packages
           - Juniper/contrail-tripleo-heat-templates
           - Juniper/contrail-tripleo-puppet
           - Juniper/contrail-vro-plugin
