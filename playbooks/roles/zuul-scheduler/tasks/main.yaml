@@ -51,13 +51,6 @@
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}
 
-- name: construct known_hosts for review.opencontrail.org
-  shell: "ssh-keyscan -p {{ item.port }} {{ item.host }} >> /opt/zuul-scheduler/.ssh/known_hosts"
-  with_items:
-    - {host: "review.opencontrail.org", port: 22}
-    - {host: "review.opencontrail.org", port: 29418}
-
-# TODO remove after debugging mirroring
 - name: protect SSH known_hosts file
   file:
     path: /opt/zuul-scheduler/.ssh/known_hosts
