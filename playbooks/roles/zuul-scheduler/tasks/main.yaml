@@ -57,7 +57,7 @@
     - {host: "review.opencontrail.org", port: 22}
     - {host: "review.opencontrail.org", port: 29418}
 
-# TODO remove after debugging mirroring  
+# TODO remove after debugging mirroring
 - name: protect SSH known_hosts file
   file:
     path: /opt/zuul-scheduler/.ssh/known_hosts
