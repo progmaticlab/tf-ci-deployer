@@ -46,7 +46,7 @@
     - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/zuul-scheduler/ssh_keys/"}
 
 - name: construct known_hosts for gerrit
-  shell: "ssh-keyscan -p {{ item.port }} {{ item.host }} >> /opt/zuul-scheduler/.ssh/known_hosts"
+  shell: "ssh-keyscan -p {{ item.port }} {{ item.host }} > /opt/zuul-scheduler/.ssh/known_hosts"
   with_items:
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}

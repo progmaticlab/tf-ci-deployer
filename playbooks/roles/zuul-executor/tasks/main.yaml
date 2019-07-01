@@ -44,12 +44,12 @@
     - {src: "{{ gerrit_ssh_keys }}/nodepool_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
 
 - name: construct known_hosts for gerrit
-  shell: "ssh-keyscan -p {{ item.port }} {{ item.host }} >> /opt/zuul-executor/.ssh/known_hosts"
+  shell: "ssh-keyscan -p {{ item.port }} {{ item.host }} > /opt/zuul-executor/.ssh/known_hosts"
   with_items:
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}
 
-# TODO remove after debugging mirroring  
+# TODO remove after debugging mirroring
 - name: construct known_hosts for review.opencontrail.org
   shell: "ssh-keyscan -p {{ item.port }} {{ item.host }} >> /opt/zuul-executor/.ssh/known_hosts"
   with_items:
