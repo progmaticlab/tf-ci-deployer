@@ -297,8 +297,9 @@ create_yum_proxy('centos7-extras',      'http://centos.mirror.vexxhost.com/7/ext
 create_yum_proxy('centos7-centosplus',  'http://centos.mirror.vexxhost.com/7/centosplus/x86_64')
 // hosted tpc binary has third party packages that was taken somewhere and it doesn't depend on branch
 create_yum_hosted('yum-tpc-binary', '0')
-// hosted tpc source has build packages from third-party-packages repo and it depends on branch
-create_yum_hosted('yum-tpc-source', '1')
+// hosted tpc source has build packages from third-party-packages repo and it doesn't depend on branch for now
+// because contrail-third-party-packages doesn't have branches
+create_yum_hosted('yum-tpc-source', '0')
 
 // Maven
 create_maven_hosted('maven-releases')
