@@ -56,7 +56,7 @@
 
 - name: "clone {{ zuul_config_project }}"
   git:
-    repo: "ssh://zuul@{{ gerrit_host }}:29418/{{ zuul_config_project }}"
+    repo: "zuul_config_project_git_url"
     dest: /opt/nodepool-launcher/config
     accept_hostkey: yes
     force: true
