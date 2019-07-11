@@ -8,7 +8,7 @@
         untrusted-projects:
           - progmaticlab/contrail-zuul-jobs:
               shadow: progmaticlab/contrail-project-config
-          - Juniper/zuul-jobs:
+          - openstack-infra/zuul-jobs:
               shadow: progmaticlab/contrail-project-config
           - tungstenfabric/zuul:
               exclude:  ['pipeline', 'job', 'semaphore', 'project', 'secret', 'project-template', 'nodeset']
