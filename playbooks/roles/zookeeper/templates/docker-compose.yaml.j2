@@ -5,6 +5,7 @@ version: '2'
 services:
   zk:
     image: zookeeper
+    restart: always
     environment:
       ZOO_MY_ID: "{{ zk_id }}"
       ZOO_SERVERS: "{{ zk_servers }}"

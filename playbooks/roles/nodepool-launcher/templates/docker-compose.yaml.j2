@@ -6,6 +6,7 @@ services:
   launcher:
     command: "nodepool-launcher -d -l /etc/nodepool/launcher-logging.conf"
     image: {{ NODEPOOL_DOCKERREPO }}/nodepool-launcher:{{ NODEPOOL_VERSION }}
+    restart: always
     environment:
       ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/nodepool_rsa.pub
       OS_CLIENT_CONFIG_FILE: /etc/cloud/cloud.yaml

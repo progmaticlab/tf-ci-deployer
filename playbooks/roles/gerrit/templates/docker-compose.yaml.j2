@@ -20,6 +20,7 @@ services:
 
   mariadb:
     image: mariadb:10.4
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_USER=gerrit
@@ -27,7 +28,6 @@ services:
       - MYSQL_DATABASE=gerritdb
     volumes:
       - gerrit-db-volume:/var/lib/mysql
-    restart: always
 
 volumes:
   gerrit-git-volume:

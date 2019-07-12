@@ -5,6 +5,7 @@ version: '2'
 services:
   mariadb:
     image: mariadb
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
     ports:

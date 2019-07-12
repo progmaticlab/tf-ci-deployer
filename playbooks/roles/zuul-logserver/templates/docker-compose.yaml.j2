@@ -5,6 +5,7 @@ version: '2'
 services:
   logs:
     image: httpd:alpine
+    restart: always
     ports:
       - "{{ zuul_logs_port }}:80"
     volumes:

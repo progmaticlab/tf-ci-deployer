@@ -6,6 +6,7 @@ services:
   builder:
     command: "nodepool-builder -d -l /etc/nodepool/builder-logging.conf"
     image: {{ NODEPOOL_DOCKERREPO }}/nodepool-builder:{{ NODEPOOL_VERSION }}
+    restart: always
     environment:
       ZUUL_USER_SSH_PUBLIC_KEY: /var/ssh/nodepool_rsa.pub
       OS_CLIENT_CONFIG_FILE: /etc/cloud/cloud.yaml

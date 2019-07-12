@@ -6,6 +6,7 @@ services:
   web:
     command: "zuul-web -d"
     image: {{ ZUUL_DOCKERREPO }}/zuul-web:{{ ZUUL_VERSION }}
+    restart: always
     volumes:
       - "./etc_zuul:/etc/zuul"
       - "/var/log/zuul:/var/log/zuul"
@@ -15,6 +16,7 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
   front:
     image: nginx:1.15
+    restart: always
     depends_on:
       - web
     ports:

@@ -9,6 +9,7 @@ services:
       no_proxy: "${no_proxy}"
     command: "zuul-executor -d"
     image: {{ ZUUL_DOCKERREPO }}/zuul-executor:{{ ZUUL_VERSION }}
+    restart: always
     pid: host
     ports:
       - "7900:7900"

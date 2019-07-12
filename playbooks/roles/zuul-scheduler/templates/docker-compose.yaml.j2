@@ -8,6 +8,7 @@ services:
       no_proxy: "${no_proxy}"
     command: "zuul-scheduler -d"
     image: {{ ZUUL_DOCKERREPO }}/zuul-scheduler:{{ ZUUL_VERSION }}
+    restart: always
     ports:
       - "4730:4730"
       - "8001:8001"
