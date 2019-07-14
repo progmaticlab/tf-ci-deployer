@@ -37,12 +37,6 @@
     dest: /opt/zuul-web/docker-compose.yaml
     mode: 0600
 
-- name: apply nginx configuration
-  template:
-    src: zuul.nginx.conf.j2
-    dest: /opt/zuul-web/zuul.nginx.conf
-    mode: 0600
-
 - name: start zuul-web service
   docker_service:
     project_src: /opt/zuul-web/
