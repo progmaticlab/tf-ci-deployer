@@ -1,0 +1,45 @@
+---
+
+- name: create required directory
+  file:
+    path: "/etc/zuul"
+    state: directory
+    recurse: yes
+    mode: 0700
+    owner: zuul
+    group: zuul
+
+- name: copy zuul config files
+  copy:
+    src: "./"
+    dest: "/etc/zuul"
+    force: true
+    mode: 0600
+    owner: zuul
+    group: zuul
+
+- name: apply zuul configuration
+  template:
+    src: zuul.conf.j2
+    dest: /etc/zuul/zuul.conf
+    mode: 0400
+    owner: zuul
+    group: zuul
+
+- name: apply site-variables template
+  template:
+    src: site-variables.yaml.j2
+    dest: /etc/zuul/site-variables.yaml
+    mode: 0400
+    owner: zuul
+    group: zuul
+
+- name: create a nexus credentials file
+  copy:
+    content: '--user {{ nexus_user }}:{{ nexus_password }}'
+    dest: /etc/zuul/nexus_creds
+    mode: 0400
+    owner: zuul
+    group: zuul
+  no_log: true
+

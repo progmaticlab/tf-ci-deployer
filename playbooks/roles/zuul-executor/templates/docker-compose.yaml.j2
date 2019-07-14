@@ -14,7 +14,7 @@ services:
     ports:
       - "7900:7900"
     volumes:
-      - "./etc_zuul:/etc/zuul"
+      - "/etc/zuul:/etc/zuul"
       - "./ssh_keys:/var/ssh"
       - "./.ssh:/home/zuul/.ssh"
       - "/var/log/zuul:/var/log/zuul"

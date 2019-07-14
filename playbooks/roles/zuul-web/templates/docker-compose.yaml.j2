@@ -8,7 +8,7 @@ services:
     image: {{ ZUUL_DOCKERREPO }}/zuul-web:{{ ZUUL_VERSION }}
     restart: always
     volumes:
-      - "./etc_zuul:/etc/zuul"
+      - "/etc/zuul:/etc/zuul"
       - "/var/log/zuul:/var/log/zuul"
       - "zuul_static:/var/lib/zuul/public_html:z"
       - "/var/run:/var/run"
