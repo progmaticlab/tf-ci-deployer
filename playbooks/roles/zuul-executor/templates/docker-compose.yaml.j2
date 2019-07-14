@@ -22,3 +22,6 @@ services:
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
+      - "logs:/srv/static/logs"
+volumes:
+  logs:

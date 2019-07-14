@@ -12,10 +12,5 @@ services:
     volumes:
       - "/etc/zuul:/etc/zuul"
       - "/var/log/zuul:/var/log/zuul"
-      - "zuul_static:/var/lib/zuul/public_html:z"
-      - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-
-volumes:
-  zuul_static:

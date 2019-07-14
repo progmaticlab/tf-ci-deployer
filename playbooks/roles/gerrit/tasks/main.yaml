@@ -91,4 +91,4 @@ file:
     state: directory
     recurse: yes
 
-# TODO: add authorized kees
+# TODO: add authorized keys
