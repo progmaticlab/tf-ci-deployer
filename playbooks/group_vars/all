@@ -9,3 +9,6 @@ ZUUL_DOCKERREPO: progmaticlab
 ZUUL_VERSION: "2.5.3"
 NODEPOOL_DOCKERREPO: progmaticlab
 NODEPOOL_VERSION: "0.5.1"
+
+zuul_mysql_db_build_number: zuul_job_cache
+zuul_mysql_db_main: zuul
