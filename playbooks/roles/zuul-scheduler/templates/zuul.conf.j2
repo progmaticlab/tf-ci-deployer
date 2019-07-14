@@ -1,0 +1,31 @@
+[gearman]
+server={{ zuul_scheduler_host }}
+check_job_registration=true
+
+[gearman_server]
+start=true
+log_config=/etc/zuul/gearman-logging.conf
+
+[zookeeper]
+hosts={{ zookeeper_host }}
+
+[scheduler]
+tenant_config=/etc/zuul/main.yaml
+log_config=/etc/zuul/scheduler-logging.conf
+state_dir=/var/lib/zuul
+
+[connection "gerrit"]
+name=gerrit
+driver=gerrit
+server={{ gerrit_host }}
+sshkey=/var/ssh/zuul_rsa
+user={{ gerrit_user }}
+baseurl={{ gerrit_scheme }}://{{ gerrit_host }}
+
+[connection "github"]
+driver=github
+
+[connection "mysql"]
+name={{ mysql_host }}
+driver=sql
+dburi=mysql+pymysql://{{ zuul_mysql_username }}:{{ zuul_mysql_password }}@{{ mysql_host }}/{{ zuul_mysql_db_main }}

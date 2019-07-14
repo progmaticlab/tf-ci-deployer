@@ -14,7 +14,7 @@ services:
     ports:
       - "7900:7900"
     volumes:
-      - "/etc/zuul:/etc/zuul"
+      - "./etc_zuul:/etc/zuul"
       - "./ssh_keys:/var/ssh"
       - "./.ssh:/home/zuul/.ssh"
       - "/var/log/zuul:/var/log/zuul"
@@ -22,6 +22,3 @@ services:
       - "/var/run:/var/run"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-      - "logs:/srv/static/logs"
-volumes:
-  logs:

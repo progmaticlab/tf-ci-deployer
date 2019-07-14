@@ -5,6 +5,8 @@
     state: directory
     recurse: yes
     mode: 0755
+    owner: zuul
+    group: zuul
   with_items:
     - /opt/zuul-logserver/
     - /home/zuul/.ssh
@@ -14,6 +16,8 @@
   file:
     path: "{{ logserver_data_directory }}"
     state: directory
+    owner: zuul
+    group: zuul
     recurse: yes
     mode: 0775
 
@@ -32,6 +36,8 @@
 - name: fix /home/zuul/.ssh/authorized_keys security
   file:
     path: /home/zuul/.ssh/authorized_keys
+    owner: zuul
+    group: zuul
     mode: 0644
 
 - name: copy logserver configuration files
@@ -39,6 +45,8 @@
     src: "httpd.conf"
     dest: "/opt/zuul-logserver/httpd.conf"
     force: true
+    owner: zuul
+    group: zuul
 
 - name: apply logserver compose file
   template:

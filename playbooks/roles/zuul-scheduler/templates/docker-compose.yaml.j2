@@ -13,7 +13,7 @@ services:
       - "4730:4730"
       - "8001:8001"
     volumes:
-      - "/etc/zuul:/etc/zuul"
+      - "./etc_zuul:/etc/zuul"
       - "./ssh_keys:/var/ssh"
       - "./.ssh:/home/zuul/.ssh"
       - "/var/log/zuul:/var/log/zuul"

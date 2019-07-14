@@ -2,18 +2,6 @@
 server={{ zuul_scheduler_host }}
 check_job_registration=true
 
-[gearman_server]
-start=true
-log_config=/etc/zuul/gearman-logging.conf
-
-[zookeeper]
-hosts={{ zookeeper_host }}
-
-[web]
-log_config=/etc/zuul/web-logging.conf
-listen_address=0.0.0.0
-listen_port=9000
-
 [merger]
 git_dir=/var/lib/zuul/git
 zuul_url=
@@ -40,14 +28,8 @@ untrusted_ro_paths=/etc/ssl/certs
 untrusted_rw_paths=
 finger_port=7900
 
-[scheduler]
-tenant_config=/etc/zuul/main.yaml
-log_config=/etc/zuul/scheduler-logging.conf
-state_dir=/var/lib/zuul
-
 [connection "github"]
 driver=github
-webhook_token=
 
 [connection "gerrit"]
 name=gerrit
@@ -56,8 +38,3 @@ server={{ gerrit_host }}
 sshkey=/var/ssh/zuul_rsa
 user={{ gerrit_user }}
 baseurl={{ gerrit_scheme }}://{{ gerrit_host }}
-
-[connection "mysql"]
-name={{ mysql_host }}
-driver=sql
-dburi=mysql+pymysql://{{ zuul_mysql_username }}:{{ zuul_mysql_password }}@{{ mysql_host }}/{{ zuul_mysql_db_main }}

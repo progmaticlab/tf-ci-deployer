@@ -22,16 +22,14 @@
   include_role:
     name: zuul-initdb
 
-- name: create configuration
-  include_role:
-    name: zuul-conf
-
 - name: create required directories
   file:
     path: "{{ item }}"
     state: directory
     recurse: yes
     mode: 0750
+    owner: zuul
+    group: zuul
   with_items:
     - /opt/zuul-scheduler/.ssh
 
@@ -41,7 +39,10 @@
     dest: "{{ item.dest }}"
     force: true
     mode: 0600
+    owner: zuul
+    group: zuul
   with_items:
+    - {src: "./", dest: "/opt/zuul-scheduler"}
     - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/zuul-scheduler/ssh_keys/"}
 
 - name: construct known_hosts for gerrit
@@ -49,6 +50,20 @@
   with_items:
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}
+
+- name: protect SSH known_hosts file
+  file:
+    path: /opt/zuul-scheduler/.ssh/known_hosts
+    owner: zuul
+    group: zuul
+
+- name: apply zuul configuration
+  template:
+    src: zuul.conf.j2
+    dest: /opt/zuul-scheduler/etc_zuul/zuul.conf
+    mode: 0600
+    owner: zuul
+    group: zuul
 
 - name: apply zuul compose file
   template:

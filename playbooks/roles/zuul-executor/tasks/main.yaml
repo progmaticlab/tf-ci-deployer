@@ -18,18 +18,17 @@
         ZUUL_VERSION: latest
       when: di_check_res is success
 
-- name: create configuration
-  include_role:
-    name: zuul-conf
-
 - name: create required directories
   file:
     path: "{{ item }}"
     state: directory
     recurse: yes
     mode: 0750
+    owner: zuul
+    group: zuul
   with_items:
     - /opt/zuul-executor/.ssh
+    - /opt/zuul-executor/etc_zuul
 
 - name: copy config files
   copy:
@@ -37,7 +36,10 @@
     dest: "{{ item.dest }}"
     force: true
     mode: 0600
+    owner: zuul
+    group: zuul
   with_items:
+    - {src: "./", dest: "/opt/zuul-executor"}
     - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
     - {src: "{{ gerrit_ssh_keys }}/nodepool_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
 
@@ -46,6 +48,37 @@
   with_items:
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}
+
+- name: protect SSH known_hosts file
+  file:
+    path: /opt/zuul-executor/.ssh/known_hosts
+    owner: zuul
+    group: zuul
+
+- name: apply zuul configuration
+  template:
+    src: zuul.conf.j2
+    dest: /opt/zuul-executor/etc_zuul/zuul.conf
+    mode: 0400
+    owner: zuul
+    group: zuul
+
+- name: apply site-variables template
+  template:
+    src: site-variables.yaml.j2
+    dest: /opt/zuul-executor/etc_zuul/site-variables.yaml
+    mode: 0400
+    owner: zuul
+    group: zuul
+
+- name: create a nexus credentials file
+  copy:
+    content: '--user {{ nexus_user }}:{{ nexus_password }}'
+    dest: /opt/zuul-executor/etc_zuul/nexus_creds
+    mode: 0400
+    owner: zuul
+    group: zuul
+  no_log: true
 
 - name: apply docker-compose configuration
   template:

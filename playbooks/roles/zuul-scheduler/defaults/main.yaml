@@ -1,3 +1,6 @@
 ---
 zuul_build_containers: false
 zuul_git_url: "https://github.com/tungstenfabric/zuul.git"
+
+zuul_mysql_db_build_number: zuul_job_cache
+zuul_mysql_db_main: zuul
