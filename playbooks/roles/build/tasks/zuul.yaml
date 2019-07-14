@@ -13,10 +13,6 @@
     force: true
 
 - name: build zuul docker images
-  command: "./build-docker.sh {{ component|default('') }}"
+  command: "docker build --target zuul-{{ component }} -t {{ ZUUL_DOCKERREPO }}/zuul-{{ component }}:{{ ZUUL_VERSION }} ."
   args:
     chdir: /opt/git/zuul
-  environment:
-    ZUUL_CLEAN: 1
-    ZUUL_DOCKERREPO: "{{ ZUUL_DOCKERREPO }}"
-    ZUUL_VERSION: "{{ ZUUL_VERSION }}"
