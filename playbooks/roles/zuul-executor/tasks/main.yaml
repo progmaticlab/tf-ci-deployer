@@ -28,8 +28,6 @@
     state: directory
     recurse: yes
     mode: 0750
-    owner: zuul
-    group: zuul
   with_items:
     - /opt/zuul-executor/.ssh
 
@@ -39,8 +37,6 @@
     dest: "{{ item.dest }}"
     force: true
     mode: 0600
-    owner: zuul
-    group: zuul
   with_items:
     - {src: "{{ gerrit_ssh_keys }}/zuul_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
     - {src: "{{ gerrit_ssh_keys }}/nodepool_rsa", dest: "/opt/zuul-executor/ssh_keys/"}
@@ -50,12 +46,6 @@
   with_items:
     - {host: "{{ gerrit_host }}", port: 22}
     - {host: "{{ gerrit_host }}", port: 29418}
-
-- name: protect SSH known_hosts file
-  file:
-    path: /opt/zuul-executor/.ssh/known_hosts
-    owner: zuul
-    group: zuul
 
 - name: apply docker-compose configuration
   template:
