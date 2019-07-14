@@ -22,6 +22,17 @@
   include_role:
     name: zuul-conf
 
+- name: create required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: 0750
+    owner: zuul
+    group: zuul
+  with_items:
+    - /opt/zuul-web
+
 - name: apply docker-compose configuration
   template:
     src: docker-compose.yaml.j2
