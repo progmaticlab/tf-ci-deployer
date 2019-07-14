@@ -1,0 +1,3 @@
+---
+zuul_mysql_db_build_number: zuul_job_cache
+zuul_mysql_db_main: zuul
