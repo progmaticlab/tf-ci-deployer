@@ -4,7 +4,8 @@ version: '2'
 
 services:
   zk:
-    image: zookeeper
+    # latest version 3.5.5 has strange error "2019-07-15 07:09:32,990 [myid:1] - ERROR [ContainerManagerTask:ContainerManager$1@84] - Error checking containers"
+    image: zookeeper:3.4:14
     restart: always
     environment:
       ZOO_MY_ID: "{{ zk_id }}"
