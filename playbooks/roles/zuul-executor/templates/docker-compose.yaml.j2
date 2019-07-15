@@ -7,6 +7,9 @@ services:
     privileged: true
     environment:
       no_proxy: "${no_proxy}"
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      LANGUAGE: en_US.UTF-8
     command: "zuul-executor -d"
     image: {{ ZUUL_DOCKERREPO }}/zuul-executor:{{ ZUUL_VERSION }}
     restart: always

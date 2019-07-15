@@ -6,6 +6,9 @@ services:
   scheduler:
     environment:
       no_proxy: "${no_proxy}"
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      LANGUAGE: en_US.UTF-8
     command: "zuul-scheduler -d"
     image: {{ ZUUL_DOCKERREPO }}/zuul-scheduler:{{ ZUUL_VERSION }}
     restart: always

@@ -4,6 +4,11 @@ version: '2'
 
 services:
   web:
+    environment:
+      no_proxy: "${no_proxy}"
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      LANGUAGE: en_US.UTF-8
     command: "zuul-web -d"
     image: {{ ZUUL_DOCKERREPO }}/zuul-web:{{ ZUUL_VERSION }}
     restart: always
