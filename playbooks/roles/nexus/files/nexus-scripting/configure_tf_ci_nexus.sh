@@ -89,7 +89,8 @@ else
   exit 1
 fi
 
+# order is important, e.g. repos creation uses cleanup policy
 create_and_run_script tfci_cleanup tfCICleanupPolicy.groovy
-create_and_run_script tfci_compact tfCIStorageCompactTask.groovy
 create_and_run_script tfci_repos tfCIRepositories.groovy
+create_and_run_script tfci_compact tfCIStorageCompactTask.groovy
 create_and_run_script tfci_roles tfCIRoles.groovy
