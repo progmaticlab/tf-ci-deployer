@@ -11,9 +11,6 @@ nexus:
     yum_tpc_binary: 'yum-tpc-binary'
     maven: 'maven-public'
   creds_path: '/etc/zuul/nexus_creds'
-docker_registry:
-  fqdn: {{ nexus_host }}
-  port: 5000
 
 zuul_log_url: "{{ zuul_log_url | default('http://logs.site.org:80') }}"
 
