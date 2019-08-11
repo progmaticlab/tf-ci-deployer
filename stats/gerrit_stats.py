@@ -14,7 +14,12 @@ EXCLUDED_PROJECTS = [
     'Juniper/contrail-dev-env',
 ]
 
+tf_fails = 0
+juniper_fails = 0
+
+
 def check_review(data):
+    global tf_fails, juniper_fails
     output = []
     output.append("Review {}, created = {}, updated = {}, URL = {}".format(
         data['number'], datetime.datetime.fromtimestamp(data['createdOn']),
@@ -46,9 +51,11 @@ def check_review(data):
 
         if len(statuses_zuul_tf) == 1 and next(iter(statuses_zuul_tf)) == 'succeeded':
             #output.append("    {}: GOOD: TF is better.".format(num))
+            juniper_fails += 1
             continue
         if len(statuses_zuul) == 1 and next(iter(statuses_zuul)) == 'succeeded':
             output.append("    {}: BAD: Juniper is better.".format(num))
+            tf_fails += 1
             continue
 
         for item in pdata:
@@ -72,6 +79,9 @@ def main():
         output = check_review(data)
         if len(output) > 1:
             print('\n'.join(output))
+    print("Juniper fails: {}".format(juniper_fails))
+    print("TF      fails: {}".format(tf_fails))
+
 
 if __name__ == "__main__":
     main()
