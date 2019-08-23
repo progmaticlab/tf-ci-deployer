@@ -3,8 +3,8 @@
 """
 Optional params:
 
---repos-config - Path to file with repos config (defailt is 'repos-config.yaml' in script's folder)
---workspace - path to workspace where cloned repos will be placed (default is 'workspace' in script's folder)
+--repos-config - Path to file with repos config (defailt is 'repos-config.yaml' in script's dir)
+--workspace - path to workspace where cloned repos will be placed (default is 'workspace' in script's dir)
 --user - user for git ssh access. This parameter is mandatory for some operations
 
 Mandatory params:
@@ -16,7 +16,7 @@ tool have next operations:
 
 clean - removes all content in workspace/src directory. (TODO: abandon reviews if they are present)
 
-clone - clones all projects to workspace. If project's folder already exists and 'git status' works well
+clone - clones all projects to workspace. If project's dir already exists and 'git status' works well
        then tool will just pull latest changes and chekout HEAD. Overwise it will re-clone it.
 
 commit - copies source's content to destination project and commits changes for each specified branch.
@@ -116,15 +116,15 @@ class Migration():
                 self._git_pull(pkey)
             else:
                 log("Clone project {}".format(pkey))
-                self._git_clone(pkey)
+                self._run_task(self._git_clone, pkey)
         # destination project must be pre-created for now
-        self._git_clone(self.dst_key, folder=self.dst_key)
+        self._git_clone(self.dst_key, clone_dir=self.dst_key)
 
     def _op_commit(self):
         project = self.projects[self.src_key]
 
-        # put destination project into separate folder to avoid naming conflict
-        excluded_folders = ['.git']
+        # put destination project into separate directory to avoid naming conflict
+        excluded_objects = ['.git']
         src_dir = os.path.join(self.work_dir, self.projects[self.src_key]['src'])
         dst_dir = os.path.join(self.work_dir, project['dst_key'])
         # copy src to dest, commit push to review, get Commit-Id
@@ -135,7 +135,7 @@ class Migration():
 
             # remove all in dest dir except .git
             for item in os.listdir(dst_dir):
-                if item not in excluded_folders:
+                if item not in excluded_objects:
                     item_path = os.path.join(dst_dir, item)
                     if os.path.isdir(item_path):
                         shutil.rmtree(item_path)
@@ -144,7 +144,7 @@ class Migration():
 
             # copy
             for item in os.listdir(src_dir):
-                if item in excluded_folders:
+                if item in excluded_objects:
                     continue
                 src_path = os.path.join(src_dir, item)
                 dst_path = os.path.join(dst_dir, item)
@@ -153,8 +153,11 @@ class Migration():
                 else:
                     shutil.copy2(src_path, dst_path)
                 if item == '.gitreview':
-                    #TODO: fix it in dest
-                    pass
+                    self._patch_file(src_path, self.src_key, self.dst_key)
+            # we don't fix src_name tp dst_name cause it requires more intelligent work
+
+            self._patch_dir(dst_dir, self.src_key, self.dst_key)
+            self._git_commit(dst_dir, "Add content from Juniper")
 
         # find links to src in all projects, change them, commit with Depends-On, push to review
 
@@ -173,19 +176,38 @@ class Migration():
         #TODO: implement
         pass
 
-    def _git_clone(self, pkey, folder=None):
-        if not folder:
-            folder = pkey.split('/')[1]
-        path = os.path.join(self.work_dir, folder)
+    def _git_clone(self, pkey, clone_dir=None):
+        if not clone_dir:
+            clone_dir = pkey.split('/')[1]
+        path = os.path.join(self.work_dir, clone_dir)
         if os.path.exists(path):
             shutil.rmtree(path)
-        url = 'ssh://{}@{}:29418/{}.git'.format(self.args.user, GERRIT_URL, self.src_key)
-        subprocess.check_call(['git', 'clone', '--no-tags', '-q', '-j', '4', url, folder], cwd=self.work_dir)
+        url = 'ssh://{}@{}:29418/{}.git'.format(self.args.user, GERRIT_URL, pkey)
+        subprocess.check_call(['git', 'clone', '-q', url, clone_dir], cwd=self.work_dir)
 
     def _git_checkout(self, branch, repo_dir):
         #TODO: think about absent branch for destination
         subprocess.check_call(['git', 'checkout', branch], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def _git_commit(self, project_dir, comment):
+        subprocess.check_call(['git', 'add', '.'], cwd=project_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.check_call(['git', 'commit', '-m', comment], cwd=project_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def _run_task(self, method, *args, **kwargs):
+        #TODO: implement threading
+        method(*args, **kwargs)
+
+    def _patch_file(self, file, src, dst):
+        subprocess.check_call('sed -i -e "s|{}|{}|g" {}'.format(src, dst, file), shell=True, cwd=self.work_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def _patch_dir(self, repo_dir, src, dst):
+        cmd = ('find . -not -path "*/.git*" -type f -print0'
+               ' | xargs -0 -r sed -i -e "s|{}|{}|g"'.format(src, dst))
+        subprocess.check_call(cmd, shell=True, cwd=repo_dir)
 
 
 def main():
