@@ -171,6 +171,7 @@ class Migration():
 
         # find links to src in all projects, change them, commit with Depends-On, push to review
         for pkey in self.projects:
+            #TODO: deal with branches
             if pkey == self.src_key:
                 continue
             log("Patching {}".format(pkey))
@@ -196,6 +197,7 @@ class Migration():
 
     def _op_review(self):
         project = self.projects[self.src_key]
+            
 
     # private helpers' functions
 
