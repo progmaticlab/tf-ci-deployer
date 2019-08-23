@@ -90,6 +90,7 @@ class Migration():
                 src_key = '{}/{}'.format(SRC_ORGANIZATION, project['src'])
                 self.projects[src_key] = {
                     "src": project['src'],
+                    "dst": project['dst'],
                     "dst_key": '{}/{}'.format(project['dst_org'], project['dst']),
                     "branches": project["branches"] if "branches" in project else default_branches
                 }
@@ -128,7 +129,7 @@ class Migration():
 
         # put destination project into separate directory to avoid naming conflict
         excluded_objects = ['.git']
-        src_dir = os.path.join(self.work_dir, self.projects[self.src_key]['src'])
+        src_dir = os.path.join(self.work_dir, project['src'])
         dst_dir = os.path.join(self.work_dir, project['dst_key'])
         # copy src to dest, commit push to review, get Commit-Id
         for branch in project['branches']:
@@ -175,10 +176,26 @@ class Migration():
             log("Patching {}".format(pkey))
             dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
             self._patch_dir(dst_dir, self.src_key, self.dst_key)
-            self._git_commit(dst_dir, "Change links from {} to {}".format(self.src_key, self.dst_key))
+            if self._git_diff_stat(dst_dir):
+                log("    Committing...")
+                self._git_commit(dst_dir, "Change links from {} to {}".format(self.src_key, self.dst_key))
+            else:
+                log("    Patch is empty. Skipping...")
 
         # handle contrail-vnc
+        log("Patching contrail-vnc as a special case")
+        dst_dir = os.path.join(self.work_dir, "contrail-vnc")
+        self._patch_dir(dst_dir,
+                        'name="{}" remote="github"'.format(project['src']),
+                        'name="{}" remote="githubtf"'.format(project['dst']))
+        if self._git_diff_stat(dst_dir):
+            log("    Committing...")
+            self._git_commit(dst_dir, "Change links from {} to {}".format(self.src_key, self.dst_key))
+        else:
+            log("    Patch is empty. Skipping...")
 
+    def _op_review(self):
+        project = self.projects[self.src_key]
 
     # private helpers' functions
 
@@ -214,24 +231,28 @@ class Migration():
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return False if res else True
 
-    def _git_commit(self, project_dir, comment):
-        subprocess.check_call(['git', 'add', '.'], cwd=project_dir,
+    def _git_commit(self, repo_dir, comment):
+        subprocess.check_call(['git', 'add', '.'], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.check_call(['git', 'commit', '-m', comment], cwd=project_dir,
+        subprocess.check_call(['git', 'commit', '-m', comment], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def _git_diff_stat(self, repo_dir):
+        return subprocess.check_output(['git', 'diff', '--stat'], cwd=repo_dir)
 
     def _run_task(self, method, *args, **kwargs):
         #TODO: implement threading
         method(*args, **kwargs)
 
     def _patch_file(self, file, src, dst):
-        subprocess.check_call('sed -ie "s|{}|{}|g" {}'.format(src, dst, file), shell=True, cwd=self.work_dir,
+        subprocess.check_call('sed -i -e "s|{}|{}|g" {}'.format(src.replace('"', '\\"'), dst.replace('"', '\\"'), file),
+                              shell=True, cwd=self.work_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _patch_dir(self, repo_dir, src, dst):
         cmd = ('find . -not -path "*/.git*" -type f -print0'
-               ' | xargs -0 -r sed -ie "s|{}|{}|g"'.format(src, dst))
-        subprocess.check_call(cmd, shell=True, cwd=repo_dir)
+               ' | xargs -0 -r sed -i -e "s|{}|{}|g"'.format(src.replace('"', '\\"'), dst.replace('"', '\\"')))
+        subprocess.check_output(cmd, shell=True, cwd=repo_dir)
 
 
 def main():
