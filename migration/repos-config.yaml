@@ -1,0 +1,64 @@
+---
+
+default_branches:
+  - "master"
+  - "R1908"
+projects:
+  - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
+  - {src: "contrail-analytics", dst_org: "tungstenfabric", dst: "analytics"}
+  - {src: "contrail-ansible", dst_org: "tungstenfabric-tools", dst: "ansible"}
+  - {src: "contrail-ansible-deployer", dst_org: "tungstenfabric-tools", dst: "ansible-deployer"}
+  - {src: "contrail-ansible-internal", dst_org: "tungstenfabric-tools", dst: "ansible-internal"}
+  - {src: "contrail-api-client", dst_org: "tungstenfabric", dst: "api-client"}
+  - {src: "contrail-build", dst_org: "tungstenfabric-tools", dst: "build"}
+  - {src: "contrail-common", dst_org: "tungstenfabric", dst: "common"}
+  - {src: "contrail-community-docs", dst_org: "tungstenfabric", dst: "community-docs"}
+  - {src: "contrail-container-builder", dst_org: "tungstenfabric-tools", dst: "container-builder"}
+  - {src: "contrail-controller", dst_org: "tungstenfabric", dst: "controller"}
+  - {src: "contrail-deployers-containers", dst_org: "tungstenfabric-tools", dst: "deployers-containers"}
+  - {src: "contrail-dev-env", dst_org: "tungstenfabric-tools", dst: "dev-env"}
+  - {src: "contrail-docs", dst_org: "tungstenfabric", dst: "docs"}
+  - {src: "contrail-dpdk", dst_org: "tungstenfabric", dst: "dpdk"}
+  - {src: "contrail-fabric-utils", dst_org: "tungstenfabric-tools", dst: "fabric-utils"}
+  - {src: "contrail-generateDS", dst_org: "tungstenfabric", dst: "generateDS"}
+  - {src: "contrail-go-api", dst_org: "tungstenfabric", dst: "go-api"}
+  - {src: "contrail-heat", dst_org: "tungstenfabric", dst: "heat-plugin"}
+  - {src: "contrail-helm-deployer", dst_org: "tungstenfabric-tools", dst: "helm-deployer"}
+  - {src: "contrail-infra", dst_org: "tungstenfabric-infra", dst: "system-config"}
+  - {src: "contrail-infra-doc", dst_org: "tungstenfabric-infra", dst: "docs"}
+  - {src: "contrail-java-api", dst_org: "tungstenfabric", dst: "java-api"}
+  - {src: "contrail-kolla-ansible", dst_org: "tungstenfabric-tools", dst: "kolla-ansible"}
+  - {src: "contrail-neutron-plugin", dst_org: "tungstenfabric", dst: "neutron-plugin"}
+  - {src: "contrail-nova-vif-driver", dst_org: "tungstenfabric", dst: "nova-vif-driver"}
+  - {src: "contrail-packages", dst_org: "tungstenfabric-tools", dst: "packages"}
+  - {src: "contrail-project-config", dst_org: "tungstenfabric-infra", dst: "project-config"}
+  - {src: "contrail-provisioning", dst_org: "tungstenfabric-tools", dst: "provisioning"}
+  - {src: "contrail-publisher", dst_org: "tungstenfabric-infra", dst: "docker-publisher"}
+  - {src: "contrail-sandesh", dst_org: "tungstenfabric", dst: "sandesh"}
+  - {src: "contrail-specs", dst_org: "tungstenfabric", dst: "specs"}
+  - {src: "contrail-test", dst_org: "tungstenfabric", dst: "test"}
+  - {src: "contrail-third-party", dst_org: "tungstenfabric-tools", dst: "third-party"}
+  - {src: "contrail-third-party-cache", dst_org: "tungstenfabric-tools", dst: "third-party-cache"}
+  - {src: "contrail-third-party-packages", dst_org: "tungstenfabric-tools", dst: "third-party-packages"}
+  - {src: "contrail-tripleo-heat-templates", dst_org: "tungstenfabric-tools", dst: "tripleo-heat-templates"}
+  - {src: "contrail-tripleo-puppet", dst_org: "tungstenfabric-tools", dst: "tripleo-puppet"}
+  - {src: "contrail-vcenter-manager", dst_org: "tungstenfabric", dst: "vcenter-manager"}
+  - {src: "contrail-vcenter-plugin", dst_org: "tungstenfabric", dst: "vcenter-plugin"}
+  - {src: "contrail-vnc", dst_org: "tungstenfabric", dst: "vnc"}
+  - {src: "contrail-vro-plugin", dst_org: "tungstenfabric", dst: "vro-plugin"}
+  - {src: "contrail-vrouter", dst_org: "tungstenfabric", dst: "vrouter"}
+  - {src: "contrail-vrouter-java-api", dst_org: "tungstenfabric", dst: "vrouter-java-api"}
+  - {src: "contrail-web-controller", dst_org: "tungstenfabric", dst: "web-controller"}
+  - {src: "contrail-web-core", dst_org: "tungstenfabric", dst: "web-core"}
+  - {src: "contrail-web-storage", dst_org: "tungstenfabric", dst: "web-storage"}
+  - {src: "contrail-webui-third-party", dst_org: "tungstenfabric", dst: "webui-third-party"}
+  - {src: "contrail-windows", dst_org: "tungstenfabric", dst: "windows"}
+  - {src: "contrail-windows-docker-driver", dst_org: "tungstenfabric", dst: "windows-docker-driver"}
+  - {src: "contrail-zuul-jobs", dst_org: "tungstenfabric-infra", dst: "tungsten-zuul-jobs"}
+  - {src: "horizon", dst_org: "tungstenfabric", dst: "openstack-horizon"}
+  - {src: "nova", dst_org: "tungstenfabric", dst: "openstack-nova"}
+  - {src: "openshift-ansible", dst_org: "tungstenfabric-tools", dst: "openshift-ansible"}
+  - {src: "openstack-helm-infra", dst_org: "tungstenfabric-tools", dst: "openstack-helm-infra"}
+  - {src: "openstack-helm", dst_org: "tungstenfabric-tools", dst: "openstack-helm"}
+  - {src: "vijava", dst_org: "tungstenfabric", dst: "vijava"}
+  - {src: "zuul-jobs", dst_org: "tungstenfabric-infra", dst: "zuul-jobs"}
