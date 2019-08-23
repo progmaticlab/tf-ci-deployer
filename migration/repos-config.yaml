@@ -2,7 +2,7 @@
 
 default_branches:
   - "master"
-  - "R1908"
+  #- "R1908"
 projects:
   - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
   - {src: "contrail-analytics", dst_org: "tungstenfabric", dst: "analytics"}
@@ -33,7 +33,6 @@ projects:
   - {src: "contrail-packages", dst_org: "tungstenfabric-tools", dst: "packages"}
   - {src: "contrail-project-config", dst_org: "tungstenfabric-infra", dst: "project-config"}
   - {src: "contrail-provisioning", dst_org: "tungstenfabric-tools", dst: "provisioning"}
-  - {src: "contrail-publisher", dst_org: "tungstenfabric-infra", dst: "docker-publisher"}
   - {src: "contrail-sandesh", dst_org: "tungstenfabric", dst: "sandesh"}
   - {src: "contrail-specs", dst_org: "tungstenfabric", dst: "specs"}
   - {src: "contrail-test", dst_org: "tungstenfabric", dst: "test"}
@@ -61,4 +60,6 @@ projects:
   - {src: "openstack-helm-infra", dst_org: "tungstenfabric-tools", dst: "openstack-helm-infra"}
   - {src: "openstack-helm", dst_org: "tungstenfabric-tools", dst: "openstack-helm"}
   - {src: "vijava", dst_org: "tungstenfabric", dst: "vijava"}
-  - {src: "zuul-jobs", dst_org: "tungstenfabric-infra", dst: "zuul-jobs"}
+  # next repos are not present in review.opencontrail.org
+  #- {src: "zuul-jobs", dst_org: "tungstenfabric-infra", dst: "zuul-jobs"}
+  #- {src: "contrail-publisher", dst_org: "tungstenfabric-infra", dst: "docker-publisher"}

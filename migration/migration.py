@@ -25,6 +25,8 @@ review - pushes committed changes to gerrit.
 
 """
 
+#TODO: handle moved projects
+
 import argparse
 import os
 import shutil
@@ -35,6 +37,7 @@ import yaml
 
 SRC_ORGANIZATION = 'Juniper'
 GERRIT_URL = 'review.opencontrail.org'
+COPY_COMMIT_MESSAGE = "Add content from Juniper"
 
 
 def log(message, level='INFO'):
@@ -129,6 +132,11 @@ class Migration():
         dst_dir = os.path.join(self.work_dir, project['dst_key'])
         # copy src to dest, commit push to review, get Commit-Id
         for branch in project['branches']:
+            if self._git_log_grep(dst_dir, COPY_COMMIT_MESSAGE):
+                log("Branch {} has been already patched".format(branch))
+                continue
+
+            log("Copying src to dst for branch {}".format(branch))
             self._git_checkout(branch, src_dir)
             #TODO: implement branch creation in destination
             self._git_checkout(branch, dst_dir)
@@ -156,10 +164,21 @@ class Migration():
                     self._patch_file(src_path, self.src_key, self.dst_key)
             # we don't fix src_name tp dst_name cause it requires more intelligent work
 
+            log("Patching destination")
             self._patch_dir(dst_dir, self.src_key, self.dst_key)
-            self._git_commit(dst_dir, "Add content from Juniper")
+            self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
 
         # find links to src in all projects, change them, commit with Depends-On, push to review
+        for pkey in self.projects:
+            if pkey == self.src_key:
+                continue
+            log("Patching {}".format(pkey))
+            dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
+            self._patch_dir(dst_dir, self.src_key, self.dst_key)
+            self._git_commit(dst_dir, "Change links from {} to {}".format(self.src_key, self.dst_key))
+
+        # handle contrail-vnc
+
 
     # private helpers' functions
 
@@ -190,6 +209,11 @@ class Migration():
         subprocess.check_call(['git', 'checkout', branch], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
+    def _git_log_grep(self, repo_dir, message):
+        res = subprocess.call('git log --oneline | grep "{}"'.format(message), shell=True, cwd=repo_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return False if res else True
+
     def _git_commit(self, project_dir, comment):
         subprocess.check_call(['git', 'add', '.'], cwd=project_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -201,12 +225,12 @@ class Migration():
         method(*args, **kwargs)
 
     def _patch_file(self, file, src, dst):
-        subprocess.check_call('sed -i -e "s|{}|{}|g" {}'.format(src, dst, file), shell=True, cwd=self.work_dir,
+        subprocess.check_call('sed -ie "s|{}|{}|g" {}'.format(src, dst, file), shell=True, cwd=self.work_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _patch_dir(self, repo_dir, src, dst):
         cmd = ('find . -not -path "*/.git*" -type f -print0'
-               ' | xargs -0 -r sed -i -e "s|{}|{}|g"'.format(src, dst))
+               ' | xargs -0 -r sed -ie "s|{}|{}|g"'.format(src, dst))
         subprocess.check_call(cmd, shell=True, cwd=repo_dir)
 
 
