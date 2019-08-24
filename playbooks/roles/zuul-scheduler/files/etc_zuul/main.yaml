@@ -78,3 +78,5 @@
           - Juniper/vijava
           - tungstenfabric/docs
           - tungstenfabric/tungsten-test-runner
+          # migrated section
+          - tungstenfabric/analytics
