@@ -175,6 +175,7 @@ class Migration():
             for branch in self.projects[pkey]['branches']:
                 log("Patching project {} / branch {}".format(pkey, branch))
                 dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
+                self._git_checkout(branch, dst_dir)
                 # common patch
                 self._patch_dir(dst_dir, self.src_key, self.dst_key)
                 #specific patches
