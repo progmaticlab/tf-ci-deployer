@@ -25,8 +25,6 @@ review - pushes committed changes to gerrit.
 
 """
 
-#TODO: handle moved projects
-
 import argparse
 import os
 import shutil
@@ -47,7 +45,6 @@ def log(message, level='INFO'):
 class Migration():
 
     valid_operations = []
-    # list of projects in format: 'old-org/old-name': 'new-org/new-name'
     projects = dict()
 
     def __init__(self):
@@ -59,6 +56,7 @@ class Migration():
 
         self._parse_args()
         self._load_repos_config()
+        # moving project always use 'Juniper' as organization
         self.src_key = '{}/{}'.format(SRC_ORGANIZATION, self.args.src)
         if self.src_key not in self.projects:
             log("Project {} could not be found in repos config".format(self.args.src))
@@ -87,12 +85,13 @@ class Migration():
             data = yaml.load(fh, Loader=yaml.FullLoader)
             default_branches = data['default_branches']
             for project in data['projects']:
-                src_key = '{}/{}'.format(SRC_ORGANIZATION, project['src'])
+                src_org = project.get('src_org', SRC_ORGANIZATION)
+                src_key = '{}/{}'.format(src_org, project['src'])
                 self.projects[src_key] = {
                     "src": project['src'],
                     "dst": project['dst'],
                     "dst_key": '{}/{}'.format(project['dst_org'], project['dst']),
-                    "branches": project["branches"] if "branches" in project else default_branches
+                    "branches": project.get('branches', default_branches)
                 }
 
     def execute(self):
@@ -139,7 +138,7 @@ class Migration():
 
             log("Copying src to dst for branch {}".format(branch))
             self._git_checkout(branch, src_dir)
-            #TODO: implement branch creation in destination
+            #NOTE: branch must be pre-created in destination
             self._git_checkout(branch, dst_dir)
 
             # remove all in dest dir except .git
@@ -163,7 +162,7 @@ class Migration():
                     shutil.copy2(src_path, dst_path)
                 if item == '.gitreview':
                     self._patch_file(src_path, self.src_key, self.dst_key)
-            # we don't fix src_name tp dst_name cause it requires more intelligent work
+            # we don't fix src_name to dst_name cause it requires more intelligent work
 
             log("Patching destination")
             self._patch_dir(dst_dir, self.src_key, self.dst_key)
@@ -171,29 +170,25 @@ class Migration():
 
         # find links to src in all projects, change them, commit with Depends-On, push to review
         for pkey in self.projects:
-            #TODO: deal with branches
             if pkey == self.src_key:
                 continue
-            log("Patching {}".format(pkey))
-            dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
-            self._patch_dir(dst_dir, self.src_key, self.dst_key)
-            if self._git_diff_stat(dst_dir):
-                log("    Committing...")
-                self._git_commit(dst_dir, "Change links from {} to {}".format(self.src_key, self.dst_key))
-            else:
-                log("    Patch is empty. Skipping...")
-
-        # handle contrail-vnc
-        log("Patching contrail-vnc as a special case")
-        dst_dir = os.path.join(self.work_dir, "contrail-vnc")
-        self._patch_dir(dst_dir,
+            for branch in self.projects[pkey]['branches']:
+                log("Patching project {} / branch {}".format(pkey, branch))
+                dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
+                # common patch
+                self._patch_dir(dst_dir, self.src_key, self.dst_key)
+                #specific patches
+                if self.projects[pkey]['src'] in ('contrail-vnc', 'vnc'):
+                    # contrail-vnc has specific file with name only
+                    self._patch_dir(dst_dir,
                         'name="{}" remote="github"'.format(project['src']),
                         'name="{}" remote="githubtf"'.format(project['dst']))
-        if self._git_diff_stat(dst_dir):
-            log("    Committing...")
-            self._git_commit(dst_dir, "Change links from {} to {}".format(self.src_key, self.dst_key))
-        else:
-            log("    Patch is empty. Skipping...")
+
+                if self._git_diff_stat(dst_dir):
+                    log("    Committing...")
+                    self._git_commit(dst_dir, "Change links from {} to {}".format(self.src_key, self.dst_key))
+                else:
+                    log("    Patch is empty. Skipping...")
 
     def _op_review(self):
         project = self.projects[self.src_key]
@@ -224,7 +219,6 @@ class Migration():
         subprocess.check_call(['git', 'clone', '-q', url, clone_dir], cwd=self.work_dir)
 
     def _git_checkout(self, branch, repo_dir):
-        #TODO: think about absent branch for destination
         subprocess.check_call(['git', 'checkout', branch], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
