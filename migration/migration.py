@@ -127,43 +127,25 @@ class Migration():
         project = self.projects[self.src_key]
 
         # put destination project into separate directory to avoid naming conflict
-        excluded_objects = ['.git']
+        excluded_names = ['.git']
         src_dir = os.path.join(self.work_dir, project['src'])
         dst_dir = os.path.join(self.work_dir, project['dst_key'])
         # copy src to dest, commit push to review, get Commit-Id
         for branch in project['branches']:
-            if self._git_log_grep(dst_dir, COPY_COMMIT_MESSAGE):
-                log("Branch {} has been already patched".format(branch))
-                continue
-
             log("Copying src to dst for branch {}".format(branch))
             self._git_checkout(branch, src_dir)
             #NOTE: branch must be pre-created in destination
             self._git_checkout(branch, dst_dir)
 
+            if self._git_log_grep(dst_dir, COPY_COMMIT_MESSAGE):
+                log("Branch {} has been already patched".format(branch))
+                continue
+
             # remove all in dest dir except .git
-            for item in os.listdir(dst_dir):
-                if item not in excluded_objects:
-                    item_path = os.path.join(dst_dir, item)
-                    if os.path.isdir(item_path):
-                        shutil.rmtree(item_path)
-                    else:
-                        os.remove(item_path)
-
+            self._clean_dir(dst_dir, excluded_names)
             # copy
-            for item in os.listdir(src_dir):
-                if item in excluded_objects:
-                    continue
-                src_path = os.path.join(src_dir, item)
-                dst_path = os.path.join(dst_dir, item)
-                if os.path.isdir(src_path):
-                    shutil.copytree(src_path, dst_path)
-                else:
-                    shutil.copy2(src_path, dst_path)
-                if item == '.gitreview':
-                    self._patch_file(src_path, self.src_key, self.dst_key)
+            self._copy_dir(src_dir, dst_dir, excluded_names)
             # we don't fix src_name to dst_name cause it requires more intelligent work
-
             log("Patching destination")
             self._patch_dir(dst_dir, self.src_key, self.dst_key)
             self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
@@ -235,6 +217,12 @@ class Migration():
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _git_diff_stat(self, repo_dir):
+        # we must to flush all caches.
+        subprocess.check_call(['git', 'status'], cwd=repo_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.check_call(['git', 'diff'], cwd=repo_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # and finally check
         return subprocess.check_output(['git', 'diff', '--stat'], cwd=repo_dir)
 
     def _run_task(self, method, *args, **kwargs):
@@ -251,6 +239,26 @@ class Migration():
                ' | xargs -0 -r sed -i -e "s|{}|{}|g"'.format(src.replace('"', '\\"'), dst.replace('"', '\\"')))
         subprocess.check_output(cmd, shell=True, cwd=repo_dir)
 
+    def _clean_dir(self, dst_dir, excluded_names):
+        for item in os.listdir(dst_dir):
+            if item in excluded_names:
+                continue
+            item_path = os.path.join(dst_dir, item)
+            if os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+            else:
+                os.remove(item_path)
+
+    def _copy_dir(self, src_dir, dst_dir, excluded_names):
+        for item in os.listdir(src_dir):
+            if item in excluded_names:
+                continue
+            src_path = os.path.join(src_dir, item)
+            dst_path = os.path.join(dst_dir, item)
+            if os.path.isdir(src_path):
+                shutil.copytree(src_path, dst_path)
+            else:
+                shutil.copy2(src_path, dst_path)
 
 def main():
     migration = Migration()
