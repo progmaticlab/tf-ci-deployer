@@ -35,7 +35,8 @@ import yaml
 
 SRC_ORGANIZATION = 'Juniper'
 GERRIT_URL = 'review.opencontrail.org'
-COPY_COMMIT_MESSAGE = "Add content from Juniper"
+COMMIT_MESSAGE_TAG='Migration'
+COPY_COMMIT_MESSAGE = '[{}] Add content from Juniper'.format(COMMIT_MESSAGE_TAG)
 
 
 def log(message, level='INFO'):
@@ -169,12 +170,26 @@ class Migration():
 
                 if self._git_diff_stat(dst_dir):
                     log("    Committing...")
-                    self._git_commit(dst_dir, "Change links from {} to {}".format(self.src_key, self.dst_key))
+                    self._git_commit(dst_dir, "[{}/{}] Change links from to {}".format(COMMIT_MESSAGE_TAG, self.src_key, self.dst_key))
                 else:
                     log("    Patch is empty. Skipping...")
 
     def _op_review(self):
         project = self.projects[self.src_key]
+        dst_dir = os.path.join(self.work_dir, project['dst_key'])
+        self._git_add_commit_hook(dst_dir)
+        for branch in project['branches']:
+            log("Push to review moved project {} / branch {}".format(self.src_key, branch))
+            self._git_checkout(branch, dst_dir)
+            self._git_review(dst_dir)
+
+        for pkey in self.projects:
+            dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
+            for branch in self.projects[pkey]['branches']:
+                self._git_checkout(branch, dst_dir)
+                if not self._git_log_grep(dst_dir, "[{}/{}]".format(COMMIT_MESSAGE_TAG, self.src_key)):
+                    log("Push to review project {} / branch {}".format(pkey, branch))
+                    self._git_review(dst_dir)
             
 
     # private helpers' functions
@@ -200,6 +215,13 @@ class Migration():
             shutil.rmtree(path)
         url = 'ssh://{}@{}:29418/{}.git'.format(self.args.user, GERRIT_URL, pkey)
         subprocess.check_call(['git', 'clone', '-q', url, clone_dir], cwd=self.work_dir)
+        self._git_add_commit_hook(path)
+
+    def _git_add_commit_hook(self, dst_dir):
+        subprocess.check_call(['scp', '-p', '-P', '29418',
+                               '{}@{}:hooks/commit-msg'.format(self.args.user, GERRIT_URL),
+                               '{}/.git/hooks/'.format(dst_dir)], cwd=self.work_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _git_checkout(self, branch, repo_dir):
         subprocess.check_call(['git', 'checkout', branch], cwd=repo_dir,
@@ -215,6 +237,13 @@ class Migration():
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.check_call(['git', 'commit', '-m', comment], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def _git_commit_amend(self, repo_dir, comment):
+        subprocess.check_call(['git', 'commit', '--amend', '--no-edit', comment], cwd=repo_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def _git_review(self, repo_dir):
+        subprocess.check_call(['git', 'review', '-y'], cwd=repo_dir)
 
     def _git_diff_stat(self, repo_dir):
         # we must to flush all caches.
