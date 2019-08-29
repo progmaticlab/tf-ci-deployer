@@ -154,7 +154,7 @@ class Migration():
             log("Patching destination")
             self._patch_dir(dst_dir, self.src_key, self.dst_key)
             self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
-            _, change_id = self._git_get_last_commit_details(repo_dir)
+            _, change_id = self._git_get_last_commit_details(dst_dir)
             moved_ids[branch] = change_id
 
         # find links to src in all projects, change them, commit with Depends-On, push to review
@@ -275,7 +275,7 @@ class Migration():
         if 'ahead' not in status:
             log('Nothing to commit for {}'.format(repo_dir), level='ERROR')
             raise SystemExit()
-        commit_id, change_id = self._git_get_last_commit_details(repo_dir)
+        commit_sha, change_id = self._git_get_last_commit_details(repo_dir)
         if not commit_sha or not change_id:
             log('Commit SHA ({}) or Change-Id ({}) could not be defined'.format(commit_sha, change_id), level='ERROR')
             raise SystemExit()
@@ -304,7 +304,7 @@ class Migration():
         method(*args, **kwargs)
 
     def _patch_file(self, file, src, dst):
-        subprocess.check_call('sed -i -E "s|{}|{}|g" {}'.format(src.replace('"', '\\"'), dst.replace('"', '\\"'), file),
+        subprocess.check_call('sed -E -i "" "s|{}|{}|g" {}'.format(src.replace('"', '\\"'), dst.replace('"', '\\"'), file),
                               shell=True, cwd=self.work_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
