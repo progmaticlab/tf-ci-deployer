@@ -26,6 +26,7 @@ review - pushes committed changes to gerrit.
 """
 
 import argparse
+import json
 import os
 import shutil
 import subprocess
@@ -136,6 +137,7 @@ class Migration():
             log("Copying src to dst for branch {}".format(branch))
             self._git_checkout(branch, src_dir)
             #NOTE: branch must be pre-created in destination
+            self._git_reset(dst_dir)
             self._git_checkout(branch, dst_dir)
 
             if self._git_log_grep(dst_dir, COPY_COMMIT_MESSAGE):
@@ -158,6 +160,7 @@ class Migration():
             for branch in self.projects[pkey]['branches']:
                 log("Patching project {} / branch {}".format(pkey, branch))
                 dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
+                self._git_reset(dst_dir)
                 self._git_checkout(branch, dst_dir)
                 # common patch
                 self._patch_dir(dst_dir, self.src_key, self.dst_key)
@@ -187,7 +190,7 @@ class Migration():
             dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
             for branch in self.projects[pkey]['branches']:
                 self._git_checkout(branch, dst_dir)
-                if not self._git_log_grep(dst_dir, "[{}/{}]".format(COMMIT_MESSAGE_TAG, self.src_key)):
+                if self._git_log_grep(dst_dir, "[{}/{}]".format(COMMIT_MESSAGE_TAG, self.src_key)):
                     log("Push to review project {} / branch {}".format(pkey, branch))
                     self._git_review(dst_dir)
             
@@ -227,8 +230,15 @@ class Migration():
         subprocess.check_call(['git', 'checkout', branch], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
+    def _git_reset(self, repo_dir):
+        subprocess.check_call(['git', 'reset', '--hard'], cwd=repo_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.check_call(['git', 'clean', '-fd'], cwd=repo_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
     def _git_log_grep(self, repo_dir, message):
-        res = subprocess.call('git log --oneline | grep "{}"'.format(message), shell=True, cwd=repo_dir,
+        msg = message.replace('[', '\\[').replace(']', '\\]')
+        res = subprocess.call('git log --oneline | grep "{}"'.format(msg), shell=True, cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return False if res else True
 
@@ -243,7 +253,31 @@ class Migration():
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _git_review(self, repo_dir):
-        subprocess.check_call(['git', 'review', '-y'], cwd=repo_dir)
+        status = subprocess.check_output(['git', 'branch', '-v'], cwd=repo_dir).decode()
+        if 'ahead' not in status:
+            log('Nothing to commit for {}'.format(repo_dir), level='ERROR')
+            raise SystemExit()
+        git_log = subprocess.check_output(['git', 'log', '-1'], cwd=repo_dir).decode()
+        commit_sha = None
+        change_id = None
+        for line in git_log.splitlines():
+            if line.startswith('commit '):
+                commit_sha = line.split()[1]
+            if 'Change-Id:' in line:
+                change_id = line.split(':')[1].strip()
+        if not commit_sha or not change_id:
+            log('Commit SHA ({}) or Change-Id ({}) could not be defined'.format(commit_sha, change_id), level='ERROR')
+            raise SystemExit()
+        commit_json = subprocess.check_output(['ssh', 'ssh://{}@{}:29418'.format(self.args.user, GERRIT_URL), 'gerrit',
+                                 'query', '--current-patch-set', '--format', 'JSON', change_id], cwd=repo_dir).decode()
+        # use only commit info. drop stats
+        commit_json = commit_json.splitlines()[0]
+        gerrit_sha = json.loads(commit_json).get('currentPatchSet', dict()).get('revision')
+        if gerrit_sha == commit_sha:
+            log('Review already raised for {}'.format(repo_dir))
+            return
+        subprocess.check_call(['git', 'review', '-y'], cwd=repo_dir,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _git_diff_stat(self, repo_dir):
         # we must to flush all caches.
@@ -264,9 +298,12 @@ class Migration():
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _patch_dir(self, repo_dir, src, dst):
-        cmd = ('find . -not -path "*/.git*" -type f -print0'
-               ' | xargs -0 -r sed -i -e "s|{}|{}|g"'.format(src.replace('"', '\\"'), dst.replace('"', '\\"')))
-        subprocess.check_output(cmd, shell=True, cwd=repo_dir)
+        cmd = (' find . -not -path "*/.git/*" -type f -exec grep -l "{}" {{}} \;'.format(src.replace('"', '\\"')))
+        output = subprocess.check_output(cmd, shell=True, cwd=repo_dir)
+        for file in output.splitlines():
+            dst_path = os.path.join(repo_dir, file.decode())
+            log("Patching file: {}".format(dst_path))
+            self._patch_file(dst_path, src, dst)
 
     def _clean_dir(self, dst_dir, excluded_names):
         for item in os.listdir(dst_dir):
