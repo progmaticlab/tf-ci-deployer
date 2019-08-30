@@ -255,10 +255,11 @@ class Migration():
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _git_log_grep(self, repo_dir, message):
+        """Returns True if message is in log and False overwise."""
         msg = message.replace('[', '\\[').replace(']', '\\]')
         res = subprocess.call('git log --oneline | grep "{}"'.format(msg), shell=True, cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        return False if res else True
+        return not res
 
     def _git_commit(self, repo_dir, comment):
         subprocess.check_call(['git', 'add', '.'], cwd=repo_dir,
