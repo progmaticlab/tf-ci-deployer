@@ -23,6 +23,11 @@ commit - copies source's content to destination project and commits changes for 
 
 review - pushes committed changes to gerrit.
 
+merge - checks all pushed review and adds 'Approved +1' for all if 'Code Review +2' is present for all.
+        If some review doesn't have 'Code Review +2' then ERROR will be printed and merge will not be applied.
+
+notify - adds notification message to all open reviews for moved project
+
 """
 
 import argparse
@@ -36,6 +41,7 @@ import yaml
 
 SRC_ORGANIZATION = 'Juniper'
 GERRIT_URL = 'review.opencontrail.org'
+GERRIT_PORT = '29418'
 COMMIT_MESSAGE_TAG='Migration'
 COPY_COMMIT_MESSAGE = '[{}] Add content from Juniper'.format(COMMIT_MESSAGE_TAG)
 
@@ -200,7 +206,12 @@ class Migration():
                 if self._git_log_grep(dst_dir, "[{}/{}]".format(COMMIT_MESSAGE_TAG, self.src_key)):
                     log("Push to review project {} / branch {}".format(pkey, branch))
                     self._git_review(dst_dir)
-            
+
+    def _op_merge(self):
+        pass
+
+    def _op_notify(self):
+        pass
 
     # private helpers' functions
 
@@ -223,12 +234,12 @@ class Migration():
         path = os.path.join(self.work_dir, clone_dir)
         if os.path.exists(path):
             shutil.rmtree(path)
-        url = 'ssh://{}@{}:29418/{}.git'.format(self.args.user, GERRIT_URL, pkey)
+        url = 'ssh://{}@{}:{}/{}.git'.format(self.args.user, GERRIT_URL, GERRIT_PORT, pkey)
         subprocess.check_call(['git', 'clone', '-q', url, clone_dir], cwd=self.work_dir)
         self._git_add_commit_hook(path)
 
     def _git_add_commit_hook(self, dst_dir):
-        subprocess.check_call(['scp', '-p', '-P', '29418',
+        subprocess.check_call(['scp', '-p', '-P', GERRIT_PORT,
                                '{}@{}:hooks/commit-msg'.format(self.args.user, GERRIT_URL),
                                '{}/.git/hooks/'.format(dst_dir)], cwd=self.work_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
