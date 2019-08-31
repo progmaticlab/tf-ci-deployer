@@ -99,7 +99,8 @@ class Migration():
                     "src": project['src'],
                     "dst": project['dst'],
                     "dst_key": '{}/{}'.format(project['dst_org'], project['dst']),
-                    "branches": project.get('branches', default_branches)
+                    "branches": project.get('branches', default_branches),
+                    "excludes": project.get('excludes')
                 }
 
     def execute(self):
@@ -115,7 +116,7 @@ class Migration():
         log("Clean everything in {}".format(self.work_dir))
         # remove ${workspace}/${src}/
         shutil.rmtree(self.work_dir)
-        #TODO: think about canceling reviews
+        #TODO: think about abandon reviews
 
     def _op_clone(self):
         if not self.args.user:
@@ -150,16 +151,15 @@ class Migration():
 
             if self._git_log_grep(dst_dir, COPY_COMMIT_MESSAGE):
                 log("Branch {} has been already patched".format(branch))
-                continue
-
-            # remove all in dest dir except .git
-            self._clean_dir(dst_dir, excluded_names)
-            # copy
-            self._copy_dir(src_dir, dst_dir, excluded_names)
-            # we don't fix src_name to dst_name cause it requires more intelligent work
-            log("Patching destination")
-            self._patch_dir(dst_dir, self.src_key, self.dst_key)
-            self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
+            else:
+                # remove all in dest dir except .git
+                self._clean_dir(dst_dir, excluded_names)
+                # copy
+                self._copy_dir(src_dir, dst_dir, excluded_names)
+                # we don't fix src_name to dst_name cause it requires more intelligent work
+                log("Patching destination")
+                self._patch_dir(dst_dir, self.src_key, self.dst_key, excludes=project.get('excludes'))
+                self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
             _, change_id = self._git_get_last_commit_details(dst_dir)
             moved_ids[branch] = change_id
 
@@ -173,7 +173,7 @@ class Migration():
                 self._git_reset(dst_dir)
                 self._git_checkout(branch, dst_dir)
                 # common patch
-                self._patch_dir(dst_dir, self.src_key, self.dst_key)
+                self._patch_dir(dst_dir, self.src_key, self.dst_key, excludes=self.projects[pkey].get('excludes'))
                 #specific patches
                 if self.projects[pkey]['src'] in ('contrail-vnc', 'vnc'):
                     # contrail-vnc has specific file with name only
@@ -320,11 +320,14 @@ class Migration():
                               shell=True, cwd=self.work_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    def _patch_dir(self, repo_dir, src, dst):
+    def _patch_dir(self, repo_dir, src, dst, excludes=None):
         cmd = (' find . -not -path "*/.git/*" -type f -exec grep -l "{}" {{}} \;'.format(src.replace('"', '\\"')))
-        output = subprocess.check_output(cmd, shell=True, cwd=repo_dir)
+        output = subprocess.check_output(cmd, shell=True, cwd=repo_dir).decode()
         for file in output.splitlines():
-            dst_path = os.path.join(repo_dir, file.decode())
+            file = os.path.normpath(file)
+            if excludes and file in excludes:
+                continue
+            dst_path = os.path.join(repo_dir, file)
             log("Patching file: {}".format(dst_path))
             self._patch_file(dst_path, src, dst)
 
