@@ -97,6 +97,7 @@ class Migration():
                 src_key = '{}/{}'.format(src_org, project['src'])
                 self.projects[src_key] = {
                     "src": project['src'],
+                    "src_key": src_key,
                     "dst": project['dst'],
                     "dst_key": '{}/{}'.format(project['dst_org'], project['dst']),
                     "branches": project.get('branches', default_branches),
@@ -119,18 +120,26 @@ class Migration():
         #TODO: think about abandon reviews
 
     def _op_clone(self):
+        def _clone(pkey, clone_dir=None):
+            if self._is_git_repo_present(pkey, clone_dir=clone_dir):
+                log("Update project {}".format(pkey))
+                self._git_pull(pkey, clone_dir=clone_dir)
+            else:
+                log("Clone project {}".format(pkey))
+                self._run_task(self._git_clone, pkey, clone_dir=clone_dir)
+
         if not self.args.user:
             log("user must be set for this operation. Please see help for the tool.", level="ERROR")
             raise SystemExit()
         for pkey in self.projects:
-            if self._is_git_repo_present(pkey):
-                log("Update project {}".format(pkey))
-                self._git_pull(pkey)
-            else:
-                log("Clone project {}".format(pkey))
-                self._run_task(self._git_clone, pkey)
-        # destination project must be pre-created for now
-        self._git_clone(self.dst_key, clone_dir=self.dst_key)
+            _clone(pkey)
+
+            # clone controller one more time to separate directory to create test review
+            #if self.projects[pkey]['src'] in ('contrail-controller', 'controller'):
+            #    controller_project = self.projects[pkey]
+
+        # destination project must be pre-created for now in gerrit/github
+        _clone(self.dst_key, clone_dir=self.dst_key)
 
     def _op_commit(self):
         project = self.projects[self.src_key]
@@ -165,7 +174,10 @@ class Migration():
 
         # find links to src in all projects, change them, commit with Depends-On, push to review
         changed_ids = dict()
+        controller_project = None
         for pkey in self.projects:
+            if self.projects[pkey]['src'] in ('contrail-controller', 'controller'):
+                controller_project = self.projects[pkey]
             if pkey == self.src_key:
                 continue
             for branch in self.projects[pkey]['branches']:
@@ -200,7 +212,8 @@ class Migration():
                     changed_ids.setdefault(pkey, dict())[branch] = change_id
 
         # create fake commit for contrail-controller
-        #for 
+        for branch in controller_project['branches']:
+
 
     def _op_review(self):
         project = self.projects[self.src_key]
@@ -227,8 +240,9 @@ class Migration():
 
     # private helpers' functions
 
-    def _is_git_repo_present(self, pkey):
-        repo_name = pkey.split('/')[1]
+    def _is_git_repo_present(self, pkey, clone_dir=None):
+        # clone_dir substitutes pkey[1]
+        repo_name = pkey.split('/')[1] if not clone_dir else clone_dir
         repo_dir = os.path.join(self.work_dir, repo_name)
         if not os.path.exists(repo_dir):
             return False
@@ -236,11 +250,12 @@ class Migration():
                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return False if result else True
 
-    def _git_pull(self, pkey):
+    def _git_pull(self, pkey, clone_dir=None):
         #TODO: implement
         pass
 
     def _git_clone(self, pkey, clone_dir=None):
+        # clone_dir substitutes pkey[1]
         if not clone_dir:
             clone_dir = pkey.split('/')[1]
         path = os.path.join(self.work_dir, clone_dir)
