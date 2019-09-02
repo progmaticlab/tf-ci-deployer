@@ -118,8 +118,6 @@ all:
       - {dest_namespace: "Juniper", project: "contrail-vrouter-java-api"}
       - {dest_namespace: "Juniper", project: "contrail-web-controller"}
       - {dest_namespace: "Juniper", project: "contrail-web-core"}
-      - {dest_namespace: "Juniper", project: "contrail-web-server-manager"}
-      - {dest_namespace: "Juniper", project: "contrail-web-storage"}
       - {dest_namespace: "Juniper", project: "contrail-webui-third-party"}
       - {dest_namespace: "Juniper", project: "contrail-windows"}
       - {dest_namespace: "Juniper", project: "contrail-windows-docker-driver"}
