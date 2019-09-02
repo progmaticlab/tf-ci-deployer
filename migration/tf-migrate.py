@@ -43,7 +43,7 @@ SRC_ORGANIZATION = 'Juniper'
 GERRIT_URL = 'review.opencontrail.org'
 GERRIT_PORT = '29418'
 COMMIT_MESSAGE_TAG='Migration'
-COPY_COMMIT_MESSAGE = '[{}] Add content from Juniper'.format(COMMIT_MESSAGE_TAG)
+COPY_COMMIT_MESSAGE = '[{}] Add content from Juniper\n\nAutomated change'.format(COMMIT_MESSAGE_TAG)
 
 
 def log(message, level='INFO'):
@@ -164,6 +164,7 @@ class Migration():
             moved_ids[branch] = change_id
 
         # find links to src in all projects, change them, commit with Depends-On, push to review
+        changed_ids = dict()
         for pkey in self.projects:
             if pkey == self.src_key:
                 continue
@@ -181,14 +182,25 @@ class Migration():
                         'name="{}" remote="github"'.format(project['src']),
                         'name="{}" remote="githubtf"'.format(project['dst']))
 
+                commit_msg_tag = "[{}/{}]".format(COMMIT_MESSAGE_TAG, self.src_key)
+                change_id = None
                 if self._git_diff_stat(dst_dir):
                     log("    Committing...")
                     depends_on = moved_ids.get(branch, moved_ids.get('master', list(moved_ids.values())[0]))
-                    msg = ("[{}/{}] Change links from to {}\n\nDepends-On: {}"
-                           "".format(COMMIT_MESSAGE_TAG, self.src_key, self.dst_key, depends_on))
+                    msg = ("[{}/{}] Change links from to {}\n\nAutomated change\nDepends-On: {}"
+                           "".format(commit_msg_tag, self.dst_key, depends_on))
                     self._git_commit(dst_dir, msg)
+                    _, change_id = self._git_get_last_commit_details(dst_dir)
+                elif self._git_log_grep(commit_msg_tag):
+                    log("    Patch is in place. Skipping...")
+                    _, change_id = self._git_get_last_commit_details(dst_dir)
                 else:
                     log("    Patch is empty. Skipping...")
+                if change_id:
+                    changed_ids.setdefault(pkey, dict())[branch] = change_id
+
+        # create fake commit for contrail-controller
+        #for 
 
     def _op_review(self):
         project = self.projects[self.src_key]
