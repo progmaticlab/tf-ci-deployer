@@ -45,6 +45,7 @@ GERRIT_PORT = '29418'
 COMMIT_MESSAGE_TAG='Migration'
 COPY_COMMIT_MESSAGE = '[{}] Add content from Juniper\n\nAutomated change\n'.format(COMMIT_MESSAGE_TAG)
 TEST_DIR = 'test'
+NOTIFICATION_MESSAGE = 'Please note that this project will be moved to TF soon.\nPlease create new review after moving is completed'
 
 
 def log(message, level='INFO'):
@@ -266,14 +267,21 @@ class Migration():
         for branch in controller_project['branches']:
             self._git_checkout(branch, dst_dir)
             log("Push test to review for branch {}".format(branch))
-            self._git_review(dst_dir)
-
+            change_id = self._git_review(dst_dir)
+            self._gerrit_post_comment(change_id, 'check experimental')
 
     def _op_merge(self):
         pass
 
     def _op_notify(self):
-        pass
+        reviews = self._gerrit_cmd(['query', '--format', 'JSON', 'project:{}'.format(self.src_key), 'status:open']).splitlines()
+        for review in reviews:
+            data = json.loads(review)
+            if 'id' not in data:
+                # last line is stats
+                continue
+            # TODO: should script set -2 to Code-Review to prevent merges while moving is going?
+            self._gerrit_post_comment(data['id'], NOTIFICATION_MESSAGE)
 
     # private helpers' functions
 
@@ -358,16 +366,13 @@ class Migration():
         if not commit_sha or not change_id:
             log('Commit SHA ({}) or Change-Id ({}) could not be defined'.format(commit_sha, change_id), level='ERROR')
             raise SystemExit()
-        commit_json = subprocess.check_output(['ssh', '-p', GERRIT_PORT, 'ssh://{}@{}'.format(self.args.user, GERRIT_URL), 'gerrit',
-                                 'query', '--current-patch-set', '--format', 'JSON', change_id], cwd=repo_dir).decode()
-        # use only commit info. drop stats
-        commit_json = commit_json.splitlines()[0]
-        gerrit_sha = json.loads(commit_json).get('currentPatchSet', dict()).get('revision')
-        if gerrit_sha == commit_sha:
+        data = self._gerrit_get_current_patch_set(change_id)
+        if data and data.get('revision') == commit_sha:
             log('Review already raised for {}'.format(repo_dir))
-            return
+            return change_id
         subprocess.check_call(['git', 'review', '-y'], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return change_id
 
     def _git_diff_stat(self, repo_dir):
         # we must to flush all caches.
@@ -377,6 +382,24 @@ class Migration():
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         # and finally check
         return subprocess.check_output(['git', 'diff', '--stat'], cwd=repo_dir)
+
+    def _gerrit_post_comment(self, change_id, comment):
+        data = self._gerrit_get_current_patch_set(change_id)
+        self._gerrit_cmd(['review', '--message', '"{}"'.format(comment), data['revision']])
+
+    def _gerrit_get_current_patch_set(self, change_id):
+        # use only commit info. drop stats
+        data = self._gerrit_cmd(['query', '--current-patch-set', '--format', 'JSON', change_id]).splitlines()
+        data = [json.loads(item) for item in data]
+        if 'type' in data[0] and data[0]['type'] == 'stats':
+            # there is no such change_id
+            return None
+        return data[0].get('currentPatchSet')
+
+    def _gerrit_cmd(self, params):
+        gerrit_cmd = ['ssh', '-p', GERRIT_PORT, 'ssh://{}@{}'.format(self.args.user, GERRIT_URL), 'gerrit']
+        gerrit_cmd.extend(params)
+        return subprocess.check_output(gerrit_cmd, cwd=self.work_dir).decode()
 
     def _run_task(self, method, *args, **kwargs):
         #TODO: implement threading
