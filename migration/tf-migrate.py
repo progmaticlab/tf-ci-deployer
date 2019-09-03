@@ -168,7 +168,7 @@ class Migration():
                 log("Patching destination")
                 self._patch_dir(dst_dir, self.src_key, self.dst_key, excludes=project.get('excludes'))
                 self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
-            _, change_id = self._git_get_last_commit_details(dst_dir)
+            _, change_id = self._git_get_last_commit_details(dst_dir, check_msg_tag=COMMIT_MESSAGE_TAG.splitlines()[0])
             moved_ids[branch] = change_id
 
         # find links to src in all projects, change them, commit with Depends-On, push to review
@@ -204,7 +204,7 @@ class Migration():
                     _, change_id = self._git_get_last_commit_details(dst_dir)
                 elif self._git_log_grep(dst_dir, commit_msg_tag):
                     log("    Patch is in place. Skipping...")
-                    _, change_id = self._git_get_last_commit_details(dst_dir)
+                    _, change_id = self._git_get_last_commit_details(dst_dir, check_msg_tag=commit_msg_tag)
                 else:
                     log("    Patch is empty. Skipping...")
                 if change_id:
@@ -336,8 +336,11 @@ class Migration():
         subprocess.check_call(['git', 'commit', '--amend', '--no-edit', '-m', comment], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    def _git_get_last_commit_details(self, repo_dir):
+    def _git_get_last_commit_details(self, repo_dir, check_msg_tag=None):
         git_log = subprocess.check_output(['git', 'log', '-1'], cwd=repo_dir).decode()
+        if check_msg_tag and check_msg_tag not in git_log:
+            log("Latest commit is not correct", level=ERROR)
+            raise SystemExit()
         commit_sha = None
         change_id = None
         for line in git_log.splitlines():
