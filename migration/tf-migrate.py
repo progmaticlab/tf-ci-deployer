@@ -244,7 +244,6 @@ class Migration():
         # moved project
         project = self.projects[self.src_key]
         dst_dir = os.path.join(self.work_dir, project['dst_key'])
-        self._git_add_commit_hook(dst_dir)
         for branch in project['branches']:
             log("Push to review moved project {} / branch {}".format(self.src_key, branch))
             self._git_checkout(branch, dst_dir)
@@ -359,7 +358,7 @@ class Migration():
         if not commit_sha or not change_id:
             log('Commit SHA ({}) or Change-Id ({}) could not be defined'.format(commit_sha, change_id), level='ERROR')
             raise SystemExit()
-        commit_json = subprocess.check_output(['ssh', 'ssh://{}@{}:29418'.format(self.args.user, GERRIT_URL), 'gerrit',
+        commit_json = subprocess.check_output(['ssh', '-p', GERRIT_PORT, 'ssh://{}@{}'.format(self.args.user, GERRIT_URL), 'gerrit',
                                  'query', '--current-patch-set', '--format', 'JSON', change_id], cwd=repo_dir).decode()
         # use only commit info. drop stats
         commit_json = commit_json.splitlines()[0]

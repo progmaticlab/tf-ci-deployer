@@ -5,6 +5,6 @@ nexus_password: "admin123"
 nexus_predefined_repos:
   - "https://s3.eu-north-1.amazonaws.com/tf-ci/images.tgz"
   - "https://s3.eu-north-1.amazonaws.com/tf-ci/vmware-releases.tgz"
-  - "https://s3.eu-north-1.amazonaws.com/tf-ci/contrail-ubuntu.tgz"
   - "https://s3.eu-north-1.amazonaws.com/tf-ci/yum-tpc-binary.tgz"
   - "https://s3.eu-north-1.amazonaws.com/tf-ci/yum-tpc-source.tgz"
+#  - "https://s3.eu-north-1.amazonaws.com/tf-ci/contrail-ubuntu.tgz"

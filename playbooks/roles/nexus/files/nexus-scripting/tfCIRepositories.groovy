@@ -214,6 +214,21 @@ def create_yum_proxy(name, remote) {
     create_or_update_repo(name, configuration)
 }
 
+def create_yum_group(name, members) {
+    configuration = new Configuration(
+        repositoryName: name,
+        recipeName: 'yum-proxy',
+        online: true,
+        attributes: [
+            group: [
+                memberNames: members
+            ],
+            storage: get_storage_opts(null),
+        ]
+    )
+    create_or_update_repo(name, configuration)
+}
+
 def create_maven_hosted(name) {
     configuration = new Configuration(
         repositoryName: name,
@@ -275,9 +290,10 @@ create_pypi_proxy('pypi', 'https://pypi.org')
 
 // Raw
 // Hosted
-create_raw_hosted('contrail-ubuntu')
 create_raw_hosted('images')
 create_raw_hosted('documentation')
+// switch off ubuntu repo as we removed running of ubuntu UT
+// create_raw_hosted('contrail-ubuntu')
 // Proxy
 create_raw_proxy('ubuntu', 'http://ubuntu.mirror.vexxhost.com/ubuntu')
 create_raw_proxy('contrail-third-party', 'http://148.251.5.90/contrail-third-party')
@@ -300,6 +316,7 @@ create_yum_hosted('yum-tpc-binary', '0')
 // hosted tpc source has build packages from third-party-packages repo and it doesn't depend on branch for now
 // because contrail-third-party-packages doesn't have branches
 create_yum_hosted('yum-tpc-source', '0')
+create_yum_group('yum-tpc', ['yum-tpc-binary', 'yum-tpc-source'])
 
 // Maven
 create_maven_hosted('maven-releases')
