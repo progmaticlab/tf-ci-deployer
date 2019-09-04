@@ -41,31 +41,34 @@ def check_review(data):
     if len(reviewers) == 1 and next(iter(reviewers)) == 'zuulv3':
         output.append("    ERROR: reviewed just by {}. project {}".format(next(iter(reviewers)), data['project']))
 
-    for num in patches:
-        pdata = patches[num]
-        statuses = set([item[1] for item in pdata])
-        if len(statuses) < 2:
-            continue
-        statuses_zuul = set([item[1] for item in pdata if item[0] == 'zuulv3'])
-        statuses_zuul_tf = set([item[1] for item in pdata if item[0] == 'zuul-tf'])
+    # check only last patchset
+    if not patches:
+        return output
+    num = max(list(patches.keys()))
+    pdata = patches[num]
+    statuses = set([item[1] for item in pdata])
+    if len(statuses) < 2:
+        return output
+    statuses_zuul = set([item[1] for item in pdata if item[0] == 'zuulv3'])
+    statuses_zuul_tf = set([item[1] for item in pdata if item[0] == 'zuul-tf'])
 
-        if len(statuses_zuul_tf) == 1 and next(iter(statuses_zuul_tf)) == 'succeeded':
-            #output.append("    {}: GOOD: TF is better.".format(num))
-            juniper_fails += 1
-            continue
-        if len(statuses_zuul) == 1 and next(iter(statuses_zuul)) == 'succeeded':
-            output.append("    {}: BAD: Juniper is better.".format(num))
-            tf_fails += 1
-            continue
+    if len(statuses_zuul_tf) == 1 and next(iter(statuses_zuul_tf)) == 'succeeded':
+        #output.append("    {}: GOOD: TF is better.".format(num))
+        juniper_fails += 1
+        return output
+    if len(statuses_zuul) == 1 and next(iter(statuses_zuul)) == 'succeeded':
+        output.append("    {}: BAD: Juniper is better.".format(num))
+        tf_fails += 1
+        return output
 
-        for item in pdata:
-            output.append("    {}: {}\t{}\t{}".format(num, item[0], item[2], item[1]))
+    for item in pdata:
+        output.append("    {}: {}\t{}\t{}".format(num, item[0], item[2], item[1]))
 
     return output
 
 
 def main():
-    limit = "10"
+    limit = "30"
     if len(sys.argv) > 1:
         limit = sys.argv[1]
     cmd = "{} {} {}".format(SSH_CMD, SSH_DEST, GERRIT_CMD)
