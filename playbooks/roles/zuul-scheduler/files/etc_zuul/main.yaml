@@ -60,8 +60,6 @@
           - Juniper/contrail-webui-third-party
           - Juniper/contrail-web-controller
           - Juniper/contrail-web-core
-          - Juniper/contrail-web-server-manager
-          - Juniper/contrail-web-storage
           - Juniper/contrail-windows
           - Juniper/contrail-windows-docker-driver
           - Juniper/contrail-windows-test
@@ -80,3 +78,6 @@
           - tungstenfabric/tungsten-test-runner
           # migrated section
           - tungstenfabric/analytics
+          - tungstenfabric/api-client
+          - tungstenfabric/common
+          - tungstenfabric/controller
