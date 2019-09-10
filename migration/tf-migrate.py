@@ -33,6 +33,7 @@ notify - adds notification message to all open reviews for moved project
 import argparse
 import json
 import os
+import random
 import shutil
 import subprocess
 import sys
@@ -186,15 +187,17 @@ class Migration():
                 log("Patching project {} / branch {}".format(pkey, branch))
                 self._git_reset(dst_dir)
                 self._git_checkout(branch, dst_dir)
-                # common patch
-                self._patch_dir(dst_dir, self.src_key, self.dst_key, excludes=self.projects[pkey].get('excludes'))
-                #specific patches
+
+                # specific patches first to prevent these findings in common patch
                 if self.projects[pkey]['src'] in ('contrail-vnc', 'vnc'):
                     # contrail-vnc has specific file with name only
-                    self._patch_dir(dst_dir,
+                    self._patch_dir_no_check(dst_dir,
                         'name="{}" remote="github"'.format(project['src']),
-                        'name="{}" remote="githubtf"'.format(project['dst']))
+                        'name="{}" remote="githubtf"'.format(project['dst']), custom=true)
+                # common patch
+                self._patch_dir(dst_dir, self.src_key, self.dst_key, excludes=self.projects[pkey].get('excludes'))
 
+                # check and commit
                 change_id = None
                 if self._git_diff_stat(dst_dir):
                     log("    Committing...")
@@ -405,21 +408,74 @@ class Migration():
         #TODO: implement threading
         method(*args, **kwargs)
 
-    def _patch_file(self, file, src, dst):
+    def _patch_file(self, file, src_key, dst_key):
+        log("Patching file: {}".format(dst_path))
+        src = src_key.split('/')[1]
+        dst = dst_key.split('/')[1]
+
+        # check file, change something, print warnings
+        # need to change 'org/project' except link to github.com/**/wiki, except links to github.com with commit SHA
+        # need to find all 'project', skip all like 'src/project' and print warnings
+
+        # max file is 1mb so just read it
+        with open(file) as fh:
+            lines = fh.readlines()
+        line_num = 0
+        new_lines = []
+        for line in lines:
+            line_num += 1
+            index = 0
+            while (index = line.find(src_key, index)) != -1:
+                # check link to Wiki
+                link_prefix = 'https://github.com/'
+                wiki_link = '{}{}/wiki'.format(link_prefix, src_key)
+                if line[index-len(link_prefix):].startswith(wiki_link):
+                    index += len(src_key)
+                    log("  Link to wiki has been found in line {} and it won't be changed.".format(line_num), level='WARNING')
+                    continue
+                # check link to commit
+                commit_link = '{}{}/blob'.format(link_prefix, src_key)
+                if line[index-len(link_prefix):].startswith(commit_link):
+                    index += len(src_key)
+                    log("  Link to commit has been found in line {} and it won't be changed.".format(line_num), level='WARNING')
+                    # TODO: next element in path after 'blob' can be commit SHA or branch name or something else.
+                    # we can analyze is it a branch name and if this branch in the list of moved branches then we can change the link.
+                    continue
+                # we can use replace with count=1 but here we definetly know what should be done.
+                line = line[0:index] + dst_key + line[index+len(src_key):]
+                index += len(dst_key)
+            while (index = line.find(src, index)) != -1:
+                index += len(src)
+
+        tmp_filename = os.path.join(os.path.dirname(file), str(random.randint(100000, 999999)))
+        with open(tmp_filename, 'w') as tmp_file_fh:
+
         subprocess.check_call('sed -E -i "" "s|{}|{}|g" {}'.format(src.replace('"', '\\"'), dst.replace('"', '\\"'), file),
                               shell=True, cwd=self.work_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    def _patch_dir(self, repo_dir, src, dst, excludes=None):
-        cmd = (' find . -not -path "*/.git/*" -type f -exec grep -l "{}" {{}} \;'.format(src.replace('"', '\\"')))
+    def _patch_dir(self, repo_dir, src_key, dst_key, excludes=None):
+        src = src_key.split('/')[1]
+        cmd = ('find . -not -path "*/.git/*" -not -path "*/vendor/github.com/*"'
+               ' -not -path "*.zip" -not -path "*.tgz" -not -path "*.tar.gz"'
+               ' -type f -exec grep -I -l "{}" {{}} \;'.format(src))
         output = subprocess.check_output(cmd, shell=True, cwd=repo_dir).decode()
         for file in output.splitlines():
             file = os.path.normpath(file)
             if excludes and file in excludes:
                 continue
             dst_path = os.path.join(repo_dir, file)
-            log("Patching file: {}".format(dst_path))
-            self._patch_file(dst_path, src, dst)
+            self._patch_file(dst_path, src_key, dst_key)
+
+    def _patch_dir_no_check(self, repo_dir, src, dst):
+        cmd = (' find . -not -path "*/.git/*" -type f -exec grep -l "{}" {{}} \;'.format(src.replace('"', '\\"')))
+        output = subprocess.check_output(cmd, shell=True, cwd=repo_dir).decode()
+        for file in output.splitlines():
+            dst_path = os.path.join(repo_dir, os.path.normpath(file))
+            subprocess.check_call(
+                'sed -E -i "" "s|{}|{}|g" {}'.format(src.replace('"', '\\"'), dst.replace('"', '\\"'), dst_path),
+                shell=True, cwd=self.work_dir,
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _clean_dir(self, dst_dir, excluded_names):
         for item in os.listdir(dst_dir):
