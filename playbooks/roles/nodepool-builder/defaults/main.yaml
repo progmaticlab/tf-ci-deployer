@@ -1,5 +1,11 @@
 ---
 nodepool_build_containers: false
 nodepool_git_url: "https://github.com/tungstenfabric/nodepool.git"
+nodepool_rh_reg_vars: {}
+# REG_USER: USER
+# REG_PASSWORD: PASS
+# REG_METHOD: portal
+# REG_POOL_ID: poolid
+# REG_REPOS: rhel-7-server-rpms
 zuul_config_project: "Juniper/contrail-project-config"
 zuul_config_project_git_url: "ssh://zuul@{{ gerrit_host }}:29418/{{ zuul_config_project }}"
