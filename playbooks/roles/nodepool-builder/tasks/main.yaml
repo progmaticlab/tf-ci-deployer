@@ -68,6 +68,15 @@
     force: true
     mode: 0600
 
+- name: Patch Red Hat details in if defined
+  lineinfile:
+    path: /opt/nodepool-builder/config/nodepool/nodepool.yaml
+    insertafter: '^# Red Hat registration goes here'
+    regexp: "^      {{ item.0 }}:"
+    line: "      {{ item.0 }}: {{ item.1 }}"
+  with_items: "{{ nodepool_rh_reg_vars.items() }}"
+  when: nodepool_rh_reg_vars != {}
+
 - name: apply docker-compose configuration
   template:
     src: docker-compose.yaml.j2
