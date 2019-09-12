@@ -72,9 +72,9 @@
   lineinfile:
     path: /opt/nodepool-builder/config/nodepool/nodepool.yaml
     insertafter: '^# Red Hat registration goes here'
-    regexp: "^      {{ item.0 }}:"
-    line: "      {{ item.0 }}: {{ item.1 }}"
-  with_items: "{{ nodepool_rh_reg_vars.items() }}"
+    regexp: "^      {{ item.key }}:"
+    line: "      {{ item.key }}: {{ item.value }}"
+  with_dict: "{{ nodepool_rh_reg_vars }}"
   when: nodepool_rh_reg_vars != {}
 
 - name: apply docker-compose configuration
