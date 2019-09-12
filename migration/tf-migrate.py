@@ -193,7 +193,7 @@ class Migration():
                     # contrail-vnc has specific file with name only
                     self._patch_dir_no_check(dst_dir,
                         'name="{}" remote="github"'.format(project['src']),
-                        'name="{}" remote="githubtf"'.format(project['dst']), custom=true)
+                        'name="{}" remote="githubtf"'.format(project['dst']))
                 # common patch
                 self._patch_dir(dst_dir, self.src_key, self.dst_key, excludes=self.projects[pkey].get('excludes'))
 
@@ -257,6 +257,7 @@ class Migration():
         controller_project = None
         for pkey in self.projects:
             if self.projects[pkey]['src'] in ('contrail-controller', 'controller'):
+                # save contrail-controller project info for next step
                 controller_project = self.projects[pkey]
             dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
             for branch in self.projects[pkey]['branches']:
@@ -266,6 +267,10 @@ class Migration():
                     self._git_review(dst_dir)
 
         # test review
+        # this code creates test review in contrail-controller project
+        # to run all tests and to ensure that all changes are in place,
+        # CI takes all these changes and passes successfully.
+        # at merge stage this review will be abandoned
         dst_dir = os.path.join(self.work_dir, TEST_DIR)
         for branch in controller_project['branches']:
             self._git_checkout(branch, dst_dir)
@@ -409,50 +414,87 @@ class Migration():
         method(*args, **kwargs)
 
     def _patch_file(self, file, src_key, dst_key):
-        log("Patching file: {}".format(dst_path))
-        src = src_key.split('/')[1]
-        dst = dst_key.split('/')[1]
+        src_org, src = src_key.split('/')
+        dst_org, dst = dst_key.split('/')
 
         # check file, change something, print warnings
-        # need to change 'org/project' except link to github.com/**/wiki, except links to github.com with commit SHA
-        # need to find all 'project', skip all like 'src/project' and print warnings
+        # tool have to change 'src_org/src_project' to 'dst_org/dst_project'
+        #   - except link to github.com/**/wiki
+        #   - except links to github.com with commit SHA
+        # tool have to find all 'project'
+        #   - skip all like 'src/project'
+        #   - skip occurrences in files *requirements.txt, ci_unittests.json
+        #   - print warnings for rest
+
+        link_prefix = 'https://github.com/'
+        wiki_link = '{}{}/wiki'.format(link_prefix, src_key)
+        commit_link = '{}{}/blob'.format(link_prefix, src_key)
 
         # max file is 1mb so just read it
-        with open(file) as fh:
-            lines = fh.readlines()
+        patched = False
+        warnings = []
+        try:
+            with open(file) as fh:
+                lines = fh.readlines()
+        except UnicodeDecodeError:
+            log("File {} has invalid characters that can be decoded by utf-8".format(file), level='ERROR')
+            return
+
         line_num = 0
         new_lines = []
         for line in lines:
             line_num += 1
             index = 0
-            while (index = line.find(src_key, index)) != -1:
+            while True:
+                index = line.find(src_key, index)
+                if index == -1:
+                    break
                 # check link to Wiki
-                link_prefix = 'https://github.com/'
-                wiki_link = '{}{}/wiki'.format(link_prefix, src_key)
                 if line[index-len(link_prefix):].startswith(wiki_link):
                     index += len(src_key)
-                    log("  Link to wiki has been found in line {} and it won't be changed.".format(line_num), level='WARNING')
+                    warnings.append("Link to wiki has been found in line {} and it won't be changed.".format(line_num))
                     continue
                 # check link to commit
-                commit_link = '{}{}/blob'.format(link_prefix, src_key)
                 if line[index-len(link_prefix):].startswith(commit_link):
                     index += len(src_key)
-                    log("  Link to commit has been found in line {} and it won't be changed.".format(line_num), level='WARNING')
+                    warnings.append("Link to commit has been found in line {} and it won't be changed.".format(line_num))
                     # TODO: next element in path after 'blob' can be commit SHA or branch name or something else.
                     # we can analyze is it a branch name and if this branch in the list of moved branches then we can change the link.
                     continue
                 # we can use replace with count=1 but here we definetly know what should be done.
                 line = line[0:index] + dst_key + line[index+len(src_key):]
+                patched = True
                 index += len(dst_key)
-            while (index = line.find(src, index)) != -1:
+            index = 0
+            while True:
+                index = line.find(src, index)
+                if index == -1:
+                    break
+                # exclude src_key as it was parsed previously
+                if line[index-len(src_org)-1:index+len(src)] == src_key:
+                    index += len(src)
+                    continue
+                # skip src in *requirements.txt, ci_unittests.json
+                if file.endswith('requirements.txt') or file in ['ci_unittests.json']:
+                    index += len(src)
+                    continue
+                # skip all occurences of pointing to sources - they still are placed in old structure
+                if line[index-4:index] == 'src/':
+                    index += len(src)
+                    continue
+                # all other treat as warnings for now
+                warnings.append("Name '{}' was found in line {} and it won't be changed. Line is:\n{}".format(src, line_num, line))
                 index += len(src)
+            new_lines.append(line)
 
-        tmp_filename = os.path.join(os.path.dirname(file), str(random.randint(100000, 999999)))
-        with open(tmp_filename, 'w') as tmp_file_fh:
+        if not patched and not warnings:
+            return
+        log("Patching file: {}".format(file))
+        for item in warnings:
+            log("  " + item, level="WARNING")
 
-        subprocess.check_call('sed -E -i "" "s|{}|{}|g" {}'.format(src.replace('"', '\\"'), dst.replace('"', '\\"'), file),
-                              shell=True, cwd=self.work_dir,
-                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        with open(file, 'w') as fh:
+            fh.writelines(new_lines)
 
     def _patch_dir(self, repo_dir, src_key, dst_key, excludes=None):
         src = src_key.split('/')[1]
