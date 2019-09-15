@@ -6,6 +6,7 @@ Optional params:
 --repos-config - Path to file with repos config (defailt is 'repos-config.yaml' in script's dir)
 --workspace - path to workspace where cloned repos will be placed (default is 'workspace' in script's dir)
 --user - user for git ssh access. This parameter is mandatory for some operations
+--force - flag to indicate that operation has to be forced
 
 Mandatory params:
 
@@ -23,8 +24,9 @@ commit - copies source's content to destination project and commits changes for 
 
 review - pushes committed changes to gerrit.
 
-merge - checks all pushed review and adds 'Approved +1' for all if 'Code Review +2' is present for all.
-        If some review doesn't have 'Code Review +2' then ERROR will be printed and merge will not be applied.
+merge - checks all pushed review and adds 'Approved +1' for all if 'Code Review +2' and 'Verified +1' are present for all.
+        If some review doesn't have these labels then ERROR will be printed and merge will not be applied,
+        or if flag 'force' is present then Approved will be set just for part of review with two labels set.
 
 notify - adds notification message to all open reviews for moved project
 
@@ -84,6 +86,7 @@ class Migration():
         parser.add_argument('--repos-config', default="./repos-config.yaml", help='Path to file with repos config')
         parser.add_argument('--workspace', default="./workspace", help="path to workspace where cloned repos will be placed")
         parser.add_argument('--user', help="user for git ssh access")
+        parser.add_argument('--force', help="Force operation if it's possible", action='store_true', default=False)
         #TODO: add creds for opencontrail's gerrit
         parser.add_argument('operation', choices=self.valid_operations, help="Operation to execute.")
         parser.add_argument('src', help="Source project from Juniper's organization")
@@ -143,6 +146,9 @@ class Migration():
         _clone(self.dst_key, clone_dir=self.dst_key)
 
     def _op_commit(self):
+        if not self.args.user:
+            log("user must be set for this operation. Please see help for the tool.", level="ERROR")
+            raise SystemExit()
         project = self.projects[self.src_key]
 
         # put destination project into separate directory to avoid naming conflict
@@ -245,6 +251,9 @@ class Migration():
                 self._git_commit(dst_dir, msg)
 
     def _op_review(self):
+        if not self.args.user:
+            log("user must be set for this operation. Please see help for the tool.", level="ERROR")
+            raise SystemExit()
         # moved project
         project = self.projects[self.src_key]
         dst_dir = os.path.join(self.work_dir, project['dst_key'])
@@ -279,8 +288,40 @@ class Migration():
             self._gerrit_post_comment(change_id, 'check experimental')
 
     def _op_merge(self):
-        pass
+        if not self.args.user:
+            log("user must be set for this operation. Please see help for the tool.", level="ERROR")
+            raise SystemExit()
+        project = self.projects[self.src_key]
+        dst_dir = os.path.join(self.work_dir, project['dst_key'])
+        reviews = dict()
+        passed = True
+        for branch in project['branches']:
+            log("Get status of review for moved project {} / branch {}".format(self.src_key, branch))
+            _, change_id = self._git_get_last_commit_details(dst_dir)
+            reviews[change_id] = self._gerrit_get_reviewed_approved_status(change_id)
+            if not reviews[change_id]['reviewed'] or not reviews['verified']:
+                passed = False;
 
+        for pkey in self.projects:
+            dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
+            for branch in self.projects[pkey]['branches']:
+                self._git_checkout(branch, dst_dir)
+                if not self._git_log_grep(dst_dir, "[{}/{}]".format(COMMIT_MESSAGE_TAG, self.src_key)):
+                    continue
+                log("Get status of review for dependent project {} / branch {}".format(pkey, branch))
+                _, change_id = self._git_get_last_commit_details(dst_dir)
+                reviews[change_id] = self._gerrit_get_reviewed_approved_status(change_id)
+                if not reviews[change_id]['reviewed'] or not reviews['verified']:
+                    passed = False;
+
+        if not passed and not self.args.force:
+            log("Not all reviews have 'Code-Review +2' and 'Verified +1' labels. Do nothing.", level='ERROR')
+            raise SystemExit()
+        for change_id in reviews:
+            log('Approving change {}'.format(change_id))
+            if reviews[change_id]['reviewed'] and reviews[change_id]['verified']:
+                self._gerrit_approve(change_id)
+        
     def _op_notify(self):
         reviews = self._gerrit_cmd(['query', '--format', 'JSON', 'project:{}'.format(self.src_key), 'status:open']).splitlines()
         for review in reviews:
@@ -391,16 +432,35 @@ class Migration():
         # and finally check
         return subprocess.check_output(['git', 'diff', '--stat'], cwd=repo_dir)
 
+    def _gerrit_get_reviewed_approved_status(self, change_id):
+        result = {'reviewed': False, 'approved': False, 'verified': False}
+        data = self._gerrit_get_current_patch_set(change_id)
+        if not data:
+            log("Review {} is not present in gerrit".format(change_id), level='ERROR')
+            raise SystemExit()
+        for approval in data.get('approvals', list()):
+            if approval.get('type') == 'Code-Review' and approval.get('value') == '2':
+                result['reviewed'] = True
+            if approval.get('type') == 'Approved' and approval.get('value') == '1':
+                result['approved'] = True
+            if approval.get('type') == 'Verified' and approval.get('value') in ['1', '2']:
+                result['verified'] = True
+        return result
+
     def _gerrit_post_comment(self, change_id, comment):
         data = self._gerrit_get_current_patch_set(change_id)
         self._gerrit_cmd(['review', '--message', '"{}"'.format(comment), data['revision']])
+
+    def _gerrit_approve(self, change_id):
+        data = self._gerrit_get_current_patch_set(change_id)
+        self._gerrit_cmd(['review', '--approved', '1', data['revision']])
 
     def _gerrit_get_current_patch_set(self, change_id):
         # use only commit info. drop stats
         data = self._gerrit_cmd(['query', '--current-patch-set', '--format', 'JSON', change_id]).splitlines()
         data = [json.loads(item) for item in data]
         if 'type' in data[0] and data[0]['type'] == 'stats':
-            # there is no such change_id
+            # there is no such change_id in gerrit
             return None
         return data[0].get('currentPatchSet')
 
