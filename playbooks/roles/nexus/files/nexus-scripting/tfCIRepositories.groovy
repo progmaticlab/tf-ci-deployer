@@ -311,12 +311,14 @@ create_yum_proxy('centos7-os',          'http://centos.mirror.vexxhost.com/7/os/
 create_yum_proxy('centos7-updates',     'http://centos.mirror.vexxhost.com/7/updates/x86_64')
 create_yum_proxy('centos7-extras',      'http://centos.mirror.vexxhost.com/7/extras/x86_64')
 create_yum_proxy('centos7-centosplus',  'http://centos.mirror.vexxhost.com/7/centosplus/x86_64')
+// old centos to provide old kernel 957.27.2
+create_yum_proxy('centos7-updates-old', 'http://centos.mirror.vexxhost.com/7.6.1810/updates/x86_64')
 // hosted tpc binary has third party packages that was taken somewhere and it doesn't depend on branch
 create_yum_hosted('yum-tpc-binary', '0')
 // hosted tpc source has build packages from third-party-packages repo and it doesn't depend on branch for now
 // because contrail-third-party-packages doesn't have branches
 create_yum_hosted('yum-tpc-source', '0')
-create_yum_group('yum-tpc', ['yum-tpc-binary', 'yum-tpc-source'])
+create_yum_group('yum-tpc', ['yum-tpc-binary', 'yum-tpc-source', 'centos7-updates-old'])
 
 // Maven
 create_maven_hosted('maven-releases')
