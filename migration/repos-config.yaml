@@ -7,7 +7,6 @@
 
 default_branches:
   - "master"
-  - "R1909"
 projects:
   - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
   - {src: "contrail-analytics", dst_org: "tungstenfabric", dst: "analytics"}
