@@ -22,6 +22,7 @@
     path: "{{ item }}"
     state: directory
     recurse: yes
+    follow: no
     mode: 0755
     owner: zuul
     group: zuul
