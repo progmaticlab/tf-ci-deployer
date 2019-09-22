@@ -88,6 +88,14 @@
     group: zuul
     state: touch
 
+- name: Create an empty RHEL docker config file
+  file:
+    path: /opt/zuul-executor/etc_zuul/docker_rh_config
+    mode: 0400
+    owner: zuul
+    group: zuul
+    state: touch
+
 - name: apply docker-compose configuration
   template:
     src: docker-compose.yaml.j2
