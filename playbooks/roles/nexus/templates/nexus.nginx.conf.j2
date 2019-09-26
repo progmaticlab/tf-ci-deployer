@@ -18,7 +18,7 @@ server {
     }
 
 {% for path in nexus_restricted_paths %}
-    location ~ ^{{ path }}(.*)$ {
+    location ~ ^/{{ path }}(.*)$ {
       include conf.d/restricted.whitelist;
       # Use IPv4 upstream address instead of DNS name to avoid attempts by nginx to use IPv6 DNS lookup
       proxy_pass http://127.0.0.1:8081/{{ path }}$1;
