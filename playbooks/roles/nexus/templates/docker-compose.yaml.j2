@@ -15,6 +15,7 @@ services:
       - nexus
     volumes:
       - "/opt/nexus/nexus.nginx.conf:/etc/nginx/conf.d/default.conf"
+      - "/opt/nexus/nexus.restricted.whitelist:/etc/nginx/conf.d/restricted.whitelist"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
 
