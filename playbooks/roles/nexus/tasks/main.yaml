@@ -22,7 +22,7 @@
 
 - name: Create nginx restricted client list
   template:
-    src: restricted.whitelist.j2
+    src: nginx.restricted.whitelist.j2
     dest: /opt/nexus/nexus.restricted.whitelist
     mode: 0644
 
