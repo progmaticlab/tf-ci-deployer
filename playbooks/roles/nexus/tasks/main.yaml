@@ -20,6 +20,12 @@
     state: present
     groups: "docker"
 
+- name: Create nginx restricted client list
+  template:
+    src: restricted.whitelist.j2
+    dest: /opt/nexus/nexus.restricted.whitelist
+    mode: 0644
+
 - name: apply nginx configuration
   template:
     src: nexus.nginx.conf.j2
