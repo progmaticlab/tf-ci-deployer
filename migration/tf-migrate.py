@@ -197,6 +197,9 @@ class Migration():
                 # specific patches first to prevent these findings in common patch
                 if self.projects[pkey]['src'] in ('contrail-vnc', 'vnc'):
                     # contrail-vnc has specific file with name only
+                    # this repo containes special XML file with folder's structure
+                    # this structure has just name without organization that must be changed
+                    # and for this line remote attribute also must be changed
                     self._patch_dir_no_check(dst_dir,
                         'name="{}" remote="github"'.format(project['src']),
                         'name="{}" remote="githubtf"'.format(project['dst']))
