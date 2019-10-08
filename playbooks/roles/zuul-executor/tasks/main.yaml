@@ -96,13 +96,14 @@
     group: zuul
     state: touch
 
-- name: Create an empty docker account file
-  file:
-    path: /opt/zuul-executor/etc_zuul/docker_account.yaml
+- name: Create an docker account file
+  template:
+    src: dockerhub_account.yaml.j2
+    dest: /opt/zuul-executor/etc_zuul/dockerhub_account.yaml
     mode: 0400
     owner: zuul
     group: zuul
-    state: touch
+  no_log: true
 
 - name: apply docker-compose configuration
   template:
