@@ -98,7 +98,7 @@
 
 - name: Create an empty docker account file
   file:
-    path: /opt/zuul-executor/etc_zuul/docker_account
+    path: /opt/zuul-executor/etc_zuul/docker_account.yaml
     mode: 0400
     owner: zuul
     group: zuul
