@@ -31,8 +31,8 @@ services:
       - SCALOCK_DBPASSWORD={{ aqua_db_password }}
       - SCALOCK_AUDIT_DBHOST=aqua-db
       - SCALOCK_AUDIT_DBNAME=slk_audit
-      - SCALOCK_AUDIT_DB_USER=postgres
-      - SCALOCK_AUDIT_DB_PASSWORD={{ aqua_db_password }}
+      - SCALOCK_AUDIT_DBUSER=postgres
+      - SCALOCK_AUDIT_DBPASSWORD={{ aqua_db_password }}
     ports:
       - 8080:8080
 volumes:

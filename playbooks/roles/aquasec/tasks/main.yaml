@@ -24,27 +24,42 @@
 - name: apply aquasec docker compose file
   template:
     src: docker-compose.yaml.j2
-    dest: /opt/zuul-logserver/docker-compose.yaml
+    dest: /opt/aquasec/docker-compose.yaml
     mode: 0644
 
 - name: start aquasec services
   docker_service:
     project_src: /opt/aquasec
 
+- name: wait for API up
+  wait_for:
+    host: 127.0.0.1
+    port: 8080
+
 - name: get auth token
   shell: >-
-    curl -s --request POST \
+    curl -s --request POST
     --url http://localhost:8080/api/v1/login
     --header 'accept: application/json'
     --header 'content-type: application/json'
     --data '{ "id": "administrator", "password": "{{ aqua_admin_password }}" }'
     | jq -rcM .token
   register: aquasec_token
+  failed_when: aquasec_token.stdout | length < 1
   changed_when: false
+
+- name: apply aqua license
+  shell: >-
+    curl --request POST
+    --url http://localhost:8080/api/v2/license
+    --header 'accept: application/json'
+    --header 'content-type: application/json'
+    --header 'Authorization: Bearer {{ aquasec_token.stdout }}'
+    --data '{ "telemetry_enabled": false, "token": "{{ aqua_license }}" }'
 
 - name: ensure scanner user
   shell: >-
-    curl -s --request POST \
+    curl --request POST
     --url http://localhost:8080/api/v1/users
     --header 'accept: application/json'
     --header 'content-type: application/json'
