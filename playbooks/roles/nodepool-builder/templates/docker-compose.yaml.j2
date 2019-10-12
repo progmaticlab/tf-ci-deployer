@@ -4,6 +4,7 @@ version: '2'
 
 services:
   builder:
+    user: root
     command: "nodepool-builder -d -l /etc/nodepool/builder-logging.conf"
     image: {{ NODEPOOL_DOCKERREPO }}/nodepool-builder:{{ NODEPOOL_VERSION }}
     restart: always

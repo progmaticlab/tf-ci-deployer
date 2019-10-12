@@ -4,6 +4,7 @@ version: '2'
 
 services:
   launcher:
+    user: root
     command: "nodepool-launcher -d -l /etc/nodepool/launcher-logging.conf"
     image: {{ NODEPOOL_DOCKERREPO }}/nodepool-launcher:{{ NODEPOOL_VERSION }}
     restart: always
