@@ -50,6 +50,12 @@ all:
 
     remote_user: ubuntu
 
+    # Account for publishing containers to dockerhub (nightly job)
+    dockerhub:
+      namespace: tungstenfabric
+      username: username
+      password: pwd
+
     image_web_server: "nexus/repository/"
     nexus_host: "nexus.internal"
     nexus_user: "admin"
