@@ -14,6 +14,8 @@ services:
     volumes:
       - "./config/nodepool:/etc/nodepool"
       - "/etc/cloud/cloud.yaml:/etc/cloud/cloud.yaml:ro"
+      - "/etc/cloud/.aws/credentials:/var/lib/nodepool/.aws/credentials:ro"
+      - "/etc/cloud/.aws/config:/root/.aws/config:ro"
       - "/var/log/zuul:/var/log/nodepool"
       - "./ssh_keys:/var/ssh"
       - "./.ssh:/root/.ssh"

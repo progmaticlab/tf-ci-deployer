@@ -8,4 +8,4 @@ gerrit_user: "zuul-tf"
 ZUUL_DOCKERREPO: progmaticlab
 ZUUL_VERSION: "2.5.3"
 NODEPOOL_DOCKERREPO: progmaticlab
-NODEPOOL_VERSION: "0.5.1"
+NODEPOOL_VERSION: "3.8.0-1"
