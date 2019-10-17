@@ -6,12 +6,16 @@ nexus:
     tungsten_ci: 5001
     tungsten_gate_cache: 5002
     proxy: 5005
+    aquasec: 5006
   repos:
     yum_tpc: 'yum-tpc'
     yum_tpc_source: 'yum-tpc-source'
     yum_tpc_binary: 'yum-tpc-binary'
     maven: 'maven-public'
   creds_path: '/etc/zuul/nexus_creds'
+aquascan:
+  user: "{{ aqua_scanner_user }}"
+  pass: "{{ aqua_scanner_pass }}"
 
 zuul_log_url: "{{ zuul_log_url | default('http://logs.site.org:80') }}"
 

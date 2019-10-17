@@ -278,6 +278,7 @@ def create_maven_group(name, members) {
 delete_repo('tungsten_ci')
 create_docker_hosted('tungsten_ci', 5001, 'tf-cleanup-policy')
 create_docker_hosted('tungsten_gate_cache', 5002)
+create_docker_hosted('aquasec', 5006)
 // unknown now
 // create_docker_hosted('tungsten_nightly', 5003)
 // create_docker_hosted('access', 5004)
