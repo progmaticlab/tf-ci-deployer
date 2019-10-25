@@ -299,21 +299,28 @@ create_raw_hosted('documentation')
 create_raw_proxy('ubuntu', 'http://ubuntu.mirror.vexxhost.com/ubuntu')
 create_raw_proxy('contrail-third-party', 'http://148.251.5.90/contrail-third-party')
 
-// Yum
-// Proxy
+////////////
+// Yum Proxy
+
+// Docker
 create_yum_proxy('docker-ce-stable',    'https://download.docker.com/linux/centos/7/x86_64/stable')
 create_yum_proxy('google-chrome',       'http://dl.google.com/linux/chrome/rpm/stable/x86_64')
+// Openstack
 create_yum_proxy('openstack-newton',    'http://mirror.neu.edu.cn/centos/7/cloud/x86_64/openstack-newton')
 create_yum_proxy('openstack-ocata',     'http://mirror.centos.org/centos/7/cloud/x86_64/openstack-ocata')
 create_yum_proxy('openstack-queens',    'http://mirror.centos.org/centos/7/cloud/x86_64/openstack-queens')
 create_yum_proxy('openstack-rocky',     'http://mirror.centos.org/centos/7/cloud/x86_64/openstack-rocky')
+// Epel
 create_yum_proxy('epel',                'https://dl.fedoraproject.org/pub/epel/7/x86_64')
+// CentOS
 create_yum_proxy('centos7-os',          'http://centos.mirror.vexxhost.com/7/os/x86_64')
 create_yum_proxy('centos7-updates',     'http://centos.mirror.vexxhost.com/7/updates/x86_64')
 create_yum_proxy('centos7-extras',      'http://centos.mirror.vexxhost.com/7/extras/x86_64')
 create_yum_proxy('centos7-centosplus',  'http://centos.mirror.vexxhost.com/7/centosplus/x86_64')
-// old centos to provide old kernel 957.27.2
+// old with kernel 957.27.2
 create_yum_proxy('centos7-updates-old', 'http://centos.mirror.vexxhost.com/7.6.1810/updates/x86_64')
+
+// TPC
 // hosted tpc binary has third party packages that was taken somewhere and it doesn't depend on branch
 create_yum_hosted('yum-tpc-binary', '0')
 // hosted tpc source has build packages from third-party-packages repo and it doesn't depend on branch for now
@@ -321,6 +328,23 @@ create_yum_hosted('yum-tpc-binary', '0')
 create_yum_hosted('yum-tpc-source', '0')
 create_yum_group('yum-tpc', ['yum-tpc-binary', 'yum-tpc-source', 'centos7-updates-old'])
 
+// RHEL-7
+create_yum_hosted('rhel-7-server-rpms', '0')
+create_yum_hosted('rhel-7-server-extras-rpms', '0')
+create_yum_hosted('rhel-7-server-optional-rpms', '0')
+// RH Software Collection for RHEL7
+create_yum_hosted('rhel-server-rhscl-7-rpms', '0')
+// RHOSP13 (queens)
+create_yum_hosted('rhel-7-server-openstack-13-rpms', '0')
+create_yum_hosted('rhel-7-server-openstack-13-tools-rpms', '0')
+create_yum_hosted('rhel-7-server-openstack-13-devtools-rpms', '0')
+// RH Groups
+create_yum_group('rhel-7', ['rhel-7-server-rpms', 'rhel-7-server-extras-rpms', 'rhel-7-server-optional-rpms'])
+create_yum_group('rhcl-7', ['rhel-server-rhscl-7-rpms'])
+create_yum_group('rhosp-13', ['rhel-7-server-openstack-13-rpms', 'rhel-7-server-openstack-13-tools-rpms', 'rhel-7-server-openstack-13-devtools-rpms'])
+
+
+/////////
 // Maven
 create_maven_hosted('maven-releases')
 create_maven_hosted('maven-snapshots')
