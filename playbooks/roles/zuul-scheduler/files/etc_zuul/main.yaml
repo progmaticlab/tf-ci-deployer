@@ -16,7 +16,7 @@
           - tungsten-infra/ci-utils
           - tungsten-infra/containerregistry
           - tungstenfabric/tf-dev-env
-          - tungstenfabric/tf-devstack          
+          - tungstenfabric/tf-devstack        
       gerrit:
         untrusted-projects:
           - Juniper/contrail
