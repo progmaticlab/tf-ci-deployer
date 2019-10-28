@@ -80,21 +80,23 @@
     group: zuul
   no_log: true
 
-- name: Create an empty RHEL creds file
-  file:
-    path: /opt/zuul-executor/etc_zuul/rh_reg_options
+- name: Create RHEL reg options file
+  copy:
+    content: >-
+      "--user {{ nodepool_rh_reg_vars.REG_USER }} --password {{ nodepool_rh_reg_vars.REG_PASSWORD }} --auto-attach --servicelevel=Self-Support"
+    dest: /opt/zuul-executor/etc_zuul/rh_reg_options
     mode: 0400
     owner: zuul
     group: zuul
-    state: touch
 
-- name: Create an empty RHEL docker config file
-  file:
-    path: /opt/zuul-executor/etc_zuul/docker_rh_config
+- name: Create RHEL docker config file
+  copy:
+    content: |
+      {"auths": {"registry.redhat.io": {"auth": "{{ (nodepool_rh_reg_vars.REG_USER + ":" + nodepool_rh_reg_vars.REG_PASSWORD) | b64encode }}"} } }
+    dest: /opt/zuul-executor/etc_zuul/docker_rh_config
     mode: 0400
     owner: zuul
     group: zuul
-    state: touch
 
 - name: Create an docker account file
   template:
