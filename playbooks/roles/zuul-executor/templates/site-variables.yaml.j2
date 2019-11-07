@@ -16,6 +16,7 @@ nexus:
 aquascan:
   user: "{{ aqua_scanner_user }}"
   pass: "{{ aqua_scanner_pass }}"
+  version: "{{ aqua_scanner_version }}"
 
 zuul_log_url: "{{ zuul_log_url | default('http://logs.site.org:80') }}"
 
