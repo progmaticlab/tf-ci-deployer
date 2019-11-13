@@ -73,7 +73,7 @@ def main():
         limit = sys.argv[1]
     cmd = "{} {} {}".format(SSH_CMD, SSH_DEST, GERRIT_CMD)
     cmd = cmd.format(limit)
-    output = subprocess.check_output(cmd, shell=True)
+    output = subprocess.check_output(cmd, shell=True).decode()
     for line in output.splitlines():
         data = json.loads(line)
         if 'id' not in data or data['status'] == 'ABANDONED':
