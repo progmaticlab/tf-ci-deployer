@@ -17,7 +17,7 @@
           cd jenkins
           python3 -m venv .venv
           source .venv/bin/activate
-          pip3 install jenkins-job-builder
+          pip3 install jenkins-job-builder wheel
           echo "--------------------------------------------------------------------- test"
           make test
           echo "--------------------------------------------------------------------- update"
