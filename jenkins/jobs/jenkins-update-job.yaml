@@ -2,6 +2,7 @@
     name: 'jenkins-update-jobs'
     description: "Updates jenkins jobs"
     defaults: global
+    node: jjb
     wrappers:
         - credentials-binding:
           - username-password-separated:
