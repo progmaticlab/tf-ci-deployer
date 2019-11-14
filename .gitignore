@@ -1,3 +1,4 @@
 playbooks/*.retry
 .vscode
 migration/workspace/**
+jenkins/.venv
