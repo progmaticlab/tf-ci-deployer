@@ -12,5 +12,5 @@
             clean: true
             branches:
               - origin/master
-      script-path: jenkins/example.pipeline
+      script-path: jenkins/pipelines/example.pipeline
       lightweight-checkout: true
