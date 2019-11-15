@@ -26,9 +26,6 @@
           AWS_SG=${{AWS_SG:-sg-00c3713629ba82bdd}}
           IMAGE_CENTOS7=${{IMAGE_CENTOS7:-ami-068051358509d0288}}
           env|sort
-          SSH_OPTIONS="-o User=ec2-user -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectionAttempts=100"
-
-          tar cvzf tf-devstack.tgz tf-devstack/
           # Spin VM
           InstanceId=$(aws ec2 run-instances \
               --region $AWS_REGION \
@@ -57,8 +54,10 @@
               "Name=instance-id,Values=$InstanceId" \
               --query 'Reservations[*].Instances[*].[PrivateIpAddress]' \
               --output text > .instanceIp
-
+      - shell: |
           # Deploy devstack
+          SSH_OPTIONS="-o User=ec2-user -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectionAttempts=100"
+          tar cvzf tf-devstack.tgz tf-devstack/
           scp $SSH_OPTIONS ./tf-devstack.tgz $(cat .instanceIp):./
           ssh $SSH_OPTIONS -t $(cat .instanceIp) \
               "tar -xzf tf-devstack.tgz && sudo yum install git -y"
