@@ -44,3 +44,14 @@
           prune: true
           wipe-workspace: true
           skip-tag: true
+- scm:
+    name: tf-devstack
+    scm:
+      - git:
+          url: 'https://github.com/tungstenfabric/tf-devstack.git'
+          branches:
+            - '*/master'
+          prune: true
+          wipe-workspace: true
+          skip-tag: true
+          basedir: tf-devstack
