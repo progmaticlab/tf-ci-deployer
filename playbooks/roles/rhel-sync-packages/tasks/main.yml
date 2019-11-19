@@ -3,25 +3,31 @@
   fail:
   when: ansible_distribution != "RedHat"
 
+- name: Set yum package excludes
+  lineinfile:
+    path: /etc/yum.conf
+    regexp: '^exclude='
+    line: "exclude={{ yum_excludes }}"
+
 - name: Install required packages
   package:
     name: "{{ sync_required_packages }}"
     state: present
 
 - name: Ensure required repositories are enabled
-  command: "yum-config-manager --enable {{ base_repos + extra_repos | join(' --enable ') }}"
+  command: "yum-config-manager --enable {{ (base_repos + extra_repos) | join(' --enable ') }}"
 
 - name: Download specified repositories
   command: reposync {{ reposync_opts }} --repoid={{ item }} --download_path={{ download_cache_dir }}
-  with_items: {{ base_repos + extra_repos }}
+  with_items: "{{ base_repos + extra_repos }}"
 
 - name: Generate repo metadata
   shell: createrepo {{ download_cache_dir }}/{{ item }} --update -g comps.xml || createrepo {{ download_cache_dir }}/{{ item }} --update
-  with_items: {{ base_repos + extra_repos }}
+  with_items: "{{ base_repos + extra_repos }}"
 
 - name: Push repos to nexus
-  shell: find . -type f | xargs -I {} -P{{ upload_parallel_count }} curl -u {{ nexus_user }}:{{ nexus_password }} --upload-file {} http://{{ nexus_host }}/repository/$repo/{}
+  shell: find . -type f | xargs -I {} -P{{ upload_parallel_count }} curl -u {{ nexus_user }}:{{ nexus_password }} --upload-file {} {{ nexus_host }}/repository/{{ item }}/{}
   args:
     warn: no
     chdir: "{{ download_cache_dir }}/{{ item }}"
-  with_items: {{ base_repos + extra_repos }}
+  with_items: "{{ base_repos + extra_repos }}"
