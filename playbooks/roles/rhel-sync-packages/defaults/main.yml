@@ -12,12 +12,14 @@ extra_repos:
   - rhel-7-server-openstack-13-tools-rpms
   - rhel-server-rhscl-7-rpms
 
-download_cache_dir: ~/repos
-reposync_opts: "--newest-only --gpgcheck -l --downloadcomps --download-metadata"
+download_cache_dir: /root/repos
+reposync_opts: "--gpgcheck -l --downloadcomps --download-metadata"
 
-nexus_host: http://pnexus.sytes.net/
+nexus_host: http://pnexus.sytes.net
 nexus_user: admin
 # nexus_password: passwordgoeshere
 
 repo_prefix: "repository/"
 upload_parallel_count: 8
+
+yum_excludes: "java* firefox* libreoffice* gimp* gnome* kde* qt*"
