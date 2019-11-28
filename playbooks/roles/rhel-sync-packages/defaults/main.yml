@@ -22,4 +22,4 @@ nexus_user: admin
 repo_prefix: "repository/"
 upload_parallel_count: 8
 
-yum_excludes: "java* firefox* libreoffice* gimp* gnome* kde* qt*"
+yum_excludes: "firefox* libreoffice* gimp* gnome* kde* qt*"
