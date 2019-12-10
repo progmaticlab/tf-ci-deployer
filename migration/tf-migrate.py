@@ -47,6 +47,7 @@ GERRIT_URL = 'review.opencontrail.org'
 GERRIT_PORT = '29418'
 COMMIT_MESSAGE_TAG='Migration'
 COPY_COMMIT_MESSAGE = '[{}] Add content from Juniper\n\nAutomated change\n'.format(COMMIT_MESSAGE_TAG)
+PATCH_COMMIT_MESSAGE = '[{}] Patch content from Juniper\n\nAutomated change\n'.format(COMMIT_MESSAGE_TAG)
 TEST_DIR = 'test'
 NOTIFICATION_MESSAGE = 'Please note that this project will be moved to TF soon.\nPlease create new review after moving is completed'
 
@@ -152,7 +153,7 @@ class Migration():
         project = self.projects[self.src_key]
 
         # put destination project into separate directory to avoid naming conflict
-        excluded_names = ['.git']
+        excluded_names = ['.git', '.gitreview']
         src_dir = os.path.join(self.work_dir, project['src'])
         dst_dir = os.path.join(self.work_dir, project['dst_key'])
         # moved project branch -> change id
@@ -165,17 +166,23 @@ class Migration():
             self._git_reset(dst_dir)
             self._git_checkout(branch, dst_dir)
 
-            if self._git_log_grep(dst_dir, COPY_COMMIT_MESSAGE):
+            if self._git_log_grep(dst_dir, PATCH_COMMIT_MESSAGE):
                 log("Branch {} has been already patched".format(branch))
             else:
                 # remove all in dest dir except .git
                 self._clean_dir(dst_dir, excluded_names)
                 # copy
+                log("Copying destination")
                 self._copy_dir(src_dir, dst_dir, excluded_names)
+                # commit just copied dir
+                self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
                 # we don't fix src_name to dst_name cause it requires more intelligent work
                 log("Patching destination")
                 self._patch_dir(dst_dir, self.src_key, self.dst_key, excludes=project.get('excludes'))
-                self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
+                if self._git_diff_stat(dst_dir):
+                    self._git_commit(dst_dir, PATCH_COMMIT_MESSAGE)
+                else:
+                    log("Patch is empty. skipping...")
             _, change_id = self._git_get_last_commit_details(dst_dir, check_msg_tag=COMMIT_MESSAGE_TAG.splitlines()[0])
             moved_ids[branch] = change_id
 
@@ -422,7 +429,7 @@ class Migration():
         if data and data.get('revision') == commit_sha:
             log('Review already raised for {}'.format(repo_dir))
             return change_id
-        subprocess.check_call(['git', 'review', '-y'], cwd=repo_dir,
+        subprocess.check_call(['git', 'review', '-y', '-t', 'migration/' + self.args.src], cwd=repo_dir,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return change_id
 
