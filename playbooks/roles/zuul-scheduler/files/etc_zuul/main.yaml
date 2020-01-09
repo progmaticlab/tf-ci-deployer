@@ -79,7 +79,7 @@
           - tungstenfabric/docs
           - tungstenfabric/tungsten-test-runner
           # migrated section
-          - tungstenfabric/analytics
-          - tungstenfabric/api-client
-          - tungstenfabric/common
-          - tungstenfabric/controller
+          - tungstenfabric/tf-analytics
+          - tungstenfabric/tf-api-client
+          - tungstenfabric/tf-common
+          - tungstenfabric/tf-controller
