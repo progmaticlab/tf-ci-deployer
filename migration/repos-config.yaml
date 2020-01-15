@@ -28,6 +28,9 @@ projects:
   - {src: "contrail-neutron-plugin", dst_org: "tungstenfabric", dst: "tf-neutron-plugin"}
   - {src: "contrail-nova-vif-driver", dst_org: "tungstenfabric", dst: "tf-nova-vif-driver"}
   - {src: "contrail-packages", dst_org: "tungstenfabric", dst: "tf-packages"}
+  - {src: "contrail-project-config", dst_org: "tungstenfabric-infra", dst: "project-config",
+     branches: ["master"],
+     excludes: ['zuul/main.yaml', 'zuul.d/projects.yaml']}
   - {src: "contrail-specs", dst_org: "tungstenfabric", dst: "tf-specs"}
   - {src: "contrail-test", dst_org: "tungstenfabric", dst: "tf-test"}
   - {src: "contrail-third-party", dst_org: "tungstenfabric", dst: "tf-third-party"}
@@ -44,6 +47,8 @@ projects:
   - {src: "contrail-vro-plugin", dst_org: "tungstenfabric", dst: "tf-vro-plugin"}
   - {src: "contrail-vrouter", dst_org: "tungstenfabric", dst: "tf-vrouter"}
   - {src: "contrail-vrouter-java-api", dst_org: "tungstenfabric", dst: "tf-vrouter-java-api"}
+  - {src: "contrail-zuul-jobs", dst_org: "tungstenfabric-infra", dst: "tungsten-zuul-jobs",
+     branches: ["master"]}
   - {src: "contrail-web-controller", dst_org: "tungstenfabric", dst: "tf-web-controller"}
   - {src: "contrail-web-core", dst_org: "tungstenfabric", dst: "tf-web-core"}
   - {src: "contrail-webui-third-party", dst_org: "tungstenfabric", dst: "tf-webui-third-party"}
