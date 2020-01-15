@@ -2,3 +2,4 @@ playbooks/*.retry
 .vscode
 migration/workspace/**
 jenkins/jjb/.venv
+hosts.yaml
