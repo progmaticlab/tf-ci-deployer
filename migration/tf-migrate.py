@@ -102,11 +102,12 @@ class Migration():
             for project in data['projects']:
                 src_org = project.get('src_org', SRC_ORGANIZATION)
                 src_key = '{}/{}'.format(src_org, project['src'])
+                dst = project.get('dst', None)
                 self.projects[src_key] = {
                     "src": project['src'],
                     "src_key": src_key,
-                    "dst": project['dst'],
-                    "dst_key": '{}/{}'.format(project['dst_org'], project['dst']),
+                    "dst": dst,
+                    "dst_key": '{}/{}'.format(project['dst_org'], project['dst']) if dst else None,
                     "branches": project.get('branches', default_branches),
                     "excludes": project.get('excludes')
                 }
