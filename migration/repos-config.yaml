@@ -33,16 +33,10 @@ projects:
      excludes: ['zuul/main.yaml', 'zuul.d/projects.yaml', 'zuul.d/jobs.yaml']}
   - {src: "contrail-specs", dst_org: "tungstenfabric", dst: "tf-specs"}
   - {src: "contrail-test", dst_org: "tungstenfabric", dst: "tf-test"}
-  - {src: "contrail-third-party", dst_org: "tungstenfabric", dst: "tf-third-party"}
-  - {src: "contrail-third-party-cache", dst_org: "tungstenfabric", dst: "tf-third-party-cache"}
+#  - {src: "contrail-third-party-cache", dst_org: "tungstenfabric", dst: "tf-third-party-cache"}
   - {src: "contrail-third-party-packages", dst_org: "tungstenfabric", dst: "tf-third-party-packages"}
   - {src: "contrail-tripleo-heat-templates", dst_org: "tungstenfabric", dst: "tf-tripleo-heat-templates",
      branches: ["master", "stable/newton", "stable/queens", "stable/rocky", "stable/stein"]}
-  - {src: "tf-tripleo-puppet", src_org: "tungstenfabric",
-     branches: ["master", "stable/newton", "stable/queens", "stable/rocky", "stable/stein"]}
-  - {src: "contrail-vcenter-manager", dst_org: "tungstenfabric", dst: "tf-vcenter-manager"}
-  - {src: "contrail-vcenter-fabric-manager", dst_org: "tungstenfabric", dst: "tf-vcenter-fabric-manager"}
-  - {src: "contrail-vcenter-plugin", dst_org: "tungstenfabric", dst: "tf-vcenter-plugin"}
   - {src: "contrail-vnc", dst_org: "tungstenfabric", dst: "tf-vnc"}
   - {src: "contrail-vro-plugin", dst_org: "tungstenfabric", dst: "tf-vro-plugin"}
   - {src: "contrail-vrouter", dst_org: "tungstenfabric", dst: "tf-vrouter"}
@@ -50,9 +44,16 @@ projects:
   - {src: "contrail-zuul-jobs",
      branches: ["master"],
      excludes: ['zuul.d/base-jobs.yaml']}
-  - {src: "tf-web-controller", src_org: "tungstenfabric"}
-  - {src: "tf-web-core", src_org: "tungstenfabric"}
-  - {src: "contrail-webui-third-party", dst_org: "tungstenfabric", dst: "tf-webui-third-party"}
   - {src: "openshift-ansible", dst_org: "tungstenfabric", dst: "openshift-ansible",
      branches: ["release-3.11", "release-3.11-contrail"]}
   - {src: "vijava", dst_org: "tungstenfabric", dst: "vijava"}
+
+  - {src: "tf-third-party", src_org: "tungstenfabric"}
+  - {src: "tf-tripleo-puppet", src_org: "tungstenfabric",
+     branches: ["master", "stable/newton", "stable/queens", "stable/rocky", "stable/stein"]}
+  - {src: "tf-vcenter-manager", src_org: "tungstenfabric"}
+  - {src: "tf-vcenter-fabric-manager", src_org: "tungstenfabric"}
+  - {src: "tf-vcenter-plugin", src_org: "tungstenfabric"}
+  - {src: "tf-web-controller", src_org: "tungstenfabric"}
+  - {src: "tf-web-core", src_org: "tungstenfabric"}
+  - {src: "tf-webui-third-party", src_org: "tungstenfabric"}

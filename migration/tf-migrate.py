@@ -50,7 +50,7 @@ COPY_COMMIT_MESSAGE = '[{}] Add content from Juniper\n\nAutomated change\n'.form
 PATCH_COMMIT_MESSAGE = '[{}] Patch content from Juniper\n\nAutomated change\n'.format(COMMIT_MESSAGE_TAG)
 TEST_DIR = 'test'
 NOTIFICATION_MESSAGE = 'Please note that this project will be moved to TF soon.\nPlease create new review after moving is completed'
-
+README_MIGRATED = 'Content was moved to https://github.com/{}\n'
 
 def log(message, level='INFO'):
     print(level + ' ' + message)
@@ -195,6 +195,7 @@ class Migration():
             if self.projects[pkey]['src'] in ('contrail-controller', 'controller'):
                 controller_project = self.projects[pkey]
             if pkey == self.src_key:
+                # do not patch source
                 continue
             dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
             for branch in self.projects[pkey]['branches']:
@@ -231,13 +232,11 @@ class Migration():
                 if change_id:
                     changed_ids.setdefault(pkey, dict())[branch] = change_id
 
-        # create fake commit for contrail-controller
-        dst_dir = os.path.join(self.work_dir, TEST_DIR)
-        for branch in controller_project['branches']:
-            log("Creating test commit for contrail-controller / branch {}".format(branch))
-            self._git_reset(dst_dir)
-            self._git_checkout(branch, dst_dir)
-            self._create_file(dst_dir, 'test', 'do not merge')
+        # create commit with removed content and new readme
+        for branch in self.projects[self.src_key]['branches']:
+            log("Removing content for project {} / branch {}".format(pkey, branch))
+            dst_dir = os.path.join(self.work_dir, self.projects[self.src_key]['src'])
+            # get list of deps
             depends = list()
             for pkey in changed_ids:
                 if branch in changed_ids[pkey]:
@@ -252,10 +251,40 @@ class Migration():
                     branches.sort()
                     depends.append(changed_ids[pkey][branches[-1]])
             depends.sort()
-            msg = ("{} Test review {}\n\nAutomated change\n\n"
-                   "".format(commit_msg_tag, self.dst_key))
+            # prepare commit
+            self._git_reset(dst_dir)
+            self._git_checkout(branch, dst_dir)
+            # save .gitreview
+            path = os.path.join(dst_dir, ".gitreview")
+            with open(path) as fh:
+                gitreview_data = fh.read()
+            # remove all in dest dir except .git
+            self._clean_dir(dst_dir, [".git", "LICENSE"])
+            # add README.md
+            path = os.path.join(dst_dir, "README.md")
+            with open(path, 'w') as fh:
+                fh.write(README_MIGRATED.format(self.dst_key))
+            # build commit message
+            msg = ("{} Remove content and add readme about migration.\n\nAutomated change\n\n"
+                   "".format(commit_msg_tag))
             for dep in depends:
                 msg += "Depends-On: {}\n".format(dep)
+            self._git_commit(dst_dir, msg)
+            # restore .gitreview
+            path = os.path.join(dst_dir, ".gitreview")
+            with open(path, 'w') as fh:
+                fh.write(gitreview_data)
+            _, final_change_id = self._git_get_last_commit_details(dst_dir, check_msg_tag=msg.splitlines()[0])
+
+        # create fake commit for contrail-controller
+        dst_dir = os.path.join(self.work_dir, TEST_DIR)
+        for branch in controller_project['branches']:
+            log("Creating test commit for contrail-controller / branch {}".format(branch))
+            self._git_reset(dst_dir)
+            self._git_checkout(branch, dst_dir)
+            self._create_file(dst_dir, 'test', 'do not merge')
+            msg = ("{} Test review {}\n\nAutomated change\n\nDepends-On: {}\n"
+                   "".format(commit_msg_tag, self.dst_key, final_change_id))
             if self._git_log_grep(dst_dir, commit_msg_tag):
                 self._git_commit_amend(dst_dir, msg)
             else:
@@ -367,7 +396,11 @@ class Migration():
         if os.path.exists(path):
             shutil.rmtree(path)
         url = 'ssh://{}@{}:{}/{}.git'.format(self.args.user, GERRIT_URL, GERRIT_PORT, pkey)
-        subprocess.check_call(['git', 'clone', '-q', url, clone_dir], cwd=self.work_dir)
+        cmd = ['git', 'clone', '-q']
+        if pkey in self.projects and len(self.projects[pkey].get('branches', list())) == 1:
+            cmd.extend(['--depth', '1', '--single-branch'])
+        cmd.extend([url, clone_dir])
+        subprocess.check_call(cmd, cwd=self.work_dir)
         self._git_add_commit_hook(path)
 
     def _git_add_commit_hook(self, dst_dir):
