@@ -52,7 +52,7 @@ create_or_update_task(
 
 // run task after cleanup but before storage compact
 def gc_task_properties = [:] as Map
-gc_task_properties.put('repositoryName', 'tungsten_ci')
+gc_task_properties.put('repositoryName', '*')
 create_or_update_task(
     'repository.docker.gc',
     'tf-ci-tungsten_ci-gc',
