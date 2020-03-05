@@ -22,11 +22,11 @@ projects:
      branches: ["contrail_dpdk_17_02", "contrail_dpdk_17_11_3", "contrail_dpdk_18_05_1"]}
   - {src: "contrail-fabric-utils", dst_org: "tungstenfabric", dst: "tf-fabric-utils"}
   - {src: "contrail-heat", dst_org: "tungstenfabric", dst: "tf-heat-plugin"}
-  - {src: "contrail-java-api", dst_org: "tungstenfabric", dst: "tf-java-api"}
+  - {src: "tf-java-api", src_org: "tungstenfabric"}
   - {src: "contrail-kolla-ansible", dst_org: "tungstenfabric", dst: "kolla-ansible",
      branches: ["contrail/ocata", "contrail/queens", "contrail/rocky"]}
   - {src: "contrail-neutron-plugin", dst_org: "tungstenfabric", dst: "tf-neutron-plugin"}
-  - {src: "contrail-nova-vif-driver", dst_org: "tungstenfabric", dst: "tf-nova-vif-driver"}
+  - {src: "tf-nova-vif-driver", src_org: "tungstenfabric"}
   - {src: "contrail-packages", dst_org: "tungstenfabric", dst: "tf-packages"}
   - {src: "contrail-project-config",
      branches: ["master"],
@@ -40,7 +40,7 @@ projects:
   - {src: "contrail-vnc", dst_org: "tungstenfabric", dst: "tf-vnc"}
   - {src: "contrail-vro-plugin", dst_org: "tungstenfabric", dst: "tf-vro-plugin"}
   - {src: "contrail-vrouter", dst_org: "tungstenfabric", dst: "tf-vrouter"}
-  - {src: "contrail-vrouter-java-api", dst_org: "tungstenfabric", dst: "tf-vrouter-java-api"}
+  - {src: "tf-vrouter-java-api", src_org: "tungstenfabric"}
   - {src: "contrail-zuul-jobs",
      branches: ["master"],
      excludes: ['zuul.d/base-jobs.yaml']}
