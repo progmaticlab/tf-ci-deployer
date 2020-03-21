@@ -21,24 +21,38 @@ juniper_fails = 0
 def check_review(data):
     global tf_fails, juniper_fails
     output = []
+    if data['project'] in EXCLUDED_PROJECTS:
+        return output
     output.append("Review {}, created = {}, updated = {}, URL = {}".format(
         data['number'], datetime.datetime.fromtimestamp(data['createdOn']),
         datetime.datetime.fromtimestamp(data['lastUpdated']), data['url']))
-    if data['project'] in EXCLUDED_PROJECTS:
-        return output
     patches = dict()
     reviewers = set()
     for comment in data['comments']:
-        if "(check pipeline)" not in comment['message'] or 'zuul' not in comment['reviewer']['username']:
-            continue
         lines = comment['message'].splitlines()
-        num = lines[0].split()[2].split(':')[0]
-        status = [line for line in lines if "(check pipeline)" in line][0].split()[1]
+        if 'username' not in comment['reviewer']:
+            continue
+        if comment['reviewer']['username'] == 'zuul-tf' and '(check)' in comment['message']:
+            num = lines[0].split()[2].split(':')[0]
+            status = [line for line in lines if "(check)" in line][0].split()[2].lower()
+            if status in ('started', 'aborted', '(check)'):
+                continue
+        elif comment['reviewer']['username'] == 'jenkins2-engprod':
+            num = lines[0].split()[2].split(':')[0]
+            if 'Verified+1' in comment['message']:
+                status = 'succeeded'
+            elif 'Build Failed' in comment['message']:
+                status = 'failed'
+            else:
+                continue
+        else:
+            continue
+
         time = str(datetime.datetime.fromtimestamp(comment['timestamp']))
         patches.setdefault(num, list()).append((comment['reviewer']['username'], status, time))
         reviewers.add(comment['reviewer']['username'])
 
-    if len(reviewers) == 1 and next(iter(reviewers)) == 'zuulv3':
+    if len(reviewers) == 1 and next(iter(reviewers)) == 'jenkins2-engprod':
         output.append("    ERROR: reviewed just by {}. project {}".format(next(iter(reviewers)), data['project']))
 
     # check only last patchset
@@ -49,7 +63,7 @@ def check_review(data):
     statuses = set([item[1] for item in pdata])
     if len(statuses) < 2:
         return output
-    statuses_zuul = set([item[1] for item in pdata if item[0] == 'zuulv3'])
+    statuses_zuul = set([item[1] for item in pdata if item[0] == 'jenkins2-engprod'])
     statuses_zuul_tf = set([item[1] for item in pdata if item[0] == 'zuul-tf'])
 
     if len(statuses_zuul_tf) == 1 and next(iter(statuses_zuul_tf)) == 'succeeded':
