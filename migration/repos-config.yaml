@@ -21,7 +21,8 @@ projects:
   - {src: "contrail-dpdk", dst_org: "tungstenfabric", dst: "tf-dpdk",
      branches: ["contrail_dpdk_17_02", "contrail_dpdk_17_11_3", "contrail_dpdk_18_05_1"]}
   - {src: "contrail-fabric-utils", dst_org: "tungstenfabric", dst: "tf-fabric-utils"}
-  - {src: "contrail-heat", dst_org: "tungstenfabric", dst: "tf-heat-plugin"}
+  - {src: "tf-heat-plugin", src_org: "tungstenfabric"}
+  - {src: "contrail-helm-deployer", dst_org: "tungstenfabric", dst: "tf-helm-deployer"}
   - {src: "tf-java-api", src_org: "tungstenfabric"}
   - {src: "contrail-kolla-ansible", dst_org: "tungstenfabric", dst: "kolla-ansible",
      branches: ["contrail/ocata", "contrail/queens", "contrail/rocky"]}
@@ -46,7 +47,7 @@ projects:
      excludes: ['zuul.d/base-jobs.yaml']}
   - {src: "openshift-ansible", dst_org: "tungstenfabric", dst: "openshift-ansible",
      branches: ["release-3.11", "release-3.11-contrail"]}
-  - {src: "vijava", dst_org: "tungstenfabric", dst: "vijava"}
+  - {src: "vijava", dst_org: "tungstenfabric", dst: "tf-vijava"}
 
   - {src: "tf-third-party", src_org: "tungstenfabric"}
   - {src: "tf-tripleo-puppet", src_org: "tungstenfabric",
