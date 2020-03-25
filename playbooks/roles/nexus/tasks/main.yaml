@@ -77,7 +77,13 @@
     src: "./nexus-scripting"
     dest: "/opt/nexus/"
 
+# order is important, e.g. repos creation uses cleanup policy
 - name: configure nexus
-  command: "bash -e configure_tf_ci_nexus.sh --password {{ nexus_password }}"
+  command: "bash -e configure_tf_ci_nexus.sh --op {{ item }} --password {{ nexus_password }}"
   args:
     chdir: "/opt/nexus/nexus-scripting"
+  with_items:
+    - cleanup
+    - repos
+    - compact
+    - roles

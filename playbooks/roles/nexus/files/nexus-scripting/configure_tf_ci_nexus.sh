@@ -24,6 +24,9 @@ function usage() {
 
 while [[ -n "$1" ]] ; do
     case $1 in
+        '--op')
+            op="$2"
+            ;;
         '--password')
             input_password="$2"
             ;;
@@ -90,7 +93,22 @@ else
 fi
 
 # order is important, e.g. repos creation uses cleanup policy
-create_and_run_script tfci_cleanup tfCICleanupPolicy.groovy
-create_and_run_script tfci_repos tfCIRepositories.groovy
-create_and_run_script tfci_compact tfCIStorageCompactTask.groovy
-create_and_run_script tfci_roles tfCIRoles.groovy
+case $op in
+    'cleanup')
+        create_and_run_script tfci_cleanup tfCICleanupPolicy.groovy
+        ;;
+    'repos')
+        create_and_run_script tfci_repos tfCIRepositories.groovy
+        ;;
+    'compact')
+        create_and_run_script tfci_compact tfCIStorageCompactTask.groovy
+        ;;
+    'roles')
+        create_and_run_script tfci_roles tfCIRoles.groovy
+        ;;
+    *)
+        echo "ERROR: unknown operation $op"
+        exit -1
+        ;;
+esac
+
