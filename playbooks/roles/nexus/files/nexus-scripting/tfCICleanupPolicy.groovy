@@ -24,13 +24,10 @@ def create_or_update_cleanup_policy(name, format, lastBlobUpdated, lastDownloade
         cp.setCriteria(cpc_map)
         storage.update(cp)
     } else {
-        cp = new CleanupPolicy(
-            name,                       // name
-            '',                         // final String notes
-            format,                     // final String format,
-            '',                         // final String mode,
-            cpc_map                     // final Map<String, String> criteria
-        )
+        cp = storage.newCleanupPolicy()
+        cp.setName(name)
+        cp.setFormat(format)
+        cp,setCriteria(cpc_map)
         storage.add(cp)
     }
 }

@@ -65,10 +65,10 @@ function create_and_run_script {
     -Dgroovy.grape.report.downloads=true \
     -Dgrape.config=$grape_config \
     $create_update_groovy_script \
-    -u "$username" -p "$password" -n "$name" -f "$file" -h "$url"
+    -u "$username" -p "$password" -n "$name" -f "$file" -h "$url" &> /dev/null
   printf "\nPublished $file as $name with result $?\n\n"
   # Run script
-  curl -v -X POST -u $username:$password \
+  curl -s -X POST -u $username:$password \
     --header "Content-Type: text/plain" \
     "$url/service/rest/v1/script/$name/run" $@
   printf "\nExecuted $name script with result $?\n\n\n"
