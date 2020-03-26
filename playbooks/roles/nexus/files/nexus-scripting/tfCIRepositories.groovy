@@ -1,5 +1,6 @@
 import org.sonatype.nexus.blobstore.api.BlobStoreManager
 import org.sonatype.nexus.repository.config.Configuration
+import org.sonatype.nexus.repository.config.internal.orient.OrientConfiguration
 import org.sonatype.nexus.repository.storage.WritePolicy
 import org.sonatype.nexus.repository.maven.VersionPolicy
 import org.sonatype.nexus.repository.maven.LayoutPolicy
@@ -102,7 +103,7 @@ def get_maven_opts() {
 
 def get_cleanup(name) {
     def cleanup_opts = [
-        policyName: name
+        policyName: [name] as Set
     ] as Map
     return cleanup_opts
 }
@@ -115,7 +116,7 @@ def create_docker_hosted(name, port, cleanup=null) {
     if (cleanup != null) {
         attrs['cleanup'] = get_cleanup(cleanup)
     }
-    def configuration = new Configuration(
+    def configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'docker-hosted',
         online: true,
@@ -125,7 +126,7 @@ def create_docker_hosted(name, port, cleanup=null) {
 }
 
 def create_docker_proxy(name, port, remote) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'docker-proxy',
         online: true,
@@ -145,7 +146,7 @@ def create_docker_proxy(name, port, remote) {
 }
 
 def create_pypi_proxy(name, remote) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'pypi-proxy',
         online: true,
@@ -160,7 +161,7 @@ def create_pypi_proxy(name, remote) {
 }
 
 def create_raw_hosted(name) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'raw-hosted',
         online: true,
@@ -172,7 +173,7 @@ def create_raw_hosted(name) {
 }
 
 def create_raw_proxy(name, remote) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'raw-proxy',
         online: true,
@@ -187,7 +188,7 @@ def create_raw_proxy(name, remote) {
 }
 
 def create_yum_hosted(name, depth) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'yum-hosted',
         online: true,
@@ -200,7 +201,7 @@ def create_yum_hosted(name, depth) {
 }
 
 def create_yum_proxy(name, remote) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'yum-proxy',
         online: true,
@@ -215,7 +216,7 @@ def create_yum_proxy(name, remote) {
 }
 
 def create_yum_group(name, members) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'yum-proxy',
         online: true,
@@ -230,7 +231,7 @@ def create_yum_group(name, members) {
 }
 
 def create_maven_hosted(name) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'maven2-hosted',
         online: true,
@@ -243,7 +244,7 @@ def create_maven_hosted(name) {
 }
 
 def create_maven_proxy(name, remote) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'maven2-proxy',
         online: true,
@@ -259,7 +260,7 @@ def create_maven_proxy(name, remote) {
 }
 
 def create_maven_group(name, members) {
-    configuration = new Configuration(
+    configuration = new OrientConfiguration(
         repositoryName: name,
         recipeName: 'maven2-proxy',
         online: true,
@@ -289,6 +290,9 @@ create_pypi_proxy('pypi', 'https://pypi.org')
 // Hosted
 create_raw_hosted('images')
 create_raw_hosted('documentation')
+
+// Proxy
+create_raw_hosted('contrail-third-party')
 
 ////////////
 // Yum Proxy
