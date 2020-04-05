@@ -218,7 +218,7 @@ def create_yum_proxy(name, remote) {
 def create_yum_group(name, members) {
     configuration = new OrientConfiguration(
         repositoryName: name,
-        recipeName: 'yum-proxy',
+        recipeName: 'yum-group',
         online: true,
         attributes: [
             group: [
@@ -262,7 +262,7 @@ def create_maven_proxy(name, remote) {
 def create_maven_group(name, members) {
     configuration = new OrientConfiguration(
         repositoryName: name,
-        recipeName: 'maven2-proxy',
+        recipeName: 'maven2-group',
         online: true,
         attributes: [
             group: [
@@ -315,10 +315,10 @@ create_yum_proxy('centos7-centosplus',  'http://centos.mirror.vexxhost.com/7/cen
 create_yum_proxy('centos7-updates-old', 'http://vault.centos.org/7.6.1810/updates/x86_64/')
 // TPC
 // hosted tpc binary has third party packages that was taken somewhere and it doesn't depend on branch
-create_yum_hosted('yum-tpc-binary', '0')
+create_yum_hosted('yum-tpc-binary', 0)
 // hosted tpc source has build packages from third-party-packages repo and it doesn't depend on branch for now
 // because contrail-third-party-packages doesn't have branches
-create_yum_hosted('yum-tpc-source', '0')
+create_yum_hosted('yum-tpc-source', 0)
 create_yum_group('yum-tpc', ['yum-tpc-binary', 'yum-tpc-source'])
 
 /////////
