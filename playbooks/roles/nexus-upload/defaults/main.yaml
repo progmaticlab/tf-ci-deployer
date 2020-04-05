@@ -7,5 +7,5 @@ nexus_predefined_repos:
   - "contrail-third-party.tgz"
   - "yum-tpc-binary.tgz"
   - "yum-tpc-source.tgz"
-  #- "images.tgz"
-  #- "vmware-releases.tgz"
+  - "images.tgz"
+  - "vmware-releases.tgz"
