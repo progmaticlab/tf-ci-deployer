@@ -27,7 +27,8 @@ def create_or_update_cleanup_policy(name, format, lastBlobUpdated, lastDownloade
         cp = storage.newCleanupPolicy()
         cp.setName(name)
         cp.setFormat(format)
-        cp,setCriteria(cpc_map)
+        cp.setCriteria(cpc_map)
+        cp.setMode('delete')
         storage.add(cp)
     }
 }
