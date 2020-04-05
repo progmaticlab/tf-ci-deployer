@@ -1,7 +1,6 @@
 ---
 - hosts: nexus
   remote_user: "{{ remote_user }}"
-  become: yes
   gather_facts: yes
   roles:
     - nexus-upload

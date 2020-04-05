@@ -7,6 +7,7 @@
 
 - name: download archive
   shell: "aws s3 cp s3://tf-ci/{{archive}} /tmp/data.tgz"
+  no_log: True
 
 - name: create dir for data
   file:
