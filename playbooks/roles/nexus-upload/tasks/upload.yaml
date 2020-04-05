@@ -5,6 +5,10 @@
 #    url: "{{ archive }}"
 #    dest: /tmp/data.tgz
 
+- name: Information
+  debug:
+    msg: "Downloading {{ archive }}"
+
 - name: download archive
   shell: "aws s3 cp s3://tf-ci/{{archive}} /tmp/data.tgz"
   no_log: True
@@ -26,8 +30,9 @@
     state: absent
 
 # with_filetree looks good but we need relative paths
+# TODO: split into two tasks: get list and upload each file in with_items
 - name: upload data
-  shell: "for f in $(find .); do curl -s -u {{ nexus_user }}:{{ nexus_password }} --upload-file $f http://{{ nexus_host }}/repository/${f} ; done"
+  shell: "for f in $(find . -type f); do curl -s -u {{ nexus_user }}:{{ nexus_password }} --upload-file $f http://{{ nexus_host }}/repository/${f} ; done"
   args:
     chdir: "/tmp/data"
 
