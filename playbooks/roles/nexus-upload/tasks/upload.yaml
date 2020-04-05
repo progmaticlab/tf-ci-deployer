@@ -1,9 +1,12 @@
 ---
 
+#- name: download archive
+#  get_url:
+#    url: "{{ archive }}"
+#    dest: /tmp/data.tgz
+
 - name: download archive
-  get_url:
-    url: "{{ archive }}"
-    dest: /tmp/data.tgz
+  shell: "aws s3 cp s3://tf-ci/{{archive}} /tmp/data.tgz"
 
 - name: create dir for data
   file:
