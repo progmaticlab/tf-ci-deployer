@@ -8,6 +8,13 @@
 default_branches:
   - "master"
 projects:
+  - {src: "contrail-project-config",
+     branches: ["master"],
+     excludes: ['zuul/main.yaml', 'zuul.d/projects.yaml', 'zuul.d/jobs.yaml']}
+  - {src: "contrail-zuul-jobs",
+     branches: ["master"],
+     excludes: ['zuul.d/base-jobs.yaml']}
+
   - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
   - {src: "contrail-ansible-deployer", dst_org: "tungstenfabric", dst: "tf-ansible-deployer"}
   - {src: "contrail-api-client", dst_org: "tungstenfabric", dst: "tf-api-client"}
@@ -20,28 +27,19 @@ projects:
   - {src: "contrail-kolla-ansible", dst_org: "tungstenfabric", dst: "kolla-ansible",
      branches: ["contrail/ocata", "contrail/queens", "contrail/rocky"]}
   - {src: "contrail-neutron-plugin", dst_org: "tungstenfabric", dst: "tf-neutron-plugin"}
-  - {src: "contrail-project-config",
-     branches: ["master"],
-     excludes: ['zuul/main.yaml', 'zuul.d/projects.yaml', 'zuul.d/jobs.yaml']}
   - {src: "contrail-test", dst_org: "tungstenfabric", dst: "tf-test"}
   - {src: "contrail-tripleo-heat-templates", dst_org: "tungstenfabric", dst: "tf-tripleo-heat-templates",
      branches: ["master", "stable/newton", "stable/queens", "stable/rocky", "stable/stein"]}
   - {src: "contrail-vnc", dst_org: "tungstenfabric", dst: "tf-vnc"}
   - {src: "contrail-vrouter", dst_org: "tungstenfabric", dst: "tf-vrouter"}
-  - {src: "contrail-zuul-jobs",
-     branches: ["master"],
-     excludes: ['zuul.d/base-jobs.yaml']}
   - {src: "openshift-ansible", dst_org: "tungstenfabric", dst: "openshift-ansible",
      branches: ["release-3.11", "release-3.11-contrail"]}
 
   - {src: "contrail-third-party-packages", dst_org: "tungstenfabric", dst: "tf-third-party-packages"}
   - {src: "contrail-vro-plugin", dst_org: "tungstenfabric", dst: "tf-vro-plugin"}
 
-  - {src: "contrail-build", dst_org: "tungstenfabric", dst: "tf-build"}
-  - {src: "contrail-packages", dst_org: "tungstenfabric", dst: "tf-packages"}
-#  - {src: "contrail-third-party-cache", dst_org: "tungstenfabric", dst: "tf-third-party-cache"}
-
   - {src: "tf-analytics", src_org: "tungstenfabric"}
+  - {src: "tf-build", src_org: "tungstenfabric"}
   - {src: "tf-fabric-utils", src_org: "tungstenfabric"}
   - {src: "tf-heat-plugin", src_org: "tungstenfabric"}
   - {src: "tf-helm-deployer", src_org: "tungstenfabric"}
@@ -49,7 +47,9 @@ projects:
   - {src: "tf-nova-vif-driver", src_org: "tungstenfabric"}
   - {src: "tf-old-docs", src_org: "tungstenfabric"}
   - {src: "tf-specs", src_org: "tungstenfabric"}
+  - {src: "tf-packages", src_org: "tungstenfabric"}
   - {src: "tf-third-party", src_org: "tungstenfabric"}
+#  - {src: "tf-third-party-cache", src_org: "tungstenfabric"}
   - {src: "tf-tripleo-puppet", src_org: "tungstenfabric",
      branches: ["master", "stable/newton", "stable/queens", "stable/rocky", "stable/stein"]}
   - {src: "tf-vcenter-fabric-manager", src_org: "tungstenfabric"}
