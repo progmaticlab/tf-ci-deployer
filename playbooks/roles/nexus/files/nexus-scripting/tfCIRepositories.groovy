@@ -312,7 +312,9 @@ create_yum_proxy('centos7-updates',     'http://centos.mirror.vexxhost.com/7/upd
 create_yum_proxy('centos7-extras',      'http://centos.mirror.vexxhost.com/7/extras/x86_64')
 create_yum_proxy('centos7-centosplus',  'http://centos.mirror.vexxhost.com/7/centosplus/x86_64')
 // for kernels in R1909 - 957.*
-create_yum_proxy('centos7-updates-old', 'http://vault.centos.org/7.6.1810/updates/x86_64/')
+// create_yum_proxy('centos7-updates-old', 'http://vault.centos.org/7.6.1810/updates/x86_64/')
+// for kernels in >=R1912 - 1062.*
+create_yum_proxy('centos7-updates-old', 'http://vault.centos.org/7.7.1908/updates/x86_64/')
 // TPC
 // hosted tpc binary has third party packages that was taken somewhere and it doesn't depend on branch
 create_yum_hosted('yum-tpc-binary', 0)
