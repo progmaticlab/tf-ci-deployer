@@ -14,19 +14,17 @@ projects:
   - {src: "contrail-zuul-jobs",
      branches: ["master"],
      excludes: ['zuul.d/base-jobs.yaml']}
-
+  - {src: "contrail-dpdk", dst_org: "tungstenfabric", dst: "tf-dpdk",
+     branches: ["contrail_dpdk_17_02", "contrail_dpdk_17_11_3", "contrail_dpdk_18_05_1"]}
   - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
+
   - {src: "contrail-ansible-deployer", dst_org: "tungstenfabric", dst: "tf-ansible-deployer"}
   - {src: "contrail-api-client", dst_org: "tungstenfabric", dst: "tf-api-client"}
-  - {src: "contrail-common", dst_org: "tungstenfabric", dst: "tf-common"}
   - {src: "contrail-container-builder", dst_org: "tungstenfabric", dst: "tf-container-builder"}
   - {src: "contrail-controller", dst_org: "tungstenfabric", dst: "tf-controller"}
   - {src: "contrail-deployers-containers", dst_org: "tungstenfabric", dst: "tf-deployers-containers"}
-  - {src: "contrail-dpdk", dst_org: "tungstenfabric", dst: "tf-dpdk",
-     branches: ["contrail_dpdk_17_02", "contrail_dpdk_17_11_3", "contrail_dpdk_18_05_1"]}
   - {src: "contrail-kolla-ansible", dst_org: "tungstenfabric", dst: "kolla-ansible",
      branches: ["contrail/ocata", "contrail/queens", "contrail/rocky"]}
-  - {src: "contrail-neutron-plugin", dst_org: "tungstenfabric", dst: "tf-neutron-plugin"}
   - {src: "contrail-test", dst_org: "tungstenfabric", dst: "tf-test"}
   - {src: "contrail-tripleo-heat-templates", dst_org: "tungstenfabric", dst: "tf-tripleo-heat-templates",
      branches: ["master", "stable/newton", "stable/queens", "stable/rocky", "stable/stein"]}
@@ -40,10 +38,12 @@ projects:
 
   - {src: "tf-analytics", src_org: "tungstenfabric"}
   - {src: "tf-build", src_org: "tungstenfabric"}
+  - {src: "tf-common", src_org: "tungstenfabric"}
   - {src: "tf-fabric-utils", src_org: "tungstenfabric"}
   - {src: "tf-heat-plugin", src_org: "tungstenfabric"}
   - {src: "tf-helm-deployer", src_org: "tungstenfabric"}
   - {src: "tf-java-api", src_org: "tungstenfabric"}
+  - {src: "tf-neutron-plugin", src_org: "tungstenfabric"}
   - {src: "tf-nova-vif-driver", src_org: "tungstenfabric"}
   - {src: "tf-old-docs", src_org: "tungstenfabric"}
   - {src: "tf-specs", src_org: "tungstenfabric"}
