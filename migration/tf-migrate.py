@@ -361,7 +361,7 @@ class Migration():
             log('Approving change {}'.format(change_id))
             if reviews[change_id]['reviewed'] and reviews[change_id]['verified']:
                 self._gerrit_approve(change_id)
-        
+
     def _op_notify(self):
         reviews = self._gerrit_cmd(['query', '--format', 'JSON', 'project:{}'.format(self.src_key), 'status:open']).splitlines()
         for review in reviews:
@@ -518,7 +518,9 @@ class Migration():
         method(*args, **kwargs)
 
     def _patch_file(self, file, src_key, dst_key):
+        src_key = src_key.lower()
         src_org, src = src_key.split('/')
+        dst_key = dst_key.lower()
         dst_org, dst = dst_key.split('/')
 
         # check file, change something, print warnings
@@ -541,7 +543,7 @@ class Migration():
             with open(file) as fh:
                 lines = fh.readlines()
         except UnicodeDecodeError:
-            log("File {} has invalid characters that can be decoded by utf-8".format(file), level='ERROR')
+            log("File {} has invalid characters that can not be decoded by utf-8".format(file), level='ERROR')
             return
 
         line_num = 0
@@ -550,16 +552,16 @@ class Migration():
             line_num += 1
             index = 0
             while True:
-                index = line.find(src_key, index)
+                index = line.lower().find(src_key, index)
                 if index == -1:
                     break
                 # check link to Wiki
-                if line[index-len(link_prefix):].startswith(wiki_link):
+                if line[index-len(link_prefix):].lower().startswith(wiki_link):
                     index += len(src_key)
                     warnings.append("Link to wiki has been found in line {} and it won't be changed.".format(line_num))
                     continue
                 # check link to commit
-                if line[index-len(link_prefix):].startswith(commit_link):
+                if line[index-len(link_prefix):].lower().startswith(commit_link):
                     index += len(src_key)
                     warnings.append("Link to commit has been found in line {} and it won't be changed.".format(line_num))
                     # TODO: next element in path after 'blob' can be commit SHA or branch name or something else.
@@ -571,11 +573,11 @@ class Migration():
                 index += len(dst_key)
             index = 0
             while True:
-                index = line.find(src, index)
+                index = line.lower().find(src, index)
                 if index == -1:
                     break
                 # exclude src_key as it was parsed previously
-                if line[index-len(src_org)-1:index+len(src)] == src_key:
+                if line[index-len(src_org)-1:index+len(src)].lower() == src_key:
                     index += len(src)
                     continue
                 # skip src in *requirements.txt, ci_unittests.json
@@ -583,7 +585,7 @@ class Migration():
                     index += len(src)
                     continue
                 # skip all occurences of pointing to sources - they still are placed in old structure
-                if line[index-4:index] == 'src/':
+                if line[index-4:index].lower() == 'src/':
                     index += len(src)
                     continue
                 # all other treat as warnings for now
@@ -604,7 +606,7 @@ class Migration():
         src = src_key.split('/')[1]
         cmd = ('find . -not -path "*/.git/*" -not -path "*/vendor/github.com/*"'
                ' -not -path "*.zip" -not -path "*.tgz" -not -path "*.tar.gz"'
-               ' -type f -exec grep -I -l "{}" {{}} \;'.format(src))
+               ' -type f -exec grep -I -i -l "{}" {{}} \;'.format(src))
         output = subprocess.check_output(cmd, shell=True, cwd=repo_dir).decode()
         for file in output.splitlines():
             file = os.path.normpath(file)
