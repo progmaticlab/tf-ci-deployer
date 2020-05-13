@@ -176,7 +176,11 @@ class Migration():
                 log("Copying destination")
                 self._copy_dir(src_dir, dst_dir, excluded_names)
                 # commit just copied dir
-                self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
+                try:
+                    self._git_commit(dst_dir, COPY_COMMIT_MESSAGE)
+                except Exception:
+                    log("Content is in place. skipping...")
+                    pass
                 # we don't fix src_name to dst_name cause it requires more intelligent work
                 log("Patching destination")
                 self._patch_dir(dst_dir, self.src_key, self.dst_key, excludes=project.get('excludes'))
