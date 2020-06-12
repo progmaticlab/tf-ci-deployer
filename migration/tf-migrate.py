@@ -368,14 +368,19 @@ class Migration():
                 self._gerrit_approve(change_id)
 
     def _op_notify(self):
-        reviews = self._gerrit_cmd(['query', '--format', 'JSON', 'project:{}'.format(self.src_key), 'status:open']).splitlines()
+        reviews = self._gerrit_cmd(['query', '--format', 'JSON', 'project:{}'.format(self.src_key),
+                                    'status:open']).splitlines()
+        project = self.projects[self.src_key]
         for review in reviews:
             data = json.loads(review)
             if 'id' not in data:
                 # last line is stats
                 continue
+            if data['branch'] not in project['branches']:
+                continue
+            log("Notifying {}".format(data['id']), level='INFO')
             # TODO: should script set -2 to Code-Review to prevent merges while moving is going?
-            # self._gerrit_post_comment(data['id'], NOTIFICATION_MESSAGE)
+            self._gerrit_post_comment(data['id'], NOTIFICATION_MESSAGE)
             data = self._gerrit_get_current_patch_set(data['id'])
             try:
                 self._gerrit_cmd(['set-reviewers', data['revision'], '--remove', self.args.user])
