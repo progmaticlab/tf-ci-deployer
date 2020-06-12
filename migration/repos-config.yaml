@@ -18,36 +18,34 @@ projects:
      branches: ["contrail_dpdk_17_02", "contrail_dpdk_17_11_3", "contrail_dpdk_18_05_1"]}
   - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
 
-  - {src: "contrail-ansible-deployer", dst_org: "tungstenfabric", dst: "tf-ansible-deployer"}
-  - {src: "contrail-api-client", dst_org: "tungstenfabric", dst: "tf-api-client"}
-  - {src: "contrail-container-builder", dst_org: "tungstenfabric", dst: "tf-container-builder"}
   - {src: "contrail-controller", dst_org: "tungstenfabric", dst: "tf-controller"}
-  - {src: "contrail-kolla-ansible", dst_org: "tungstenfabric", dst: "kolla-ansible",
-     branches: ["contrail/ocata", "contrail/queens", "contrail/rocky", "contrail/train"]}
-  - {src: "contrail-test", dst_org: "tungstenfabric", dst: "tf-test"}
   - {src: "contrail-tripleo-heat-templates", dst_org: "tungstenfabric", dst: "tf-tripleo-heat-templates",
-     branches: ["master", "stable/queens", "stable/stein"]}
+     branches: ["stable/queens", "stable/train"]}
   - {src: "contrail-vnc", dst_org: "tungstenfabric", dst: "tf-vnc"}
-  - {src: "contrail-vrouter", dst_org: "tungstenfabric", dst: "tf-vrouter"}
-  - {src: "openshift-ansible", dst_org: "tungstenfabric", dst: "openshift-ansible",
-     branches: ["release-3.11-contrail"]}
 
   - {src: "contrail-third-party-packages", dst_org: "tungstenfabric", dst: "tf-third-party-packages"}
   - {src: "contrail-vro-plugin", dst_org: "tungstenfabric", dst: "tf-vro-plugin"}
 
   - {src: "tf-analytics", src_org: "tungstenfabric"}
+  - {src: "tf-ansible-deployer", src_org: "tungstenfabric"}
   - {src: "tf-build", src_org: "tungstenfabric"}
   - {src: "tf-common", src_org: "tungstenfabric"}
+  - {src: "tf-container-builder", src_org: "tungstenfabric"}
   - {src: "tf-deployers-containers", src_org: "tungstenfabric"}
   - {src: "tf-fabric-utils", src_org: "tungstenfabric"}
   - {src: "tf-heat-plugin", src_org: "tungstenfabric"}
   - {src: "tf-helm-deployer", src_org: "tungstenfabric"}
   - {src: "tf-java-api", src_org: "tungstenfabric"}
+  - {src: "tf-kolla-ansible", src_org: "tungstenfabric",
+     branches: ["contrail/ocata", "contrail/queens", "contrail/rocky", "contrail/train"]}
   - {src: "tf-neutron-plugin", src_org: "tungstenfabric"}
   - {src: "tf-nova-vif-driver", src_org: "tungstenfabric"}
   - {src: "tf-old-docs", src_org: "tungstenfabric"}
+  - {src: "tf-openshift-ansible", src_org: "tungstenfabric",
+     branches: ["release-3.11", "release-3.11-contrail"]}
   - {src: "tf-specs", src_org: "tungstenfabric"}
   - {src: "tf-packages", src_org: "tungstenfabric"}
+  - {src: "tf-test", src_org: "tungstenfabric"}
   - {src: "tf-third-party", src_org: "tungstenfabric"}
 #  - {src: "tf-third-party-cache", src_org: "tungstenfabric"}
   - {src: "tf-tripleo-puppet", src_org: "tungstenfabric",
@@ -56,6 +54,7 @@ projects:
   - {src: "tf-vcenter-manager", src_org: "tungstenfabric"}
   - {src: "tf-vcenter-plugin", src_org: "tungstenfabric"}
   - {src: "tf-vijava", src_org: "tungstenfabric"}
+  - {src: "tf-vrouter", src_org: "tungstenfabric"}
   - {src: "tf-vrouter-java-api", src_org: "tungstenfabric"}
   - {src: "tf-web-controller", src_org: "tungstenfabric"}
   - {src: "tf-web-core", src_org: "tungstenfabric"}

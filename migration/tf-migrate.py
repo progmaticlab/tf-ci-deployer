@@ -35,7 +35,6 @@ notify - adds notification message to all open reviews for moved project
 import argparse
 import json
 import os
-import random
 import shutil
 import subprocess
 import sys
@@ -45,12 +44,13 @@ import yaml
 SRC_ORGANIZATION = 'Juniper'
 GERRIT_URL = 'review.opencontrail.org'
 GERRIT_PORT = '29418'
-COMMIT_MESSAGE_TAG='Migration'
+COMMIT_MESSAGE_TAG = 'Migration'
 COPY_COMMIT_MESSAGE = '[{}] Add content from Juniper\n\nAutomated change\n'.format(COMMIT_MESSAGE_TAG)
 PATCH_COMMIT_MESSAGE = '[{}] Patch content from Juniper\n\nAutomated change\n'.format(COMMIT_MESSAGE_TAG)
 TEST_DIR = 'test'
 NOTIFICATION_MESSAGE = 'Please note that this project will be moved to TF soon.\nPlease create new review after moving is completed'
 README_MIGRATED = 'Content was moved to https://github.com/{}\n'
+
 
 def log(message, level='INFO'):
     print(level + ' ' + message)
@@ -88,7 +88,7 @@ class Migration():
         parser.add_argument('--workspace', default="./workspace", help="path to workspace where cloned repos will be placed")
         parser.add_argument('--user', help="user for git ssh access")
         parser.add_argument('--force', help="Force operation if it's possible", action='store_true', default=False)
-        #TODO: add creds for opencontrail's gerrit
+        # TODO: add creds for opencontrail's gerrit
         parser.add_argument('operation', choices=self.valid_operations, help="Operation to execute.")
         parser.add_argument('src', help="Source project from Juniper's organization")
         self.args = parser.parse_args()
@@ -125,7 +125,7 @@ class Migration():
         log("Clean everything in {}".format(self.work_dir))
         # remove ${workspace}/${src}/
         shutil.rmtree(self.work_dir)
-        #TODO: think about abandon reviews
+        # TODO: think about abandoned reviews
 
     def _op_clone(self):
         def _clone(pkey, clone_dir=None):
@@ -163,7 +163,7 @@ class Migration():
         for branch in project['branches']:
             log("Copying src to dst for branch {}".format(branch))
             self._git_checkout(branch, src_dir)
-            #NOTE: branch must be pre-created in destination
+            # NOTE: branch must be pre-created in destination
             self._git_reset(dst_dir)
             self._git_checkout(branch, dst_dir)
 
@@ -213,7 +213,8 @@ class Migration():
                     # this repo containes special XML file with folder's structure
                     # this structure has just name without organization that must be changed
                     # and for this line remote attribute also must be changed
-                    self._patch_dir_no_check(dst_dir,
+                    self._patch_dir_no_check(
+                        dst_dir,
                         'name="{}" remote="github"'.format(project['src']),
                         'name="{}" remote="githubtf"'.format(project['dst']))
                 # common patch
@@ -344,7 +345,7 @@ class Migration():
             _, change_id = self._git_get_last_commit_details(dst_dir)
             reviews[change_id] = self._gerrit_get_reviewed_approved_status(change_id)
             if not reviews[change_id]['reviewed'] or not reviews['verified']:
-                passed = False;
+                passed = False
 
         for pkey in self.projects:
             dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
@@ -356,7 +357,7 @@ class Migration():
                 _, change_id = self._git_get_last_commit_details(dst_dir)
                 reviews[change_id] = self._gerrit_get_reviewed_approved_status(change_id)
                 if not reviews[change_id]['reviewed'] or not reviews['verified']:
-                    passed = False;
+                    passed = False
 
         if not passed and not self.args.force:
             log("Not all reviews have 'Code-Review +2' and 'Verified +1' labels. Do nothing.", level='ERROR')
@@ -374,7 +375,12 @@ class Migration():
                 # last line is stats
                 continue
             # TODO: should script set -2 to Code-Review to prevent merges while moving is going?
-            self._gerrit_post_comment(data['id'], NOTIFICATION_MESSAGE)
+            # self._gerrit_post_comment(data['id'], NOTIFICATION_MESSAGE)
+            data = self._gerrit_get_current_patch_set(data['id'])
+            try:
+                self._gerrit_cmd(['set-reviewers', data['revision'], '--remove', self.args.user])
+            except Exception:
+                pass
 
     # private helpers' functions
 
@@ -390,7 +396,7 @@ class Migration():
         return False if result else True
 
     def _git_pull(self, pkey, clone_dir=None):
-        #TODO: implement
+        # TODO: implement
         pass
 
     def _git_clone(self, pkey, clone_dir=None):
@@ -443,7 +449,7 @@ class Migration():
     def _git_get_last_commit_details(self, repo_dir, check_msg_tag=None):
         git_log = subprocess.check_output(['git', 'log', '-1'], cwd=repo_dir).decode()
         if check_msg_tag and check_msg_tag not in git_log:
-            log("Latest commit is not correct", level=ERROR)
+            log("Latest commit is not correct", level='ERROR')
             raise SystemExit()
         commit_sha = None
         change_id = None
@@ -518,7 +524,7 @@ class Migration():
         return subprocess.check_output(gerrit_cmd, cwd=self.work_dir).decode()
 
     def _run_task(self, method, *args, **kwargs):
-        #TODO: implement threading
+        # TODO: implement threading
         method(*args, **kwargs)
 
     def _patch_file(self, file, src_key, dst_key):
@@ -560,19 +566,19 @@ class Migration():
                 if index == -1:
                     break
                 # check link to Wiki
-                if line[index-len(link_prefix):].lower().startswith(wiki_link):
+                if line[index - len(link_prefix):].lower().startswith(wiki_link):
                     index += len(src_key)
                     warnings.append("Link to wiki has been found in line {} and it won't be changed.".format(line_num))
                     continue
                 # check link to commit
-                if line[index-len(link_prefix):].lower().startswith(commit_link):
+                if line[index - len(link_prefix):].lower().startswith(commit_link):
                     index += len(src_key)
                     warnings.append("Link to commit has been found in line {} and it won't be changed.".format(line_num))
                     # TODO: next element in path after 'blob' can be commit SHA or branch name or something else.
                     # we can analyze is it a branch name and if this branch in the list of moved branches then we can change the link.
                     continue
                 # we can use replace with count=1 but here we definetly know what should be done.
-                line = line[0:index] + dst_key + line[index+len(src_key):]
+                line = line[0:index] + dst_key + line[index + len(src_key):]
                 patched = True
                 index += len(dst_key)
             index = 0
@@ -581,7 +587,7 @@ class Migration():
                 if index == -1:
                     break
                 # exclude src_key as it was parsed previously
-                if line[index-len(src_org)-1:index+len(src)].lower() == src_key:
+                if line[index - len(src_org) - 1:index + len(src)].lower() == src_key:
                     index += len(src)
                     continue
                 # skip src in *requirements.txt, ci_unittests.json
@@ -589,7 +595,7 @@ class Migration():
                     index += len(src)
                     continue
                 # skip all occurences of pointing to sources - they still are placed in old structure
-                if line[index-4:index].lower() == 'src/':
+                if line[index - 4:index].lower() == 'src/':
                     index += len(src)
                     continue
                 # all other treat as warnings for now
@@ -646,9 +652,9 @@ class Migration():
             src_path = os.path.join(src_dir, item)
             dst_path = os.path.join(dst_dir, item)
             if os.path.isdir(src_path):
-                shutil.copytree(src_path, dst_path)
+                shutil.copytree(src_path, dst_path, symlinks=True)
             else:
-                shutil.copy2(src_path, dst_path)
+                shutil.copy2(src_path, dst_path, follow_symlinks=False)
 
     def _create_file(self, fdir, filename, content):
         path = os.path.join(fdir, filename)
