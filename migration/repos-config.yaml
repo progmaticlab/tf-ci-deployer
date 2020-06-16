@@ -19,8 +19,6 @@ projects:
   - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
 
   - {src: "contrail-controller", dst_org: "tungstenfabric", dst: "tf-controller"}
-  - {src: "contrail-tripleo-heat-templates", dst_org: "tungstenfabric", dst: "tf-tripleo-heat-templates",
-     branches: ["stable/queens", "stable/train"]}
   - {src: "contrail-vnc", dst_org: "tungstenfabric", dst: "tf-vnc"}
 
   - {src: "tf-analytics", src_org: "tungstenfabric"}
@@ -47,6 +45,8 @@ projects:
   - {src: "tf-third-party", src_org: "tungstenfabric"}
 #  - {src: "tf-third-party-cache", src_org: "tungstenfabric"}
   - {src: "tf-third-party-packages", src_org: "tungstenfabric"}
+  - {src: "tf-tripleo-heat-templates", src_org: "tungstenfabric",
+     branches: ["stable/queens", "stable/train"]}
   - {src: "tf-tripleo-puppet", src_org: "tungstenfabric",
      branches: ["master", "stable/newton", "stable/queens", "stable/rocky", "stable/stein"]}
   - {src: "tf-vcenter-fabric-manager", src_org: "tungstenfabric"}
