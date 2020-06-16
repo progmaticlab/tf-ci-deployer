@@ -25,7 +25,7 @@ projects:
 
   - {src: "tf-analytics", src_org: "tungstenfabric"}
   - {src: "tf-ansible-deployer", src_org: "tungstenfabric"}
-  - {src: "tf-api-client", dst_org: "tungstenfabric"}
+  - {src: "tf-api-client", src_org: "tungstenfabric"}
   - {src: "tf-build", src_org: "tungstenfabric"}
   - {src: "tf-common", src_org: "tungstenfabric"}
   - {src: "tf-container-builder", src_org: "tungstenfabric"}
