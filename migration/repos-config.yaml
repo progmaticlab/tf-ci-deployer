@@ -19,7 +19,6 @@ projects:
   - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
 
   - {src: "contrail-controller", dst_org: "tungstenfabric", dst: "tf-controller"}
-  - {src: "contrail-vnc", dst_org: "tungstenfabric", dst: "tf-vnc"}
 
   - {src: "tf-analytics", src_org: "tungstenfabric"}
   - {src: "tf-ansible-deployer", src_org: "tungstenfabric"}
@@ -53,6 +52,7 @@ projects:
   - {src: "tf-vcenter-manager", src_org: "tungstenfabric"}
   - {src: "tf-vcenter-plugin", src_org: "tungstenfabric"}
   - {src: "tf-vijava", src_org: "tungstenfabric"}
+  - {src: "tf-vnc", src_org: "tungstenfabric"}
   - {src: "tf-vro-plugin", src_org: "tungstenfabric"}
   - {src: "tf-vrouter", src_org: "tungstenfabric"}
   - {src: "tf-vrouter-java-api", src_org: "tungstenfabric"}
