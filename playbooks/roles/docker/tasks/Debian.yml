@@ -31,7 +31,7 @@
 # bionic has another package version
 - name: install docker for bionic
   apt:
-    name: docker-ce=18.06.3~ce~3-0~ubuntu
+    name: docker-ce
     state: present
     update_cache: yes
   when: ansible_distribution_release == 'bionic'
