@@ -43,7 +43,7 @@
 - name: Create influxdb datasource
   grafana_datasource:
     name: "influxdb"
-    grafana_url: "http://{{ ansible_host }}:3000"
+    grafana_url: "http://localhost:3000"
     grafana_user: "admin"
     grafana_password: "{{ grafana_password }}"
     org_id: "1"
@@ -52,13 +52,13 @@
     database: "{{ database }}"
     time_interval: ">10s"
 
-- name: Create dashboard
-  uri:
-    url: http://{{ ansible_host }}:3000/api/dashboards/db
-    user: "admin"
-    password: "{{ grafana_password }}"
-    method: POST
-    body: "{\"overwrite\": false, \"dashboard\": {{ lookup('file','dashboard.json') }} }"
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
+#- name: Create dashboard
+#  uri:
+#    url: http://localhost:3000/api/dashboards/db
+#    user: admin
+#    password: "{{ grafana_password }}"
+#    method: POST
+#    force_basic_auth: yes
+#    status_code: 200
+#    body_format: json
+#    body: "{\"overwrite\": true, \"dashboard\": {{ lookup('file', 'dashboard.json') }} }"
