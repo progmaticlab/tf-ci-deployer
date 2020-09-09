@@ -18,6 +18,7 @@ exclude_dir="$logdir/static*"
 df -h
 du -hs $logdir
 
+find $logdir/jenkins_logs/nightly/ -maxdepth 1 -type d -ctime +30 rm -rf {} \;
 find $logdir -type f,l ! -path "$exclude_dir" -ctime +30 -execdir rm -f {} \;
 find $logdir -type d ! -path "$exclude_dir" -ctime +30 -empty -delete
 
