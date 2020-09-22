@@ -17,7 +17,7 @@ projects:
   - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
 
   - {src: "contrail-dpdk", dst_org: "tungstenfabric", dst: "tf-dpdk",
-     branches: ["contrail_dpdk_17_02", "contrail_dpdk_17_11_3", "contrail_dpdk_18_05_1", "contrail_dpdk_19_11"]}
+     branches: ["contrail_dpdk_19_11"]}
 
   - {src: "tf-analytics", src_org: "tungstenfabric"}
   - {src: "tf-ansible-deployer", src_org: "tungstenfabric"}

@@ -142,7 +142,7 @@ class Migration():
         for pkey in self.projects:
             _clone(pkey)
             # clone controller one more time to separate directory to create test review
-            if self.projects[pkey]['src'] in ('contrail-controller', 'controller'):
+            if self.projects[pkey]['src'] in ('contrail-controller', 'tf-controller'):
                 _clone(pkey, clone_dir=TEST_DIR)
         # destination project must be pre-created for now in gerrit/github
         _clone(self.dst_key, clone_dir=self.dst_key)
@@ -196,7 +196,7 @@ class Migration():
         changed_ids = dict()
         controller_project = None
         for pkey in self.projects:
-            if self.projects[pkey]['src'] in ('contrail-controller', 'controller'):
+            if self.projects[pkey]['src'] in ('contrail-controller', 'tf-controller'):
                 controller_project = self.projects[pkey]
             if pkey == self.src_key:
                 # do not patch source
@@ -208,8 +208,8 @@ class Migration():
                 self._git_checkout(branch, dst_dir)
 
                 # specific patches first to prevent these findings in common patch
-                if self.projects[pkey]['src'] in ('contrail-vnc', 'vnc'):
-                    # contrail-vnc has specific file with name only
+                if self.projects[pkey]['src'] in ('contrail-vnc', 'tf-vnc'):
+                    # *-vnc has specific file with name only
                     # this repo containes special XML file with folder's structure
                     # this structure has just name without organization that must be changed
                     # and for this line remote attribute also must be changed
@@ -239,22 +239,23 @@ class Migration():
 
         # create commit with removed content and new readme
         for branch in self.projects[self.src_key]['branches']:
-            log("Removing content for project {} / branch {}".format(pkey, branch))
+            log("Removing content for project {} / branch {}".format(self.src_key, branch))
             dst_dir = os.path.join(self.work_dir, self.projects[self.src_key]['src'])
+            log("  dst_dir = {}".format(dst_dir))
             # get list of deps
             depends = list()
-            for pkey in changed_ids:
-                if branch in changed_ids[pkey]:
-                    depends.append(changed_ids[pkey][branch])
-                elif 'master' in changed_ids[pkey]:
-                    # if branch is not in changed_ids[pkey]:
+            for cid in changed_ids:
+                if branch in changed_ids[cid]:
+                    depends.append(changed_ids[cid][branch])
+                elif 'master' in changed_ids[cid]:
+                    # if branch is not in changed_ids[cid]:
                     # - ocata/queens/... not in [master, R1909] then take master
-                    depends.append(changed_ids[pkey]['master'])
+                    depends.append(changed_ids[cid]['master'])
                 else:
                     # - master/R1909 not in [ocata, queens, ...] then take latest by alphabet order
-                    branches = changed_ids[pkey].keys()
+                    branches = changed_ids[cid].keys()
                     branches.sort()
-                    depends.append(changed_ids[pkey][branches[-1]])
+                    depends.append(changed_ids[cid][branches[-1]])
             depends.sort()
             # prepare commit
             self._git_reset(dst_dir)
@@ -281,10 +282,10 @@ class Migration():
                 fh.write(gitreview_data)
             _, final_change_id = self._git_get_last_commit_details(dst_dir, check_msg_tag=msg.splitlines()[0])
 
-        # create fake commit for contrail-controller
+        # create fake commit for *-controller
         dst_dir = os.path.join(self.work_dir, TEST_DIR)
         for branch in controller_project['branches']:
-            log("Creating test commit for contrail-controller / branch {}".format(branch))
+            log("Creating test commit for tf-controller / branch {}".format(branch))
             self._git_reset(dst_dir)
             self._git_checkout(branch, dst_dir)
             self._create_file(dst_dir, 'test', 'do not merge')
@@ -310,8 +311,8 @@ class Migration():
         # dependent projects
         controller_project = None
         for pkey in self.projects:
-            if self.projects[pkey]['src'] in ('contrail-controller', 'controller'):
-                # save contrail-controller project info for next step
+            if self.projects[pkey]['src'] in ('contrail-controller', 'tf-controller'):
+                # save *-controller project info for next step
                 controller_project = self.projects[pkey]
             dst_dir = os.path.join(self.work_dir, self.projects[pkey]['src'])
             for branch in self.projects[pkey]['branches']:
@@ -321,7 +322,7 @@ class Migration():
                     self._git_review(dst_dir)
 
         # test review
-        # this code creates test review in contrail-controller project
+        # this code creates test review in *-controller project
         # to run all tests and to ensure that all changes are in place,
         # CI takes all these changes and passes successfully.
         # at merge stage this review will be abandoned
@@ -412,7 +413,7 @@ class Migration():
             shutil.rmtree(path)
         url = 'ssh://{}@{}:{}/{}.git'.format(self.args.user, GERRIT_URL, GERRIT_PORT, pkey)
         cmd = ['git', 'clone', '-q']
-        if pkey in self.projects and len(self.projects[pkey].get('branches', list())) == 1:
+        if pkey != self.src_key and pkey in self.projects and len(self.projects[pkey].get('branches', list())) == 1:
             cmd.extend(['--depth', '1', '--single-branch'])
         cmd.extend([url, clone_dir])
         subprocess.check_call(cmd, cwd=self.work_dir)
