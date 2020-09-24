@@ -16,9 +16,6 @@ projects:
      excludes: ['zuul.d/base-jobs.yaml']}
   - {src: "contrail", dst_org: "tungstenfabric", dst: "atom"}
 
-  - {src: "contrail-dpdk", dst_org: "tungstenfabric", dst: "tf-dpdk",
-     branches: ["contrail_dpdk_19_11"]}
-
   - {src: "tf-analytics", src_org: "tungstenfabric"}
   - {src: "tf-ansible-deployer", src_org: "tungstenfabric"}
   - {src: "tf-api-client", src_org: "tungstenfabric"}
@@ -27,6 +24,8 @@ projects:
   - {src: "tf-container-builder", src_org: "tungstenfabric"}
   - {src: "tf-controller", src_org: "tungstenfabric"}
   - {src: "tf-deployers-containers", src_org: "tungstenfabric"}
+  - {src: "tf-dpdk", src_org: "tungstenfabric",
+     branches: ["contrail_dpdk_19_11"]}
   - {src: "tf-fabric-utils", src_org: "tungstenfabric"}
   - {src: "tf-heat-plugin", src_org: "tungstenfabric"}
   - {src: "tf-helm-deployer", src_org: "tungstenfabric"}
