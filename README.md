@@ -1,7 +1,7 @@
 # Overview
 Deployment scripts of Tungsten Fabric CI
 
-# Gerrit deployment
+# Gerrit deployment - Deprecated.
 ## Initial gerrit service deployment
 Initial gerrit host configuration is placed in ansible inventory file
 ```
@@ -46,7 +46,7 @@ As gerrit service has started on **gerrit_url** you can import official Tunsten 
     ansible-playbook playbooks/import-gerrit-repos.yaml -i hosts.yaml
 ```
 
-# Zuul deployment
+# Zuul deployment - Deprecated.
 ## Initial zuul service deployment
 Initial zuul host configuration is placed in ansible inventory file
 ```
