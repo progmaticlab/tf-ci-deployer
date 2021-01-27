@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 REPOS_RH8=(rhel-8-for-x86_64-appstream-rpms rhel-8-for-x86_64-baseos-rpms rhel-8-for-x86_64-highavailability-rpms ansible-2.9-for-rhel-8-x86_64-rpms ansible-2-for-rhel-8-x86_64-rpms advanced-virt-for-rhel-8-x86_64-rpms satellite-tools-6.5-for-rhel-8-x86_64-rpms openstack-16.1-for-rhel-8-x86_64-rpms fast-datapath-for-rhel-8-x86_64-rpms rhceph-4-tools-for-rhel-8-x86_64-rpms)
 REPOS_UBI8=(ubi-8-appstream ubi-8-baseos ubi-8-codeready-builder)

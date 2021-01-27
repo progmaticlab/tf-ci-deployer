@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 RHUSERNAME=${RHUSERNAME:-}
 RHPASSWORD=${RHPASSWORD:-}
@@ -12,22 +12,37 @@ function unregister_and_exit() {
   exit
 }
 
-if [[ ! -z ${RHEL_USER+x} && ! -z ${RHEL_PASSWORD+x} && ! -z ${RHEL_POOL_ID+x} ]]; then
+function retry() {
+  local i
+  for ((i=0; i<5; ++i)) ; do
+    if $@ ; then
+      break
+    fi
+    echo "COMMAND FAILED: $@" 
+    echo "RETRYING COMMAND (time=$i out of 5)"
+  done
+  if [[ $i == 5 ]]; then
+    return 1
+  fi
+}
+
+if [[ ! -z ${RHEL_USER+x} && ! -z ${RHEL_PASSWORD+x} && ! -z ${RHEL_POOL_ID+x} && ! -z ${RHEL_ADDITIONAL_POOL_ID+x} ]]; then
   subscription-manager register --name=rhel7repomirror --username=$RHEL_USER --password=$RHEL_PASSWORD
 else
-  echo "No RedHat subscription credentials provided, exiting"
+  echo "No RedHat subscription credentials (or pools) provided, exiting"
   exit 1
 fi
 
 trap unregister_and_exit EXIT
 subscription-manager attach --pool=$RHEL_POOL_ID
+subscription-manager attach --pool=$RHEL_ADDITIONAL_POOL_ID
 yum repolist
 yum install -y yum-utils createrepo
 
 
 for r in ${REPOS_RH7[@]}; do
   subscription-manager repos --enable=${r}
-  reposync -l --repoid=${r} --download-metadata --downloadcomps --download_path=${MIRRORDIR}/rhel7/${DATE}
+  retry reposync -n -l --repoid=${r} --download-metadata --downloadcomps --download_path=${MIRRORDIR}/rhel7/${DATE}
   createrepo -v ${MIRRORDIR}/rhel7/${DATE}/${r}/
 done
 
@@ -37,7 +52,7 @@ ln -s ${DATE} stage
 popd
 
 for r in ${REPOS_UBI7[@]}; do
-  reposync -l --repoid=${r} --download-metadata --downloadcomps --download_path=${MIRRORDIR}/ubi7/${DATE}
+  retry reposync -n -l --repoid=${r} --download-metadata --downloadcomps --download_path=${MIRRORDIR}/ubi7/${DATE}
   createrepo -v ${MIRRORDIR}/ubi7/${DATE}/${r}/
 done
 
