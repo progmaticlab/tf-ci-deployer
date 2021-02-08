@@ -22,7 +22,9 @@ function retry() {
     echo "RETRYING COMMAND (time=$i out of 5)"
   done
   if [[ $i == 5 ]]; then
-    return 1
+    echo "COMMAND FAILED AFTER 5 tries: $@"
+    echo ABORTING
+    exit 1
   fi
 }
 
@@ -42,7 +44,7 @@ yum install -y yum-utils createrepo
 
 for r in ${REPOS_RH7[@]}; do
   subscription-manager repos --enable=${r}
-  retry reposync -n -l --repoid=${r} --download-metadata --downloadcomps --download_path=${MIRRORDIR}/rhel7/${DATE}
+  retry reposync -l --repoid=${r} --download-metadata --downloadcomps --download_path=${MIRRORDIR}/rhel7/${DATE}
   createrepo -v ${MIRRORDIR}/rhel7/${DATE}/${r}/
 done
 
@@ -52,7 +54,7 @@ ln -s ${DATE} stage
 popd
 
 for r in ${REPOS_UBI7[@]}; do
-  retry reposync -n -l --repoid=${r} --download-metadata --downloadcomps --download_path=${MIRRORDIR}/ubi7/${DATE}
+  retry reposync -l --repoid=${r} --download-metadata --downloadcomps --download_path=${MIRRORDIR}/ubi7/${DATE}
   createrepo -v ${MIRRORDIR}/ubi7/${DATE}/${r}/
 done
 

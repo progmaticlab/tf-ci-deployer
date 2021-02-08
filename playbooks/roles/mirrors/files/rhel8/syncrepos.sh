@@ -10,6 +10,23 @@ function unregister_and_exit() {
   exit
 }
 
+function retry() {
+  local i
+  for ((i=0; i<5; ++i)) ; do
+    if $@ ; then
+      break
+    fi
+    echo "COMMAND FAILED: $@" 
+    echo "RETRYING COMMAND (time=$i out of 5)"
+  done
+  if [[ $i == 5 ]]; then
+    echo "COMMAND FAILED AFTER 5 tries: $@"
+    echo ABORTING
+    exit 1
+  fi
+}
+
+
 if [[ ! -z ${RHEL_USER+x} && ! -z ${RHEL_PASSWORD+x} && ! -z ${RHEL_POOL_ID+x} ]]; then
   subscription-manager register --name=rhel8repomirror --username=$RHEL_USER --password=$RHEL_PASSWORD
 else
@@ -19,14 +36,18 @@ fi
 
 trap unregister_and_exit EXIT
 subscription-manager attach --pool=$RHEL_POOL_ID
+
+#Fix release to 8.2 for RHOSP16
+subscription-manager release --set=8.2
+
 yum repolist
 yum install -y yum-utils createrepo
 
 
 for r in ${REPOS_RH8[@]}; do
   subscription-manager repos --enable=${r}
-  reposync --repoid=${r} --download-metadata --downloadcomps --download-path=${MIRRORDIR}/rhel8/${DATE}
-  createrepo -v ${MIRRORDIR}/rhel8/${DATE}/${r}/
+  retry reposync --repoid=${r} --download-metadata --downloadcomps --download-path=${MIRRORDIR}/rhel8/${DATE}
+  #createrepo -v ${MIRRORDIR}/rhel8/${DATE}/${r}/
 done
 
 pushd ${MIRRORDIR}/rhel8
@@ -36,7 +57,7 @@ popd
 
 for r in ${REPOS_UBI8[@]}; do
   reposync --repoid=${r} --download-metadata --downloadcomps --download-path=${MIRRORDIR}/ubi8/${DATE}
-  createrepo -v ${MIRRORDIR}/ubi8/${DATE}/${r}/
+  #createrepo -v ${MIRRORDIR}/ubi8/${DATE}/${r}/
 done
 
 pushd ${MIRRORDIR}/ubi8
