@@ -17,6 +17,12 @@
 - name: add live-restore option
   include: "docker_opts_{{ ansible_system }}.yml"
 
-- name: install python compose
+- name: Install required python modules
   pip:
-    name: docker-compose
+    name: ['docker', 'docker-compose']
+
+- name: Install Docker Compose.
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.28.5/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 0755

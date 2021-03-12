@@ -1,8 +1,8 @@
 ---
 
-- name: collect hosts configuration
-  include: collect-hosts.yaml
-
+#- name: collect hosts configuration
+#  include: collect-hosts.yaml
+#
 - name: Ensure zuul group exists
   group:
     name: zuul

@@ -38,7 +38,7 @@
     dest: /opt/nexus/docker-compose.yaml
 
 - name: start nexus service
-  docker_service:
+  docker_compose:
     project_src: /opt/nexus
     restarted: yes
 

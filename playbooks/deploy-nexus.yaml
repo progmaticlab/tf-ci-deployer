@@ -16,5 +16,6 @@
   roles:
     - common
     - ntp
+    - pip
     - docker
     - nexus

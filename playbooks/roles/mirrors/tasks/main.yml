@@ -7,7 +7,7 @@
     - /opt/mirrors/
     - /var/local/mirror/repos
     - /var/local/mirror/dockerhub
-    - /var/local/mirror/pypi
+    - /var/local/mirror/pypi/data
 
 - name: Copy config files
   copy:
@@ -28,6 +28,10 @@
     - rhel7
     - rhel8
     - ubuntu18
+
+- name: Install required python modules
+  pip:
+    name: ['requests', 'docker']
 
 - name: Build devpi image
   docker_image:
