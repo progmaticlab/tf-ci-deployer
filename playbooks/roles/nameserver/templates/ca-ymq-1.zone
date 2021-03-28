@@ -1,0 +1,14 @@
+$TTL	600
+@	IN	SOA	tfci-ns2.progmaticlab.com. null.progmaticlab.com. (
+			{{ ansible_date_time.iso8601_basic_short[:11] | regex_replace('T', '') }}		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+@       IN      NS      tfci-ns2.progmaticlab.com.
+tf-jenkins	IN	A	199.204.45.99
+tf-mirrors      IN      A       10.0.0.71
+tf-monitoring   IN      CNAME	tf-jenkins
+tf-nexus        IN      A       199.19.213.181
+$INCLUDE "/var/named/data/common.data"
+

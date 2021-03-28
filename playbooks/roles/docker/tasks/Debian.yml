@@ -9,6 +9,11 @@
     - software-properties-common
     - python-setuptools
 
+- name: upgrade setuptools
+  pip:
+    name: setuptools
+    state: latest
+
 - name: add docker repo key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg

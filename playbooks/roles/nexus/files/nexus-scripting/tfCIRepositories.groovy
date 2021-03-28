@@ -289,6 +289,7 @@ create_docker_hosted('tungsten_gate_cache', 5002)
 // Raw
 // Hosted
 create_raw_hosted('images')
+create_raw_hosted('external-web-cache')
 // deprecated. create_raw_hosted('documentation')
 
 // Proxy

@@ -18,6 +18,18 @@ services:
       - "/opt/nexus/nexus.restricted.whitelist:/etc/nginx/conf.d/restricted.whitelist"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
+  docker-tls:
+    image: traefik
+    restart: always
+    depends_on:
+      - nexus
+    volumes:
+      - "/opt/nexus/nexus.traefik.yaml:/etc/traefik/traefik.yaml"
+      - "/opt/nexus/nexus.traefik.provider.yaml:/etc/traefik/provider.yaml"
+    ports:
+      - 5101:5101
+      - 5102:5102
+      - 443:443
 
 volumes:
   nexus-data:

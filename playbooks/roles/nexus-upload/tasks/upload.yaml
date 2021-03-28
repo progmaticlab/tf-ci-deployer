@@ -10,7 +10,7 @@
     msg: "Downloading {{ archive }}"
 
 - name: download archive
-  shell: "aws s3 cp s3://tf-ci/{{archive}} /tmp/data.tgz"
+  shell: "aws s3 cp s3://tf-ci2/{{archive}} /tmp/data.tgz"
   #  no_log: True
 
 - name: create dir for data

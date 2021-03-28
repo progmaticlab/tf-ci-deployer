@@ -20,22 +20,25 @@
     state: present
     groups: "docker"
 
-- name: Create nginx restricted client list
+- name: Configure proxy
   template:
-    src: nginx.restricted.whitelist.j2
-    dest: /opt/nexus/nexus.restricted.whitelist
+    src: "{{ item }}.j2"
+    dest: "/opt/nexus/{{ item }}"
     mode: 0644
-
-- name: apply nginx configuration
-  template:
-    src: nexus.nginx.conf.j2
-    dest: /opt/nexus/nexus.nginx.conf
-    mode: 0644
+  with_items:
+    - nginx.restricted.whitelist
+    - nexus.nginx.conf
+    - nexus.traefik.yaml
+    - nexus.traefik.provider.yaml
+    - docker-compose.yaml
 
 - name: apply docker-compose.yaml
   template:
-    src: docker-compose.yaml.j2
-    dest: /opt/nexus/docker-compose.yaml
+    src: "{{ item }}.j2"
+    dest: "/opt/nexus/{{ item }}"
+    mode: 0644
+  with_items:
+    - docker-compose.yaml
 
 - name: start nexus service
   docker_compose:

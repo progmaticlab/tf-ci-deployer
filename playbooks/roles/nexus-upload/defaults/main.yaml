@@ -4,8 +4,8 @@ nexus_user: "admin"
 nexus_password: "admin123"
 # url was https://s3.eu-north-1.amazonaws.com/tf-ci/
 nexus_predefined_repos:
-  - "contrail-third-party.tgz"
-  - "yum-tpc-binary.tgz"
-  - "yum-tpc-source.tgz"
+#  - "contrail-third-party.tgz"
+#  - "yum-tpc-binary.tgz"
+#  - "yum-tpc-source.tgz"
   - "images.tgz"
   - "vmware-releases.tgz"
